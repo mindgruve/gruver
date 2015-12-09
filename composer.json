@@ -6,6 +6,13 @@
       "email": "ksimpson@mindgruve.com"
     }
   ],
-  "require": {},
-  "license": "MIT"
+  "require": {
+    "symfony/console": "^3.0",
+    "stage1/docker-php": "^0.4.3",
+    "symfony/yaml": "^3.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {"Mindgruve\\Gruver\\": "src"}
+  }
 }
