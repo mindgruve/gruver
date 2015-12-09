@@ -1,0 +1,46 @@
+mindgruve.com:
+  environments:
+      prod:
+          hosts: [ 'mindgruve.com', 'www.mindgruve.com' ]
+          health_checks: ~
+          repository:
+              url: svn://path-to-repository/mindgruve.com/trunk
+              branch: trunk
+              type: svn
+          containers:
+              - { name: 'prod1', url: 'prod1.mindgruve.com' }
+              - { name: 'prod2', url: 'prod2.mindgruve.com' }
+              - { name: 'prod3', url: 'prod3.mindgruve.com' }
+          shared:
+              uploads:  'application/src/Wordpress/WPContent/uploads'
+              plugins:  'application/src/Wordpress/WPContent/plugins'
+          firewall: { allowed_ips: [ '72.220.161.250' ] }
+      review:
+          hosts: [ 'mindgruve.com.review.mindgruve.com' ]
+          health_checks: ~
+          repository:
+              url: svn://path-to-repository/mindgruve.com/branches/development
+              branch: development
+              type: svn
+          containers:
+              - { name: review1, url: review1.mindgruve.com }
+              - { name: review2, url: review2.mindgruve.com }
+          shared:
+              uploads:  'application/src/Wordpress/WPContent/uploads'
+              plugins:  'application/src/Wordpress/WPContent/plugins'
+
+  events:
+      pre-update-source: ~
+      post-update-source: ~
+      pre-build-container: ~
+      post-build-container: ~
+      pre-run-tests: ~
+      post-run-tests: ~
+      pre-promote: ~
+      post-promote: ~
+      pre-rollback: ~
+      post-rollback: ~
+  vcs:
+      svn:
+          username: ksimpson
+          password: password
