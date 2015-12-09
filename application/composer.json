@@ -1,0 +1,11 @@
+{
+  "name": "mindgruve/gruver",
+  "authors": [
+    {
+      "name": "Kevin",
+      "email": "ksimpson@mindgruve.com"
+    }
+  ],
+  "require": {},
+  "license": "MIT"
+}
