@@ -137,4 +137,32 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->sut->isCleanWorkingCopy());
         $this->assertTrue($this->sut2->isCleanWorkingCopy());
     }
+
+    public function testUpdateToRevision()
+    {
+        $this->assertTrue($this->sut->isCleanWorkingCopy());
+        $this->assertTrue($this->sut2->isCleanWorkingCopy());
+
+        $originalRevison = $this->sut->getVersion();
+        $this->assertEquals($this->sut->getVersion(), $this->sut2->getVersion());
+        $this->modifyFile($this->path, 'modified-file.txt', true);
+        $this->modifyFile($this->path, 'modified-file.txt', true);
+        $this->assertNotEquals($this->sut->getVersion(), $this->sut2->getVersion());
+
+        /**
+         * Update to specific revision
+         */
+        $this->sut2->update($originalRevison + 1);
+        $this->assertEquals($originalRevison + 1, $this->sut2->getVersion());
+
+        /**
+         * Default to update to head
+         */
+        $this->sut2->update();
+        $this->assertEquals($this->sut->getVersion(), $this->sut2->getVersion());
+
+
+        $this->assertTrue($this->sut->isCleanWorkingCopy());
+        $this->assertTrue($this->sut2->isCleanWorkingCopy());
+    }
 }
