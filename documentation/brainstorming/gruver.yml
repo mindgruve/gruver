@@ -1,8 +1,17 @@
 mindgruve.com:
   environments:
+      default:
+          file_permissions:
+              - { owner: 'web', group: 'web', path: '.', mode: 775, recursive: true  }
+              - { owner: 'apache', group: 'web', path: 'application/src/Wordpress/WPContent/cache', recursive: 'true' }
+              - { owner: 'apache', group: 'web', path: 'application/src/Wordpress/WPContent/uploads', recursive: 'true' }
+              - { owner: 'apache', group: 'web', path: 'application/src/Wordpress/WPContent/plugins', recursive: 'true' }
+          health_checks: ~
+          shared:
+              uploads:  'application/src/Wordpress/WPContent/uploads'
+              plugins:  'application/src/Wordpress/WPContent/plugins'
       prod:
           hosts: [ 'mindgruve.com', 'www.mindgruve.com' ]
-          health_checks: ~
           repository:
               url: svn://path-to-repository/mindgruve.com/trunk
               branch: trunk
@@ -10,13 +19,10 @@ mindgruve.com:
           containers:
               - { name: 'prod1', url: 'prod1.mindgruve.com' }
               - { name: 'prod2', url: 'prod2.mindgruve.com' }
-          shared:
-              uploads:  'application/src/Wordpress/WPContent/uploads'
-              plugins:  'application/src/Wordpress/WPContent/plugins'
+
           firewall: { allowed_ips: [ '72.220.161.250' ] }
       review:
           hosts: [ 'mindgruve.com.review.mindgruve.com' ]
-          health_checks: ~
           repository:
               url: svn://path-to-repository/mindgruve.com/branches/development
               branch: development
@@ -24,10 +30,6 @@ mindgruve.com:
           containers:
               - { name: review1, url: review1.mindgruve.com }
               - { name: review2, url: review2.mindgruve.com }
-          shared:
-              uploads:  'application/src/Wordpress/WPContent/uploads'
-              plugins:  'application/src/Wordpress/WPContent/plugins'
-
   events:
       pre-update-source: ~
       post-update-source: ~

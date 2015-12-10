@@ -2,6 +2,10 @@
 Update the source code using git/svn
 **example:**  gruver update-source mindgruve.com --env=prod --release=1.0.1
 
+## gruver set-file-permissions [app] [env] [release]
+Apply the file permission rules   
+**example:** gruver set-file-permissions mindgruve.com --env=prod --release=1.0.1
+
 ## gruver build-container [app] [env] [release]
 Build the container
 **example:**  gruver build mindgruve.com --env=prod --release=1.0.1
