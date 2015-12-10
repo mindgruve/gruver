@@ -10,7 +10,6 @@ mindgruve.com:
           containers:
               - { name: 'prod1', url: 'prod1.mindgruve.com' }
               - { name: 'prod2', url: 'prod2.mindgruve.com' }
-              - { name: 'prod3', url: 'prod3.mindgruve.com' }
           shared:
               uploads:  'application/src/Wordpress/WPContent/uploads'
               plugins:  'application/src/Wordpress/WPContent/plugins'

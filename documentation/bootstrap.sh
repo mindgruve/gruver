@@ -1,14 +1,17 @@
 #!/bin/sh
 
-yum remove -y php.x86_64
-yum remove -y php-cli.x86_64
-yum remove -y php-common.x86_64
+apt-get update
+apt-get install -y php5 php5-dev subversion libsvn-dev php-pear
+pecl install svn-beta
+echo 'extension=svn.so' >> /etc/php5/apache2/php.ini
+echo 'extension=svn.so' >> /etc/php5/cli/php.ini
 
-yum install -y libxml2 libxml2-devel
+# Install Composer
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
 
-wget http://php.net/get/php-5.5.30.tar.gz/from/this/mirror --output-document php-5.5.30.tar.gz
-tar -xvf php-5.5.30.tar.gz
-cd php-5.5.30
-./configure
-make
-make install
+# Create Test SVN
+mkdir -p /vagrant/src/Tests/Temp/
+svnadmin create /vagrant/src/Tests/Temp/SVN-Repo
+svn co file:///vagrant/src/Tests/Temp/SVN-Repo /vagrant/src/Tests/Temp/SVN-Working-Copy
+svn co file:///vagrant/src/Tests/Temp/SVN-Repo /vagrant/src/Tests/Temp/SVN-Working-Copy-2

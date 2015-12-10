@@ -1,3 +1,5 @@
 .idea/*
 vendor/*
 documentation/.vagrant/*
+bin/*
+src/Tests/Temp/*
