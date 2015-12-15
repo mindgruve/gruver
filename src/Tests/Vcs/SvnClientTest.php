@@ -1,6 +1,6 @@
 <?php
 
-namespace Mindgruve\Gruver\Tests;
+namespace Mindgruve\Gruver\Tests\Vcs;
 
 use Mindgruve\Gruver\Vcs\SvnClient;
 use Mindgruve\Gruver\Vcs\VcsClientInterface;
@@ -31,12 +31,12 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->path = __DIR__ . '/Temp/Svn-Working-Copy';
+        $this->path = __DIR__ . '/../Temp/Svn-Working-Copy';
         svn_revert($this->path, true);
         svn_update($this->path);
         $this->sut = new SvnClient($this->path);
 
-        $this->path2 = __DIR__ . '/Temp/Svn-Working-Copy-2';
+        $this->path2 = __DIR__ . '/../Temp/Svn-Working-Copy-2';
         svn_revert($this->path2, true);
         svn_update($this->path2);
         $this->sut2 = new SvnClient($this->path2);
@@ -75,11 +75,17 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @group Vcs
+     */
     public function testInterface()
     {
         $this->assertTrue($this->sut instanceof VcsClientInterface);
     }
 
+    /**
+     * @group Vcs
+     */
     public function testDirtyWorkingCopy()
     {
         $this->assertTrue($this->sut->isCleanWorkingCopy());
@@ -90,6 +96,9 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
         unlink($this->path . '/unversioned-file.txt');
     }
 
+    /**
+     * @group Vcs
+     */
     public function testModifiedFile()
     {
         $this->assertTrue($this->sut->isCleanWorkingCopy());
@@ -97,6 +106,9 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->sut->isCleanWorkingCopy());
     }
 
+    /**
+     * @group Vcs
+     */
     public function testDeletedFile()
     {
         $this->assertTrue($this->sut->isCleanWorkingCopy());
@@ -115,6 +127,10 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->sut->isCleanWorkingCopy());
     }
 
+    /**
+     * @throws \Exception
+     * @group Vcs
+     */
     public function testGetVersion()
     {
         $this->assertTrue($this->sut->isCleanWorkingCopy());
@@ -123,6 +139,10 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($versionNumber + 1, $this->sut->getVersion());
     }
 
+    /**
+     * @throws \Exception
+     * @group Vcs
+     */
     public function testUpdateToHead()
     {
         $this->assertTrue($this->sut->isCleanWorkingCopy());
@@ -138,6 +158,10 @@ class SvnClientTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->sut2->isCleanWorkingCopy());
     }
 
+    /**
+     * @throws \Exception
+     * @group Vcs
+     */
     public function testUpdateToRevision()
     {
         $this->assertTrue($this->sut->isCleanWorkingCopy());
