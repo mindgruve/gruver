@@ -4,11 +4,11 @@ namespace Mindgruve\Gruver\Command;
 
 use Symfony\Component\Console\Command\Command;
 
-class RollbackCommand extends Command
+class RunHealthChecksCommand extends Command
 {
 
-    const COMMAND = 'rollback';
-    const DESCRIPTION = 'Rollback a deployment and use previous container.';
+    const COMMAND = 'run-health-checks';
+    const DESCRIPTION = 'Run health checks';
 
     public function configure()
     {
@@ -16,6 +16,5 @@ class RollbackCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION);
     }
-
 
 }

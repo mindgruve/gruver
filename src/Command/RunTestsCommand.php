@@ -2,7 +2,19 @@
 
 namespace Mindgruve\Gruver\Command;
 
-class RunTestsCommand
+use Symfony\Component\Console\Command\Command;
+
+class RunTestsCommand extends Command
 {
+
+    const COMMAND = 'run-tests';
+    const DESCRIPTION = 'Run unit tests';
+
+    public function configure()
+    {
+        $this
+            ->setName(self::COMMAND)
+            ->setDescription(self::DESCRIPTION);
+    }
 
 }

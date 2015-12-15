@@ -4,11 +4,10 @@ namespace Mindgruve\Gruver\Command;
 
 use Symfony\Component\Console\Command\Command;
 
-class RollbackCommand extends Command
+class RemoveSymlinksCommand extends Command
 {
-
-    const COMMAND = 'rollback';
-    const DESCRIPTION = 'Rollback a deployment and use previous container.';
+    const COMMAND = 'remove-symlinks';
+    const DESCRIPTION = 'Remove the symlinks to shared directories.';
 
     public function configure()
     {
@@ -16,6 +15,4 @@ class RollbackCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION);
     }
-
-
 }
