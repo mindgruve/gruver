@@ -4,10 +4,11 @@ namespace Mindgruve\Gruver\Command;
 
 use Symfony\Component\Console\Command\Command;
 
-class RemoveSymlinksCommand extends Command
+class RunHealthChecksCommand extends Command
 {
-    const COMMAND = 'remove-symlinks';
-    const DESCRIPTION = 'Remove the symlinks to shared directories.';
+
+    const COMMAND = 'check';
+    const DESCRIPTION = 'Run health checks';
 
     public function configure()
     {
@@ -15,4 +16,5 @@ class RemoveSymlinksCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION);
     }
+
 }

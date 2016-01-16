@@ -8,7 +8,7 @@ class DeployCommand extends Command
 {
 
     const COMMAND = 'deploy';
-    const DESCRIPTION = 'Equivalent to running update-source + build-container + run-tests + run-health-checks + promote-container';
+    const DESCRIPTION = 'Builds the container, runs health checks, and if continuous deployment is enabled, will promote the container to production.';
 
     public function configure()
     {

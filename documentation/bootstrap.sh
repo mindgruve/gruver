@@ -1,8 +1,7 @@
 #!/bin/sh
 
 apt-get update
-apt-get install -y php5 php5-dev subversion libsvn-dev php-pear
-pecl install svn-beta
+apt-get install -y php5 php5-dev subversion php-pear git
 echo 'extension=svn.so' >> /etc/php5/apache2/php.ini
 echo 'extension=svn.so' >> /etc/php5/cli/php.ini
 
