@@ -21,7 +21,7 @@ honeybadger-325.staging1.mindgruve.com   <-- NOT LIVE - STAGING
 caribu-424.staging1.mindgruve.com  <-- NOT LIVE - STAGING   
 articfox-143.staging1.mindgruve.com  <-- NOT LIVE - STAGING 
 
-When a user visits the actual production URL mindgruve.com, HAProxy routes the user to the live container (prod1.mindgruve.com).  HAProxy will also rewrite the request/response from the containers so that the container only see requests comming from the production URL.
+When a user visits the actual production URL mindgruve.com, HAProxy routes the user to the live container.  HAProxy will also rewrite the request/response from the containers so that the container only see requests comming from the production URL.
 
 ## Manual Deployment Flow
 --> Developer commits change to master/trunk.   

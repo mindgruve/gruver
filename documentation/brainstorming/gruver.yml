@@ -1,5 +1,7 @@
 mindgruve.com:
-    docker: ~
+    docker:
+        docker_compose: /usr/local/bin/docker-compose
+        yaml: /var/docker/mindgruve.com/docker-compose.yml
     staging:
         url_pattern:  %s-$d.staging1.mindgruve.com
         allowed_ip: [ '72.220.161.250' ]
