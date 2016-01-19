@@ -7,8 +7,8 @@
 (5) Shared folders will be mounted on the host.  
 (6) HAProxy is used to route requests to applications.   
 (7) Wildcard subdomains for DNS are available
-(8) PHP is available on the server
-(9) SQLite is available on the server
+(8) PHP is available on the server   
+(9) PHPExtension for SQLite is available on the server
 
 ### Blue/Green Deployments:   
 Gruver is assumes a blue/green deployment method.  On every commit to the master/trunk branch a new staging container is built and the live container is unchanged.  Gruver will keep the staging containers ready should they need to be promoted to live.  It will also delete old containers that are no longer needed.  By default, Gruver will keep the last 3 staging containers.

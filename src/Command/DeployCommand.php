@@ -3,12 +3,13 @@
 namespace Mindgruve\Gruver\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
 class DeployCommand extends Command
 {
 
     const COMMAND = 'deploy';
-    const DESCRIPTION = 'Builds the container, runs health checks, and if continuous deployment is enabled, will promote the container to production.';
+    const DESCRIPTION = 'Deploy an application.';
 
     public function configure()
     {

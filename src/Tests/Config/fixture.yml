@@ -1,0 +1,24 @@
+name: "mindgruve.com"
+notifications:
+    email:
+        recipients: [ 'ksimpson@mindgruve.com' ]
+build:
+    compose_binary: /usr/local/bin/docker-compose
+    compose_yaml: /var/docker/mindgruve.com/source-code/docker-compose.yml
+staging:
+    url_pattern:  '%s-$d.staging1.mindgruve.com'
+    allowed_ips: [ '72.220.161.250' ]
+production:
+    hosts: [ 'mindgruve.com', 'www.mindgruve.com' ]
+health_checks: [ ]
+automatic_deployment: false
+events:
+    pre_build: ~
+    post_build: ~
+    pre_pull: ~
+    post_pull: ~
+    pre_promote: ~
+    post_promote: ~
+    pre_rollback: ~
+    pre_rollback: ~
+    post_rollback: ~

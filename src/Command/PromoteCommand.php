@@ -3,11 +3,12 @@
 namespace Mindgruve\Gruver\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
-class PromoteContainerCommand extends Command
+class PromoteCommand extends Command
 {
     const COMMAND = 'promote';
-    const DESCRIPTION = 'Promote a container to accept live traffic';
+    const DESCRIPTION = 'Promote a container to accept live traffic.';
 
     public function configure()
     {

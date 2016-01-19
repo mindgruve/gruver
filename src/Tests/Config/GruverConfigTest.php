@@ -17,7 +17,11 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
 
     }
 
-
+    public function testValidFixture()
+    {
+        $testYaml = __DIR__.'/fixture.yml';
+        $sut = new ConfigLoader($testYaml);
+    }
 
 
 }

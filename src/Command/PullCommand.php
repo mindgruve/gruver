@@ -5,11 +5,11 @@ namespace Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
-class RollbackCommand extends Command
+class PullCommand extends Command
 {
+    const COMMAND = 'pull';
+    const DESCRIPTION = 'Pull a container from a docker repository.';
 
-    const COMMAND = 'rollback';
-    const DESCRIPTION = 'Rollback a deployment and use previous container.';
 
     public function configure()
     {
@@ -17,6 +17,4 @@ class RollbackCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION);
     }
-
-
 }

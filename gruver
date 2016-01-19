@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+require(__DIR__ . '/vendor/autoload.php');
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+
+/**
+ * Replace with Symfony Finder Component
+ */
+
+$application = new Application();
+$application->add(new \Mindgruve\Gruver\Command\BuildCommand());
+$application->add(new \Mindgruve\Gruver\Command\PullCommand());
+$application->add(new \Mindgruve\Gruver\Command\DeployCommand());
+$application->add(new \Mindgruve\Gruver\Command\PromoteCommand());
+$application->add(new \Mindgruve\Gruver\Command\RollbackCommand());
+$application->add(new \Mindgruve\Gruver\Command\CheckCommand());
+$application->add(new \Mindgruve\Gruver\Command\StatusCommand());
+
+$input = new ArgvInput();
+$application->run($input);

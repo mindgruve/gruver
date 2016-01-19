@@ -3,12 +3,13 @@
 namespace Mindgruve\Gruver\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 
-class RunHealthChecksCommand extends Command
+class CheckCommand extends Command
 {
 
     const COMMAND = 'check';
-    const DESCRIPTION = 'Run health checks';
+    const DESCRIPTION = 'Run health checks on an application.';
 
     public function configure()
     {
