@@ -30,7 +30,7 @@ class BuildCommand extends Command
         $config = new GruverConfig($gruverYaml);
 
         $output->writeln('<info>GRUVER: Building container...</info>');
-        $process = new Process($config->get('build.compose_binary'). ' build');
+        $process = new Process($config->get('binaries.docker_compose'). ' build');
         $process->setTimeout(3600);
 
         try{

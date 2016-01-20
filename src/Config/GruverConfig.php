@@ -30,10 +30,10 @@ class GruverConfig
     public function get($key)
     {
         switch ($key) {
-            case 'name':
-                return $this->config['name'];
-            case 'build.compose_binary':
-                return $this->config['build']['compose_binary'];
+            case 'application.name':
+                return $this->config['application']['name'];
+            case 'binaries.docker_compose':
+                return isset($this->config['binaries']['docker_compose']) ? $this->config['binaries']['docker_compose'] : 'docker-compose';
         }
     }
 }

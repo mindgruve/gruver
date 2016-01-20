@@ -14,7 +14,7 @@ class EnvironmentalVariables
 
     public function export()
     {
-        $name = escapeshellarg($this->config->get('name'));
+        $name = escapeshellarg($this->config->get('application.name'));
 
         return 'export GRUVER_APPLICATION_NAME='.$name;
     }
