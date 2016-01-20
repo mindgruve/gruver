@@ -18,9 +18,11 @@ events:
       - echo 'processing pre_build'
     post_build:
       - echo 'processing post_build'
-    pre_pull: ~
-    post_pull: ~
     pre_promote: ~
     post_promote: ~
     pre_rollback: ~
     post_rollback: ~
+    pre_cleanup: ~
+    post_cleanup: ~
+    pre_status: ~
+    post_status: ~

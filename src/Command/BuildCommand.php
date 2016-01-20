@@ -42,7 +42,7 @@ class BuildCommand extends Command
             );
             $eventDispatcher->dispatchPostBuild();
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            $output->write('<error>'.$e->getMessage().'</error>');
             exit;
         }
     }
