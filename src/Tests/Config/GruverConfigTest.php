@@ -9,6 +9,7 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
+     * @group config
      * @expectedException \Exception
      */
     public function testConstructorFileDoesNotExists()
