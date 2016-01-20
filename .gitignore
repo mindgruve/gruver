@@ -3,4 +3,4 @@ vendor/*
 documentation/.vagrant/*
 bin/*
 src/Tests/Temp/*
-source-cose/*
+source-code/*
