@@ -12,11 +12,12 @@ class EnvironmentalVariables
         $this->config = $config;
     }
 
-    public function export()
+    public function buildExport()
     {
-        $name = escapeshellarg($this->config->get('application.name'));
+        $applicationName = escapeshellarg($this->config->get('application.name'));
+        $applicationDir = escapeshellarg($this->config->get('application.directory'));
 
-        return 'export GRUVER_APPLICATION_NAME='.$name;
+        return 'export GRUVER_APPLICATION_NAME='.$applicationName;
     }
 
 }

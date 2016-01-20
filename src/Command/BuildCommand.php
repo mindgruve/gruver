@@ -3,6 +3,7 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Config\GruverConfig;
+use Mindgruve\Gruver\EventDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,22 +24,26 @@ class BuildCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $gruverYaml = $_SERVER['PWD'].'/gruver.yml';
-        if (!file_exists($gruverYaml)) {
-            $output->write('<error>Gruver could not find a gruver.yml.</error>');
-        }
-        $config = new GruverConfig($gruverYaml);
+        $config = new GruverConfig();
+        $eventDispatcher = new EventDispatcher($config, $output);
 
-        $output->writeln('<info>GRUVER: Building container...</info>');
-        $process = new Process($config->get('binaries.docker_compose'). ' build');
+        $output->writeln(
+            '<info>GRUVER: Building container for '.$config->get('application.name').'</info>'
+        );
+        $process = new Process($config->get('binaries.docker_compose').' build');
         $process->setTimeout(3600);
 
-        try{
-            $process->mustRun(function ($type, $buffer) {
-                echo $buffer;
-            });
-        }catch(\Exception $e){
-            echo $e->getMessage();exit;
+        try {
+            $eventDispatcher->dispatchPreBuild();
+            $process->mustRun(
+                function ($type, $buffer) use ($output) {
+                    $output->write($buffer);
+                }
+            );
+            $eventDispatcher->dispatchPostBuild();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit;
         }
     }
 }
