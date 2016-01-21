@@ -2,9 +2,9 @@
 
 namespace Mindgruve\Gruver\Config;
 
-use Mockery\CountValidator\Exception;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class GruverConfig
 {
@@ -41,30 +41,18 @@ class GruverConfig
      */
     public function get($key)
     {
+
+        $accessor = PropertyAccess::createPropertyAccessor();
+
         switch ($key) {
-            case 'application.directory':
+            case '[application].[directory]':
                 return $_SERVER['PWD'];
-            case 'application.name':
-                return $this->config['application']['name'];
-            case 'binaries.docker_compose':
+            case '[binaries].[docker_compose]':
                 return isset($this->config['binaries']['docker_compose']) ? $this->config['binaries']['docker_compose'] : 'docker-compose';
-            case 'binaries.docker':
+            case '[binaries].[docker]':
                 return isset($this->config['binaries']['docker']) ? $this->config['binaries']['docker'] : 'docker';
-            case 'events.pre_build':
-                return $this->config['events']['pre_build'];
-            case 'events.post_build':
-                return $this->config['events']['post_build'];
-            case 'events.pre_cleanup':
-                return $this->config['events']['pre_cleanup'];
-            case 'events.post_cleanup':
-                return $this->config['events']['post_cleanup'];
-            case 'cleanup.remove_exited_containers':
-                return $this->config['cleanup']['remove_exited_containers'];
-            case 'cleanup.remove_orphan_images':
-                return $this->config['cleanup']['remove_orphan_images'];
             default:
-                throw new \Exception('Configuration key not found - '.$key);
-                break;
+                return $accessor->getValue($this->config, $key);
         }
     }
 }

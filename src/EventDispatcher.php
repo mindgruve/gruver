@@ -26,7 +26,7 @@ class EventDispatcher
 
     public function dispatchPreBuild()
     {
-        $shellCommands = $this->config->get('events.pre_build');
+        $shellCommands = $this->config->get('[events][pre_build]');
 
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
@@ -37,7 +37,7 @@ class EventDispatcher
 
     public function dispatchPostBuild()
     {
-        $shellCommands = $this->config->get('events.post_build');
+        $shellCommands = $this->config->get('[events][post_build]');
 
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
@@ -47,7 +47,7 @@ class EventDispatcher
     }
 
     public function dispatchPreCleanup(){
-        $shellCommands = $this->config->get('events.pre_cleanup');
+        $shellCommands = $this->config->get('[events][pre_cleanup]');
 
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
@@ -57,7 +57,7 @@ class EventDispatcher
     }
 
     public function dispatchPostCleanup(){
-        $shellCommands = $this->config->get('events.post_cleanup');
+        $shellCommands = $this->config->get('[events][post_cleanup]');
 
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {

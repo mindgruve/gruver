@@ -27,19 +27,19 @@ class CleanupCommand extends Command
         $config = new GruverConfig();
         $eventDispatcher = new EventDispatcher($config, $output);
 
-        $output->writeln('<info>GRUVER: Running cleanup for '.$config->get('application.name').'</info>');
+        $output->writeln('<info>GRUVER: Running cleanup for '.$config->get('[application][name]').'</info>');
 
         try {
             $eventDispatcher->dispatchPreCleanup();
 
-            if($config->get('cleanup.remove_exited_containers')){
-                $process = new Process($config->get('binaries.docker').' rm -v $(docker ps -a -q -f status=exited)');
+            if($config->get('[cleanup][remove_exited_containers]')){
+                $process = new Process($config->get('[binaries][docker]').' rm -v $(docker ps -a -q -f status=exited)');
                 $process->setTimeout(600);
                 $process->run();
             }
 
-            if($config->get('cleanup.remove_orphan_images')){
-                $process = new Process($config->get('binaries.docker').' rmi $(docker images -f "dangling=true" -q)');
+            if($config->get('[cleanup][remove_orphan_images]')){
+                $process = new Process($config->get('[binaries][docker]').' rmi $(docker images -f "dangling=true" -q)');
                 $process->setTimeout(3600);
                 $process->run();
             }
