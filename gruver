@@ -17,6 +17,7 @@ $application->add(new \Mindgruve\Gruver\Command\PromoteCommand());
 $application->add(new \Mindgruve\Gruver\Command\RollbackCommand());
 $application->add(new \Mindgruve\Gruver\Command\CheckCommand());
 $application->add(new \Mindgruve\Gruver\Command\StatusCommand());
+$application->add(new \Mindgruve\Gruver\Command\CleanupCommand());
 
 $input = new ArgvInput();
 $application->run($input);

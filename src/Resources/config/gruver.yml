@@ -3,6 +3,9 @@ application:
     email_notifications: [ 'ksimpson@mindgruve.com' ]
 build:
     method: docker_compose
+cleanup:
+    remove_exited_containers: true
+    remove_orphan_images: true
 staging:
     url_pattern:  '%s-$d.staging1.mindgruve.com'
     allowed_ips: [ '72.220.161.250' ]
@@ -22,7 +25,9 @@ events:
     post_promote: ~
     pre_rollback: ~
     post_rollback: ~
-    pre_cleanup: ~
-    post_cleanup: ~
+    pre_cleanup:
+      - echo 'processing pre_cleanup'
+    post_cleanup:
+      - echo 'processing post_cleanup'
     pre_status: ~
     post_status: ~

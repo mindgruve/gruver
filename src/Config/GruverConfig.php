@@ -54,6 +54,14 @@ class GruverConfig
                 return $this->config['events']['pre_build'];
             case 'events.post_build':
                 return $this->config['events']['post_build'];
+            case 'events.pre_cleanup':
+                return $this->config['events']['pre_cleanup'];
+            case 'events.post_cleanup':
+                return $this->config['events']['post_cleanup'];
+            case 'cleanup.remove_exited_containers':
+                return $this->config['cleanup']['remove_exited_containers'];
+            case 'cleanup.remove_orphan_images':
+                return $this->config['cleanup']['remove_orphan_images'];
             default:
                 throw new \Exception('Configuration key not found - '.$key);
                 break;
