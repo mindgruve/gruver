@@ -37,9 +37,9 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
         $sut = new GruverConfig($testYaml);
 
         $this->assertEquals($_SERVER['PWD'], $sut->get('[application][directory]'));
-        $this->assertEquals('mindgruve.com',$sut->get('[application][name]'));
-        $this->assertEquals(array('ksimpson@mindgruve.com'),$sut->get('[application][email_notifications]'));
-        $this->assertEquals(array('ksimpson@mindgruve.com'),$sut->get('[application][email_notifications]'));
+        $this->assertEquals('mindgruve.com', $sut->getApplicationName());
+        $this->assertEquals(array('ksimpson@mindgruve.com'), $sut->get('[application][email_notifications]'));
+        $this->assertEquals(array('ksimpson@mindgruve.com'), $sut->get('[application][email_notifications]'));
     }
 
 }

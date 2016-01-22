@@ -27,7 +27,7 @@ class CleanupCommand extends Command
         $config = new GruverConfig();
         $eventDispatcher = new EventDispatcher($config, $output);
 
-        $output->writeln('<info>GRUVER: Running cleanup for '.$config->get('[application][name]').'</info>');
+        $output->writeln('<info>GRUVER: Running cleanup for '.$config->getApplicationName().'</info>');
 
         try {
             $eventDispatcher->dispatchPreCleanup();

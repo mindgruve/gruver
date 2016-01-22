@@ -9,29 +9,58 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class GruverConfig
 {
     /**
+     * @var string
+     */
+    protected $pwd;
+
+    /**
      * @var array
      */
-    protected $config;
+    protected $gruverConfig;
 
-    protected $envVars;
+    /**
+     * @var array
+     */
+    protected $dockerCompose;
 
+    /**
+     * @param null|string $gruverYaml
+     * @throws \Exception
+     */
     public function __construct($gruverYaml = null)
     {
+        $this->pwd = $_SERVER['PWD'];
+
         if (!$gruverYaml) {
-            $gruverYaml = $_SERVER['PWD'].'/gruver.yml';
+            $gruverYaml = $this->pwd.'/gruver.yml';
         }
 
         if (!file_exists($gruverYaml)) {
             throw new \Exception('Gruver could not find a gruver.yml.');
         }
 
+        if (!file_exists($this->pwd.'/docker-compose.yml')) {
+            throw new \Exception('Gruver could not find a docker-compose.yml.');
+        }
+
         $processor = new Processor();
+        $this->dockerCompose = Yaml::parse($this->pwd.'/docker-compose.yml');
+        $this->gruverConfig = $processor->processConfiguration(
+            new GruverConfigSchema(),
+            array(
+                Yaml::parse(__DIR__.'/../Resources/config/gruver.yml'),
+                Yaml::parse($gruverYaml)
+            )
+        );
+    }
 
-        $current = Yaml::parse($gruverYaml);
-        $default = Yaml::parse(__DIR__.'/../Resources/config/gruver.yml');
+    public function getApplicationName()
+    {
+        return $this->get('[application][name]');
+    }
 
-        $this->config = $processor->processConfiguration(new GruverConfigSchema(), array($default,$current));
-        $this->envVars = new EnvironmentalVariables($this);
+    public function getExternalLinks()
+    {
     }
 
     /**
@@ -46,13 +75,13 @@ class GruverConfig
 
         switch ($key) {
             case '[application][directory]':
-                return $_SERVER['PWD'];
+                return $this->pwd;
             case '[binaries][docker_compose]':
-                return isset($this->config['binaries']['docker_compose']) ? $this->config['binaries']['docker_compose'] : 'docker-compose';
+                return isset($this->gruverConfig['binaries']['docker_compose']) ? $this->gruverConfig['binaries']['docker_compose'] : 'docker-compose';
             case '[binaries][docker]':
-                return isset($this->config['binaries']['docker']) ? $this->config['binaries']['docker'] : 'docker';
+                return isset($this->gruverConfig['binaries']['docker']) ? $this->gruverConfig['binaries']['docker'] : 'docker';
             default:
-                return $accessor->getValue($this->config, $key);
+                return $accessor->getValue($this->gruverConfig, $key);
         }
     }
 }

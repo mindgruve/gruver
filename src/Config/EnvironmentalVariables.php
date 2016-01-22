@@ -7,17 +7,22 @@ class EnvironmentalVariables
 
     protected $config;
 
+    protected $GVR_APPLICATION;
+
+    protected $GVR_RELEASE;
+
     public function __construct(GruverConfig $config)
     {
         $this->config = $config;
+        $this->GVR_APPLICATION = $this->config->getApplicationName();
+        $this->GVR_RELEASE = '1.0.0';
     }
 
     public function buildExport()
     {
-        $applicationName = escapeshellarg($this->config->get('[application][name]'));
-        $applicationDir = escapeshellarg($this->config->get('[application][directory]'));
+        $env = 'export GVR_APPLICATION='.$this->GVR_APPLICATION.';';
+        $env .= ' export GVR_RELEASE='.$this->GVR_RELEASE.';';
 
-        return 'export GRUVER_APPLICATION_NAME='.$applicationName;
+        return $env;
     }
-
 }

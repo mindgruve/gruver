@@ -46,7 +46,30 @@ class EventDispatcher
         }
     }
 
-    public function dispatchPreCleanup(){
+    public function dispatchPreRun()
+    {
+        $shellCommands = $this->config->get('[events][pre_run]');
+
+        foreach ($shellCommands as $shellCommand) {
+            if ($shellCommand) {
+                $this->runProcess($shellCommand);
+            }
+        }
+    }
+
+    public function dispatchPostRun()
+    {
+        $shellCommands = $this->config->get('[events][post_run]');
+
+        foreach ($shellCommands as $shellCommand) {
+            if ($shellCommand) {
+                $this->runProcess($shellCommand);
+            }
+        }
+    }
+
+    public function dispatchPreCleanup()
+    {
         $shellCommands = $this->config->get('[events][pre_cleanup]');
 
         foreach ($shellCommands as $shellCommand) {
@@ -56,7 +79,8 @@ class EventDispatcher
         }
     }
 
-    public function dispatchPostCleanup(){
+    public function dispatchPostCleanup()
+    {
         $shellCommands = $this->config->get('[events][post_cleanup]');
 
         foreach ($shellCommands as $shellCommand) {

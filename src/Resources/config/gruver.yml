@@ -18,6 +18,10 @@ events:
       - echo 'processing pre_build'
     post_build:
       - echo 'processing post_build'
+    pre_run:
+      - echo 'processing pre_run'
+    post_run:
+      - echo 'processing post_run'
     pre_promote: ~
     post_promote: ~
     pre_rollback: ~
