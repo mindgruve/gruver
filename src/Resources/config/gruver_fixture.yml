@@ -1,11 +1,11 @@
 application:
-    name: ~
-    email_notifications: []
+    name: 'mindgruve.com'
+    email_notifications: ['ksimpson@mindgruve.com']
 staging:
     allowed_ips: []
     url_pattern:  '%s-$d.staging1.mindgruve.com'
 production:
-    hosts: []
+    hosts: [ 'www.mindgruve.com', 'mindgruve.com' ]
 config:
     automatic_deployment: false
     docker_binary: '/usr/bin/docker'

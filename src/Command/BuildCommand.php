@@ -31,7 +31,7 @@ class BuildCommand extends Command
 
         try {
             $eventDispatcher->dispatchPreBuild();
-            $process = new Process($config->get('[binaries][docker_compose]').' build');
+            $process = new Process($config->get('[config][docker_compose_binary]').' build');
             $process->setTimeout(3600);
             $process->mustRun(
                 function ($type, $buffer) use ($output) {

@@ -28,9 +28,9 @@ class GruverConfig
         $processor = new Processor();
 
         $current = Yaml::parse($gruverYaml);
-        $defaults = Yaml::parse(__DIR__.'/../Resources/config/gruver.yml');
+        $default = Yaml::parse(__DIR__.'/../Resources/config/gruver.yml');
 
-        $this->config = $processor->processConfiguration(new GruverConfigSchema(), array($current, $defaults));
+        $this->config = $processor->processConfiguration(new GruverConfigSchema(), array($default,$current));
         $this->envVars = new EnvironmentalVariables($this);
     }
 
@@ -45,11 +45,11 @@ class GruverConfig
         $accessor = PropertyAccess::createPropertyAccessor();
 
         switch ($key) {
-            case '[application].[directory]':
+            case '[application][directory]':
                 return $_SERVER['PWD'];
-            case '[binaries].[docker_compose]':
+            case '[binaries][docker_compose]':
                 return isset($this->config['binaries']['docker_compose']) ? $this->config['binaries']['docker_compose'] : 'docker-compose';
-            case '[binaries].[docker]':
+            case '[binaries][docker]':
                 return isset($this->config['binaries']['docker']) ? $this->config['binaries']['docker'] : 'docker';
             default:
                 return $accessor->getValue($this->config, $key);

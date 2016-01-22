@@ -32,14 +32,14 @@ class CleanupCommand extends Command
         try {
             $eventDispatcher->dispatchPreCleanup();
 
-            if($config->get('[cleanup][remove_exited_containers]')){
-                $process = new Process($config->get('[binaries][docker]').' rm -v $(docker ps -a -q -f status=exited)');
+            if($config->get('[config][remove_exited_containers]')){
+                $process = new Process($config->get('[config][docker_binary]').' rm -v $(docker ps -a -q -f status=exited)');
                 $process->setTimeout(600);
                 $process->run();
             }
 
-            if($config->get('[cleanup][remove_orphan_images]')){
-                $process = new Process($config->get('[binaries][docker]').' rmi $(docker images -f "dangling=true" -q)');
+            if($config->get('[config][remove_orphan_images]')){
+                $process = new Process($config->get('[config][docker_binary]').' rmi $(docker images -f "dangling=true" -q)');
                 $process->setTimeout(3600);
                 $process->run();
             }
