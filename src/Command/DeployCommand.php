@@ -8,6 +8,8 @@ use Symfony\Component\Console\Input\InputArgument;
 class DeployCommand extends Command
 {
 
+    use GruverCommandTrait;
+
     const COMMAND = 'deploy';
     const DESCRIPTION = 'Deploy an application.';
 
@@ -17,5 +19,4 @@ class DeployCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION);
     }
-
 }

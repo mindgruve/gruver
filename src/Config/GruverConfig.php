@@ -24,12 +24,21 @@ class GruverConfig
     protected $dockerCompose;
 
     /**
+     * @var array
+     */
+    protected $envVar;
+
+    /**
      * @param null|string $gruverYaml
      * @throws \Exception
      */
-    public function __construct($gruverYaml = null)
+    public function __construct($gruverYaml = null, $dockerComposeYaml = null)
     {
         $this->pwd = $_SERVER['PWD'];
+
+        if (!$dockerComposeYaml) {
+            $dockerComposeYaml = $this->pwd.'/docker-compose.yml';
+        }
 
         if (!$gruverYaml) {
             $gruverYaml = $this->pwd.'/gruver.yml';
@@ -39,7 +48,7 @@ class GruverConfig
             throw new \Exception('Gruver could not find a gruver.yml.');
         }
 
-        if (!file_exists($this->pwd.'/docker-compose.yml')) {
+        if (!file_exists($dockerComposeYaml)) {
             throw new \Exception('Gruver could not find a docker-compose.yml.');
         }
 
@@ -61,6 +70,15 @@ class GruverConfig
 
     public function getExternalLinks()
     {
+    }
+
+    public function buildExport()
+    {
+        if (!$this->envVar) {
+            $this->envVar = new EnvironmentalVariables($this);
+        }
+
+        return $this->envVar->buildExport();
     }
 
     /**

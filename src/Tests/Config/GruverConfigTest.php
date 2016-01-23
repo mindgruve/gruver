@@ -24,8 +24,9 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidFixture()
     {
-        $testYaml = __DIR__.'/../../Resources/config/gruver_fixture.yml';
-        $sut = new GruverConfig($testYaml);
+        $gruverFixture = __DIR__.'/../Data/gruver-fixture.yml';
+        $composeFixture = __DIR__.'/../Data/docker-compose-fixture.yml';
+        $sut = new GruverConfig($gruverFixture, $composeFixture);
     }
 
     /**
@@ -33,8 +34,9 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testConfigGet()
     {
-        $testYaml = __DIR__.'/../../Resources/config/gruver_fixture.yml';
-        $sut = new GruverConfig($testYaml);
+        $gruverFixture = __DIR__.'/../Data/gruver-fixture.yml';
+        $composeFixture = __DIR__.'/../Data/docker-compose-fixture.yml';
+        $sut = new GruverConfig($gruverFixture, $composeFixture);
 
         $this->assertEquals($_SERVER['PWD'], $sut->get('[application][directory]'));
         $this->assertEquals('mindgruve.com', $sut->getApplicationName());

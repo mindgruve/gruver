@@ -10,7 +10,6 @@ config:
     automatic_deployment: false
     docker_binary: '/usr/bin/docker'
     docker_compose_binary: '/usr/local/bin/docker-compose'
-    haproxy_binary: ''
     health_checks: []
     remove_exited_containers: true
     remove_orphan_images: true

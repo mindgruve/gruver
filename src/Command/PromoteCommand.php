@@ -7,6 +7,8 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class PromoteCommand extends Command
 {
+    use GruverCommandTrait;
+
     const COMMAND = 'promote';
     const DESCRIPTION = 'Promote a container to accept live traffic.';
 

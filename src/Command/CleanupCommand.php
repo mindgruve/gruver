@@ -11,6 +11,8 @@ use Symfony\Component\Process\Process;
 
 class CleanupCommand extends Command
 {
+    use GruverCommandTrait;
+
     const COMMAND = 'cleanup';
     const DESCRIPTION = 'Remove unused containers.';
 
@@ -32,16 +34,14 @@ class CleanupCommand extends Command
         try {
             $eventDispatcher->dispatchPreCleanup();
 
-            if($config->get('[config][remove_exited_containers]')){
-                $process = new Process($config->get('[config][docker_binary]').' rm -v $(docker ps -a -q -f status=exited)');
-                $process->setTimeout(600);
-                $process->run();
+            if ($config->get('[config][remove_exited_containers]')) {
+                $cmd = $config->get('[config][docker_binary]').' rm -v $(docker ps -a -q -f status=exited)';
+                $this->runProcess($cmd, $config);
             }
 
-            if($config->get('[config][remove_orphan_images]')){
-                $process = new Process($config->get('[config][docker_binary]').' rmi $(docker images -f "dangling=true" -q)');
-                $process->setTimeout(3600);
-                $process->run();
+            if ($config->get('[config][remove_orphan_images]')) {
+                $cmd = $config->get('[config][docker_binary]').' rmi $(docker images -f "dangling=true" -q)';
+                $this->runProcess($cmd, $config);
             }
 
             $eventDispatcher->dispatchPostCleanup();
@@ -49,7 +49,5 @@ class CleanupCommand extends Command
             $output->write('<error>'.$e->getMessage().'</error>');
             exit;
         }
-
-
     }
 }

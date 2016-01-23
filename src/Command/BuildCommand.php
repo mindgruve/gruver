@@ -7,10 +7,11 @@ use Mindgruve\Gruver\EventDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
 class BuildCommand extends Command
 {
+
+    use GruverCommandTrait;
 
     const COMMAND = 'build';
     const DESCRIPTION = 'Build a docker container.';
@@ -31,13 +32,10 @@ class BuildCommand extends Command
 
         try {
             $eventDispatcher->dispatchPreBuild();
-            $process = new Process($config->get('[config][docker_compose_binary]').' build');
-            $process->setTimeout(3600);
-            $process->mustRun(
-                function ($type, $buffer) use ($output) {
-                    $output->write($buffer);
-                }
-            );
+
+            $cmd = $config->get('[config][docker_compose_binary]').' build';
+            $this->mustRunProcess($cmd, $config, 3600, $output);
+
             $eventDispatcher->dispatchPostBuild();
         } catch (\Exception $e) {
             $output->write('<error>'.$e->getMessage().'</error>');
