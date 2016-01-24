@@ -20,8 +20,8 @@ class EnvironmentalVariables
 
     public function buildExport()
     {
-        $env = 'export GVR_APPLICATION='.$this->GVR_APPLICATION.';';
-        $env .= ' export GVR_RELEASE='.$this->GVR_RELEASE.';';
+        $env = 'export GVR_APPLICATION=' . $this->GVR_APPLICATION . ';';
+        $env .= ' export GVR_RELEASE=' . $this->GVR_RELEASE . ';';
 
         return $env;
     }

@@ -37,11 +37,11 @@ class GruverConfig
         $this->pwd = $_SERVER['PWD'];
 
         if (!$dockerComposeYaml) {
-            $dockerComposeYaml = $this->pwd.'/docker-compose.yml';
+            $dockerComposeYaml = $this->pwd . '/docker-compose.yml';
         }
 
         if (!$gruverYaml) {
-            $gruverYaml = $this->pwd.'/gruver.yml';
+            $gruverYaml = $this->pwd . '/gruver.yml';
         }
 
         if (!file_exists($gruverYaml)) {
@@ -53,11 +53,11 @@ class GruverConfig
         }
 
         $processor = new Processor();
-        $this->dockerCompose = Yaml::parse($this->pwd.'/docker-compose.yml');
+        $this->dockerCompose = Yaml::parse($this->pwd . '/docker-compose.yml');
         $this->gruverConfig = $processor->processConfiguration(
             new GruverConfigSchema(),
             array(
-                Yaml::parse(__DIR__.'/../Resources/config/gruver.yml'),
+                Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml'),
                 Yaml::parse($gruverYaml)
             )
         );

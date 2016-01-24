@@ -14,7 +14,7 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructorFileDoesNotExists()
     {
-        $testYaml = __DIR__.'/../Temp/'.uniqid();
+        $testYaml = __DIR__ . '/../Temp/' . uniqid();
         $sut = new GruverConfig($testYaml);
 
     }
@@ -24,8 +24,8 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidFixture()
     {
-        $gruverFixture = __DIR__.'/../Data/gruver-fixture.yml';
-        $composeFixture = __DIR__.'/../Data/docker-compose-fixture.yml';
+        $gruverFixture = __DIR__ . '/../Data/gruver-fixture.yml';
+        $composeFixture = __DIR__ . '/../Data/docker-compose-fixture.yml';
         $sut = new GruverConfig($gruverFixture, $composeFixture);
     }
 
@@ -34,8 +34,8 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testConfigGet()
     {
-        $gruverFixture = __DIR__.'/../Data/gruver-fixture.yml';
-        $composeFixture = __DIR__.'/../Data/docker-compose-fixture.yml';
+        $gruverFixture = __DIR__ . '/../Data/gruver-fixture.yml';
+        $composeFixture = __DIR__ . '/../Data/docker-compose-fixture.yml';
         $sut = new GruverConfig($gruverFixture, $composeFixture);
 
         $this->assertEquals($_SERVER['PWD'], $sut->get('[application][directory]'));

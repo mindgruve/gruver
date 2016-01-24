@@ -28,17 +28,17 @@ class BuildCommand extends Command
         $config = new GruverConfig();
         $eventDispatcher = new EventDispatcher($config, $output);
 
-        $output->writeln('<info>GRUVER: Building container for '.$config->getApplicationName().'</info>');
+        $output->writeln('<info>GRUVER: Building container for ' . $config->getApplicationName() . '</info>');
 
         try {
             $eventDispatcher->dispatchPreBuild();
 
-            $cmd = $config->get('[config][docker_compose_binary]').' build';
+            $cmd = $config->get('[config][docker_compose_binary]') . ' build';
             $this->mustRunProcess($cmd, $config, 3600, $output);
 
             $eventDispatcher->dispatchPostBuild();
         } catch (\Exception $e) {
-            $output->write('<error>'.$e->getMessage().'</error>');
+            $output->write('<error>' . $e->getMessage() . '</error>');
             exit;
         }
     }

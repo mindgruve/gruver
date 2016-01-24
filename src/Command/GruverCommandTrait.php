@@ -11,7 +11,7 @@ trait GruverCommandTrait
 
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->buildExport().' '.$cmd;
+        $cmd = $config->buildExport() . ' ' . $cmd;
 
         $process = new Process($cmd);
         $process->setTimeout($timeout);
@@ -26,7 +26,7 @@ trait GruverCommandTrait
 
     protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->buildExport().' '.$cmd;
+        $cmd = $config->buildExport() . ' ' . $cmd;
 
         $process = new Process($cmd);
         $process->setTimeout($timeout);
