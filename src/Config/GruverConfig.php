@@ -44,13 +44,25 @@ class GruverConfig
             throw new \Exception('Gruver could not find a gruver.yml.');
         }
 
+        /**
+         * Load these configs, each one can potentially overwrite the configs before.
+         *      (1) Config packaged with Gruver
+         *      (2) The config loaded at /etc/gruver/gruver.yml
+         *      (3) The local config
+         */
+        $gruverConfigs[] = Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml');
+        if (file_exists('/etc/gruver/gruver.yml')) {
+            $gruverConfigs[] = Yaml::parse('/etc/gruver/gruver.yml');
+        }
+        $gruverConfigs[] = Yaml::parse($gruverYaml);
+
+        /**
+         * Process to validate schema
+         */
         $processor = new Processor();
         $this->gruverConfig = $processor->processConfiguration(
             new GruverConfigSchema(),
-            array(
-                Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml'),
-                Yaml::parse($gruverYaml)
-            )
+            $gruverConfigs
         );
     }
 
