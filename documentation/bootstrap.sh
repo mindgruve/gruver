@@ -28,4 +28,9 @@ curl -L https://github.com/docker/compose/releases/download/1.4.2/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
 # Install HAProxy
-apt-get install -y haproxy
+#apt-get install -y haproxy
+
+# Install Box - http://box-project.github.io/box2/
+curl -LSs https://box-project.github.io/box2/installer.php | php
+mv box.phar /usr/bin/box
+chmod +x /usr/bin/box

@@ -1,0 +1,15 @@
+{
+  "directories": [
+    "src"
+  ],
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": ["Tests"],
+      "in": "vendor"
+    }
+  ],
+  "output": "bin/gruver.phar",
+  "stub": true,
+  "main": "gruver"
+}
