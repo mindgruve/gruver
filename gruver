@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\ArgvInput;
  */
 
 $application = new Application();
+$application->add(new \Mindgruve\Gruver\Command\InstallCommand());
 $application->add(new \Mindgruve\Gruver\Command\BuildCommand());
 $application->add(new \Mindgruve\Gruver\Command\RunCommand());
 $application->add(new \Mindgruve\Gruver\Command\DeployCommand());
