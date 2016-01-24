@@ -8,7 +8,6 @@ use Mindgruve\Gruver\EventDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RunCommand extends Command
@@ -33,25 +32,19 @@ class RunCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $serviceName = $input->getArgument('service_name');
-
         $config = new GruverConfig();
         $eventDispatcher = new EventDispatcher($config, $output);
         $dockerCompose = new DockerCompose($config);
 
-        $output->writeln('<info>GRUVER: Running container for ' . $config->getApplicationName() . '</info>');
-
         try {
+            $output->writeln('<info>GRUVER: Running container for ' . $config->getApplicationName() . '</info>');
             $eventDispatcher->dispatchPreRun();
-
-            /**
-             * @todo Check that external links are running
-             */
-            $cmd = $dockerCompose->getRunCommand($serviceName);
-            $this->mustRunProcess($cmd, $config, 3600, $output);
+            $this->mustRunProcess($dockerCompose->getRunCommand($serviceName), $config, 3600, $output);
             $eventDispatcher->dispatchPostRun();
 
         } catch (\Exception $e) {
-            $output->write('<error>' . $e->getMessage() . '</error>');
+            $output->write('<error>Error encountered running docker-compose</error>');
+            $output->write($e->getMessage());
             exit;
         }
     }

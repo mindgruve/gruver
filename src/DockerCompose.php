@@ -22,6 +22,10 @@ class DockerCompose
      */
     protected $config;
 
+    /**
+     * @param GruverConfig $config
+     * @throws \Exception
+     */
     public function __construct(GruverConfig $config)
     {
         $this->config = $config;

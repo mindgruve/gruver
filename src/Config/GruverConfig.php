@@ -54,16 +54,18 @@ class GruverConfig
         );
     }
 
+    /**
+     * @return string
+     */
     public function getApplicationName()
     {
         return $this->get('[application][name]');
     }
 
-    public function getExternalLinks()
-    {
-    }
-
-    public function buildExport()
+    /**
+     * @return string
+     */
+    public function getEnvironmentalVariableExport()
     {
         if (!$this->envVar) {
             $this->envVar = new EnvironmentalVariables($this);
