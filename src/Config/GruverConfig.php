@@ -36,10 +36,6 @@ class GruverConfig
     {
         $this->pwd = $_SERVER['PWD'];
 
-        if (!$dockerComposeYaml) {
-            $dockerComposeYaml = $this->pwd . '/docker-compose.yml';
-        }
-
         if (!$gruverYaml) {
             $gruverYaml = $this->pwd . '/gruver.yml';
         }
@@ -48,12 +44,7 @@ class GruverConfig
             throw new \Exception('Gruver could not find a gruver.yml.');
         }
 
-        if (!file_exists($dockerComposeYaml)) {
-            throw new \Exception('Gruver could not find a docker-compose.yml.');
-        }
-
         $processor = new Processor();
-        $this->dockerCompose = Yaml::parse($this->pwd . '/docker-compose.yml');
         $this->gruverConfig = $processor->processConfiguration(
             new GruverConfigSchema(),
             array(

@@ -2,11 +2,13 @@
 
 namespace Mindgruve\Gruver\Command;
 
+use Mindgruve\Gruver\DockerCompose;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\EventDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RunCommand extends Command
@@ -30,9 +32,11 @@ class RunCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $serviceName = $input->getArgument('service_name');
+
         $config = new GruverConfig();
         $eventDispatcher = new EventDispatcher($config, $output);
-        $serviceName = $input->getArgument('service_name');
+        $dockerCompose = new DockerCompose($config);
 
         $output->writeln('<info>GRUVER: Running container for ' . $config->getApplicationName() . '</info>');
 
@@ -42,13 +46,7 @@ class RunCommand extends Command
             /**
              * @todo Check that external links are running
              */
-
-            /**
-             * @todo take the application name from the command argument instead
-             */
-
-            $cmd = $config->get('[config][docker_compose_binary]') . ' run -d ' . $serviceName;
-
+            $cmd = $dockerCompose->getRunCommand($serviceName);
             $this->mustRunProcess($cmd, $config, 3600, $output);
             $eventDispatcher->dispatchPostRun();
 
