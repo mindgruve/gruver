@@ -68,25 +68,13 @@ class InstallCommand extends Command
          */
         $process = new Process('mkdir -p /etc/gruver');
         $process->run();
-        if(!file_exists('/etc/gruver/gruver.yml')){
-            copy(__DIR__.'/../Resources/config/gruver.yml', '/etc/gruver/gruver.yml');
+        if (!file_exists('/etc/gruver/gruver.yml')) {
+            copy(__DIR__ . '/../Resources/config/gruver.yml', '/etc/gruver/gruver.yml');
         }
-        if(file_exists('/etc/gruver/gruver.yml')){
+        if (file_exists('/etc/gruver/gruver.yml')) {
             $output->writeln('<info>(✓) Able to write to /etc/gruver</info>');
         } else {
             $output->writeln('<error>(x) Unable to write to /etc/gruver</error>');
-        }
-
-        /**
-         * Log Directory /var/log/gruver
-         */
-        $process = new Process('mkdir -p /var/log/gruver');
-        $process->run();
-        touch('/var/log/gruver/error.log');
-        if(file_exists('/var/log/gruver/error.log')){
-            $output->writeln('<info>(✓) Able to write to /var/log/gruver/error.log</info>');
-        } else {
-            $output->writeln('<error>(x) Unable to write to /var/log/gruver/error.log</error>');
         }
     }
 }

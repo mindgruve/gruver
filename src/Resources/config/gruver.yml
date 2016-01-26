@@ -12,6 +12,15 @@ config:
     docker_compose_binary: '/usr/local/bin/docker-compose'
     docker_compose_files: []
     health_checks: []
+    log_adapters:
+        deployment:
+            type: stream
+            path: /var/log/gruver/deployment.log
+            level: info
+        error:
+            type: stream
+            path: /var/log/gruver/error.log
+            level: error
     remove_exited_containers: true
     remove_orphan_images: true
 events:
