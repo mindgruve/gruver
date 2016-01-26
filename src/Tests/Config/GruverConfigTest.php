@@ -10,17 +10,6 @@ class ConfigLoaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @group config
-     * @expectedException \Exception
-     */
-    public function testConstructorFileDoesNotExists()
-    {
-        $testYaml = __DIR__ . '/../Temp/' . uniqid();
-        $sut = new GruverConfig($testYaml);
-
-    }
-
-    /**
-     * @group config
      */
     public function testValidFixture()
     {

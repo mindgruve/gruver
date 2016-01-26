@@ -4,6 +4,7 @@ namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\EventDispatcher;
+use Mindgruve\Gruver\Process\DockerProcess;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,6 +29,7 @@ class CleanupCommand extends Command
 
         $config = new GruverConfig();
         $eventDispatcher = new EventDispatcher($config, $output);
+        $docker = new DockerProcess($config);
 
         $output->writeln('<info>GRUVER: Running cleanup for ' . $config->getApplicationName() . '</info>');
 
@@ -35,13 +37,11 @@ class CleanupCommand extends Command
             $eventDispatcher->dispatchPreCleanup();
 
             if ($config->get('[config][remove_exited_containers]')) {
-                $cmd = $config->get('[config][docker_binary]') . ' rm -v $(docker ps -a -q -f status=exited)';
-                $this->runProcess($cmd, $config);
+                $this->runProcess($docker->getRemoveExitedContainersCommand(), $config);
             }
 
             if ($config->get('[config][remove_orphan_images]')) {
-                $cmd = $config->get('[config][docker_binary]') . ' rmi $(docker images -f "dangling=true" -q)';
-                $this->runProcess($cmd, $config);
+                $this->runProcess($docker->getRemoveOrphanImagesCommand(), $config);
             }
 
             $eventDispatcher->dispatchPostCleanup();

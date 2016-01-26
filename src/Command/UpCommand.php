@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\DockerCompose;
+use Mindgruve\Gruver\Process\DockerComposeProcess;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\EventDispatcher;
 use Symfony\Component\Console\Command\Command;
@@ -10,11 +10,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RunCommand extends Command
+class UpCommand extends Command
 {
     use GruverCommandTrait;
 
-    const COMMAND = 'run';
+    const COMMAND = 'up';
     const DESCRIPTION = 'Run a docker container.';
 
     public function configure()
@@ -24,7 +24,7 @@ class RunCommand extends Command
             ->setDescription(self::DESCRIPTION)
             ->addArgument(
                 'service_name',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'What service do you want to run?'
             );
     }
@@ -34,12 +34,12 @@ class RunCommand extends Command
         $serviceName = $input->getArgument('service_name');
         $config = new GruverConfig();
         $eventDispatcher = new EventDispatcher($config, $output);
-        $dockerCompose = new DockerCompose($config);
+        $dockerCompose = new DockerComposeProcess($config);
 
         try {
             $output->writeln('<info>GRUVER: Running container for ' . $config->getApplicationName() . '</info>');
             $eventDispatcher->dispatchPreRun();
-            $this->mustRunProcess($dockerCompose->getRunCommand($serviceName), $config, 3600, $output);
+            $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
             $eventDispatcher->dispatchPostRun();
 
         } catch (\Exception $e) {

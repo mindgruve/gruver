@@ -1,10 +1,11 @@
 <?php
 
-namespace Mindgruve\Gruver;
+namespace Mindgruve\Gruver\Process;
 
 use Mindgruve\Gruver\Config\GruverConfig;
+use Symfony\Component\Process\Process;
 
-class DockerCompose
+class DockerComposeProcess
 {
 
     /**
@@ -50,6 +51,37 @@ class DockerCompose
         $this->files = $files;
     }
 
+    public function binaryExists()
+    {
+        $process = new Process('which ' . $this->config->get('[config][docker_compose_binary]'));
+        $process->run();
+        if ($process->getOutput()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getVersion()
+    {
+        $process = new Process($this->config->get('[config][docker_compose_binary]') . ' --version');
+        $process->run();
+        $version = preg_match('/version ([0-9]).([0-9]).([0-9])/', trim($process->getOutput()), $matches);
+        if ($version) {
+            $dockerMajorVersion = $matches[1];
+            $dockerMinorVersion = $matches[2];
+            $dockerPatch = $matches[3];
+
+            return array(
+                'major' => $dockerMajorVersion,
+                'minor' => $dockerMinorVersion,
+                'patch' => $dockerPatch,
+            );
+        }
+
+        return null;
+    }
+
     /**
      * @return string
      */
@@ -71,7 +103,7 @@ class DockerCompose
      * @param bool $detached
      * @return string
      */
-    public function getRunCommand($serviceName, $detached = true)
+    public function getUpCommand($serviceName, $detached = true)
     {
         $cmd = $this->config->get('[config][docker_compose_binary]');
 
@@ -79,13 +111,15 @@ class DockerCompose
             $cmd .= ' -f ' . $file;
         }
 
-        $cmd .= ' run';
+        $cmd .= ' up';
 
         if ($detached) {
             $cmd = $cmd . ' -d';
         }
 
-        $cmd = $cmd . ' ' . $serviceName;
+        if ($serviceName) {
+            $cmd = $cmd . ' ' . $serviceName;
+        }
 
         return $cmd;
     }

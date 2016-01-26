@@ -35,14 +35,7 @@ class GruverConfig
     public function __construct($gruverYaml = null, $dockerComposeYaml = null)
     {
         $this->pwd = $_SERVER['PWD'];
-
-        if (!$gruverYaml) {
-            $gruverYaml = $this->pwd . '/gruver.yml';
-        }
-
-        if (!file_exists($gruverYaml)) {
-            throw new \Exception('Gruver could not find a gruver.yml.');
-        }
+        $gruverYaml = $gruverYaml ? $gruverYaml : $this->pwd . '/gruver.yml';
 
         /**
          * Load these configs, each one can potentially overwrite the configs before.
@@ -54,7 +47,9 @@ class GruverConfig
         if (file_exists('/etc/gruver/gruver.yml')) {
             $gruverConfigs[] = Yaml::parse('/etc/gruver/gruver.yml');
         }
-        $gruverConfigs[] = Yaml::parse($gruverYaml);
+        if (file_exists($gruverYaml)) {
+            $gruverConfigs[] = Yaml::parse($gruverYaml);
+        }
 
         /**
          * Process to validate schema
