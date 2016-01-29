@@ -2,13 +2,11 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
 class RollbackCommand extends Command
 {
-    use GruverCommandTrait;
-
     const COMMAND = 'rollback';
     const DESCRIPTION = 'Rollback a deployment and use previous container.';
 

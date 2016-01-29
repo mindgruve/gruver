@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
 class StatusCommand extends Command

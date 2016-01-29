@@ -12,7 +12,8 @@
     "symfony/config": "~2.8",
     "symfony/process": "~2.8",
     "symfony/property-access": "~2.8",
-    "monolog/monolog": "^1.17"
+    "monolog/monolog": "^1.17",
+    "pimple/pimple": "^3.0"
   },
   "require-dev": {
     "mockery/mockery": "~0.9",

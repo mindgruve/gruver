@@ -5,16 +5,13 @@ namespace Mindgruve\Gruver\Command;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\Process\DockerComposeProcess;
 use Mindgruve\Gruver\EventDispatcher;
-use Symfony\Component\Console\Command\Command;
+use Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class BuildCommand extends Command
 {
-
-    use GruverCommandTrait;
-
     const COMMAND = 'build';
     const DESCRIPTION = 'Build a docker container.';
 

@@ -3,7 +3,7 @@
 
 require(__DIR__ . '/vendor/autoload.php');
 
-use Symfony\Component\Console\Application;
+use Mindgruve\Gruver\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 
 /**

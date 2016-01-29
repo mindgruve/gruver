@@ -5,15 +5,13 @@ namespace Mindgruve\Gruver\Command;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\EventDispatcher;
 use Mindgruve\Gruver\Process\DockerProcess;
-use Symfony\Component\Console\Command\Command;
+use Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 class CleanupCommand extends Command
 {
-    use GruverCommandTrait;
-
     const COMMAND = 'cleanup';
     const DESCRIPTION = 'Remove unused containers.';
 

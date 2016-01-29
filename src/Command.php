@@ -1,14 +1,14 @@
 <?php
 
-namespace Mindgruve\Gruver\Command;
+namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\GruverConfig;
+use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
-trait GruverCommandTrait
+class Command extends BaseCommand
 {
-
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
         $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;
