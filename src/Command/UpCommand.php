@@ -30,20 +30,20 @@ class UpCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $serviceName = $input->getArgument('service_name');
-        $config = new GruverConfig();
-        $eventDispatcher = new EventDispatcher($config, $output);
-        $dockerCompose = new DockerComposeProcess($config);
+        $config = $this->container['config'];
+        $eventDispatcher = $this->container['dispatcher'];
+        $dockerCompose = $this->container['docker_compose'];
+        $logger = $this->container['logger'];
 
         try {
-            $output->writeln('<info>GRUVER: Running container for ' . $config->getApplicationName() . '</info>');
+            $logger->addInfo('Running container for ' . $config->getApplicationName());
             $eventDispatcher->dispatchPreRun();
             $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
             $eventDispatcher->dispatchPostRun();
 
         } catch (\Exception $e) {
-            $output->write('<error>Error encountered running docker-compose</error>');
-            $output->write($e->getMessage());
-            exit;
+            $logger->addError('Error encountered running docker-compose');
+            $logger->addError($e->getMessage());
         }
     }
 }

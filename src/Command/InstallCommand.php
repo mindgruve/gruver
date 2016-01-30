@@ -25,13 +25,14 @@ class InstallCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = new GruverConfig();
+        $docker = $this->container['docker'];
+        $dockerCompose = $this->container['docker'];
+
         $output->writeln('Checking gruver dependencies... ');
 
         /**
          * Docker
          */
-        $docker = new DockerProcess($config);
         if ($docker->binaryExists()) {
             $output->writeln('<info>(✓) Docker installed</info>');
         } else {
@@ -49,7 +50,6 @@ class InstallCommand extends Command
         /**
          * Docker Compose
          */
-        $dockerCompose = new DockerComposeProcess($config);
         if ($dockerCompose->binaryExists()) {
             $output->writeln('<info>(✓) Docker-Compose installed</info>');
         } else {

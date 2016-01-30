@@ -3,7 +3,9 @@
 namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\GruverConfig;
+use Mindgruve\Gruver\Factory\LoggerFactory;
 use Mindgruve\Gruver\Process\DockerComposeProcess;
+use Mindgruve\Gruver\Process\DockerProcess;
 use Pimple\Container;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,13 +30,18 @@ class Command extends BaseCommand
         $container['dispatcher'] = function ($c) use ($output) {
             return new EventDispatcher($c['config'], $output);
         };
-        $container['logger'] = function ($c) {
-            return new LogHandler($c['config']);
-        };
         $container['docker_compose'] = function ($c) {
             return new DockerComposeProcess($c['config']);
         };
-
+        $container['docker'] = function ($c) {
+            return new DockerProcess($c['config']);
+        };
+        $container['logger.factory'] = function ($c) {
+            return new LoggerFactory($c['config']);
+        };
+        $container['logger'] = function ($c) {
+            return $c['logger.factory']->getLogger();
+        };
 
         $this->container = $container;
 

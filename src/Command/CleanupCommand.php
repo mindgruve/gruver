@@ -24,13 +24,12 @@ class CleanupCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $config = $this->container['config'];
+        $eventDispatcher = $this->container['dispatcher'];
+        $docker = $this->container['docker'];
+        $logger = $this->container['logger'];
 
-        $config = new GruverConfig();
-        $eventDispatcher = new EventDispatcher($config, $output);
-        $docker = new DockerProcess($config);
-
-        $output->writeln('<info>GRUVER: Running cleanup for ' . $config->getApplicationName() . '</info>');
-
+        $logger->addInfo('Running cleanup for ' . $config->getApplicationName());
         try {
             $eventDispatcher->dispatchPreCleanup();
 
@@ -44,8 +43,7 @@ class CleanupCommand extends Command
 
             $eventDispatcher->dispatchPostCleanup();
         } catch (\Exception $e) {
-            $output->write('<error>' . $e->getMessage() . '</error>');
-            exit;
+            $logger->addError($e->getMessage());
         }
     }
 }

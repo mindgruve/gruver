@@ -32,15 +32,16 @@ class BuildCommand extends Command
         $config = $this->container['config'];
         $eventDispatcher = $this->container['dispatcher'];
         $dockerCompose = $this->container['docker_compose'];
+        $logger = $this->container['logger'];
 
         try {
-            $output->writeln('<info>GRUVER: Building container for ' . $config->getApplicationName() . '</info>');
+            $logger->addInfo('Building container for ' . $config->getApplicationName());
             $eventDispatcher->dispatchPreBuild();
             $this->mustRunProcess($dockerCompose->getBuildCommand(), $config, 3600, $output);
             $eventDispatcher->dispatchPostBuild();
         } catch (\Exception $e) {
-            $output->write('<error>Error encountered running docker-compose</error>');
-            $output->write($e->getMessage());
+            $logger->addError('Error encountered running docker-compose');
+            $logger->addError($e->getMessage());
         }
     }
 }
