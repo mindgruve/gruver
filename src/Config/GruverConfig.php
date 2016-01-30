@@ -32,7 +32,7 @@ class GruverConfig
      * @param null|string $gruverYaml
      * @throws \Exception
      */
-    public function __construct($gruverYaml = null, $dockerComposeYaml = null)
+    public function __construct($gruverYaml = null)
     {
         $this->pwd = $_SERVER['PWD'];
         $gruverYaml = $gruverYaml ? $gruverYaml : $this->pwd . '/gruver.yml';

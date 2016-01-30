@@ -3,12 +3,45 @@
 namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\GruverConfig;
+use Mindgruve\Gruver\Process\DockerComposeProcess;
+use Pimple\Container;
 use Symfony\Component\Console\Command\Command as BaseCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 class Command extends BaseCommand
 {
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $gruverYaml = $input->hasOption('gruver_file') ? $input->getOption('gruver_file') : null;
+
+        $container = new Container();
+        $container['config'] = function ($c) use ($gruverYaml) {
+            return new GruverConfig($gruverYaml);
+        };
+        $container['dispatcher'] = function ($c) use ($output) {
+            return new EventDispatcher($c['config'], $output);
+        };
+        $container['logger'] = function ($c) {
+            return new LogHandler($c['config']);
+        };
+        $container['docker_compose'] = function ($c) {
+            return new DockerComposeProcess($c['config']);
+        };
+
+
+        $this->container = $container;
+
+        parent::initialize($input, $output);
+    }
+
+
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
         $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;

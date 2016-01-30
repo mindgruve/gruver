@@ -3,23 +3,26 @@
 namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\GruverConfig;
-use Pimple\Container;
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-    protected $eventDispatcher;
-
-    protected $gruverConfig;
-
-    protected $logHandler;
-
-    protected $container;
-
-    protected function init($output, $gruverYaml = null, $dockerComposeYaml = null)
+    protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
     {
-        $this->container = new Container();
-        $this->gruverConfig = new GruverConfig($gruverYaml, $dockerComposeYaml);
-        $this->eventDispatcher = new EventDispatcher($this->gruverConfig, $output);
+        $definition = $command->getDefinition();
+        $definition->addOption(
+            new InputOption(
+                'gruver_file',
+                'g',
+                InputOption::VALUE_OPTIONAL,
+                'Location of gruver.yml file'
+            )
+        );
+
+        return parent::doRunCommand($command, $input, $output);
     }
 }

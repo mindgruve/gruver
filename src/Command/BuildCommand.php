@@ -29,9 +29,9 @@ class BuildCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = new GruverConfig();
-        $eventDispatcher = new EventDispatcher($config, $output);
-        $dockerCompose = new DockerComposeProcess($config);
+        $config = $this->container['config'];
+        $eventDispatcher = $this->container['dispatcher'];
+        $dockerCompose = $this->container['docker_compose'];
 
         try {
             $output->writeln('<info>GRUVER: Building container for ' . $config->getApplicationName() . '</info>');
