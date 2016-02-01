@@ -11,6 +11,7 @@ config:
     docker_binary: '/usr/bin/docker'
     docker_compose_binary: '/usr/local/bin/docker-compose'
     docker_compose_files: []
+    date_format: 'Ymd'
     health_checks: []
     logging:
         default_directory: '/var/log/gruver'

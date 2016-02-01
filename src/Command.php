@@ -4,6 +4,7 @@ namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\Factory\LoggerFactory;
+use Mindgruve\Gruver\Factory\UrlFactory;
 use Mindgruve\Gruver\Process\DockerComposeProcess;
 use Mindgruve\Gruver\Process\DockerProcess;
 use Pimple\Container;
@@ -41,6 +42,10 @@ class Command extends BaseCommand
         };
         $container['logger'] = function ($c) {
             return $c['logger.factory']->getLogger();
+        };
+
+        $container['url.factory'] = function ($c) {
+            return new UrlFactory($c['config']);
         };
 
         $this->container = $container;
