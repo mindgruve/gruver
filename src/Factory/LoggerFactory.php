@@ -2,12 +2,14 @@
 
 namespace Mindgruve\Gruver\Factory;
 
+use Mindgruve\Gruver\Handler\ConsoleOutputHandler;
 use Monolog\ErrorHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
 use Mindgruve\Gruver\Config\GruverConfig;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class LoggerFactory
 {
@@ -21,9 +23,15 @@ class LoggerFactory
      */
     protected $defaultLogDirectory;
 
-    public function __construct(GruverConfig $config)
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
+
+    public function __construct(GruverConfig $config, OutputInterface $output)
     {
         $this->defaultLogDirectory = $config->get('[config][default_log_directory]');
+        $this->output = $output;
 
         $adapterConfigs = $config->get('[config][logging][adapters]');
         $logger = new Logger('default');
@@ -31,6 +39,7 @@ class LoggerFactory
         foreach ($adapterConfigs as $adapterConfig) {
             $this->addAdapter($logger, $adapterConfig, $this->defaultLogDirectory . '/default.log');
         }
+        $logger->pushHandler(new ConsoleOutputHandler($this->output));
 
         $this->logger = $logger;
     }
@@ -52,7 +61,6 @@ class LoggerFactory
         } else {
             throw new \Exception('Unknown log handler type - ' . $type);
         }
-
         return $logger;
     }
 

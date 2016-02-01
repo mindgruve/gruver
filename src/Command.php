@@ -36,8 +36,8 @@ class Command extends BaseCommand
         $container['docker'] = function ($c) {
             return new DockerProcess($c['config']);
         };
-        $container['logger.factory'] = function ($c) {
-            return new LoggerFactory($c['config']);
+        $container['logger.factory'] = function ($c) use ($output) {
+            return new LoggerFactory($c['config'], $output);
         };
         $container['logger'] = function ($c) {
             return $c['logger.factory']->getLogger();
