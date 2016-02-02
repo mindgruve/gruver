@@ -8,8 +8,9 @@ production:
     hosts: []
 config:
     automatic_deployment: false
-    docker_binary: '/usr/bin/docker'
-    docker_compose_binary: '/usr/local/bin/docker-compose'
+    docker_binary: 'docker'
+    docker_compose_binary: 'docker-compose'
+    sqlite3_binary: 'sqlite3'
     docker_compose_files: []
     date_format: 'Ymd'
     health_checks: []

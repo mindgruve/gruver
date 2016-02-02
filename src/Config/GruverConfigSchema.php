@@ -46,6 +46,7 @@ class GruverConfigSchema implements ConfigurationInterface
                         ->scalarNode('automatic_deployment')->end()
                         ->scalarNode('docker_binary')->end()
                         ->scalarNode('docker_compose_binary')->end()
+                        ->scalarNode('sqlite3_binary')->end()
                         ->scalarNode('date_format')->end()
                         ->arrayNode('docker_compose_files')
                             ->prototype('scalar')->end()

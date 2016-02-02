@@ -26,12 +26,36 @@ class InstallCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $docker = $this->container['docker'];
-        $dockerCompose = $this->container['docker'];
+        $dockerCompose = $this->container['docker_compose'];
+        $sqlite3 = $this->container['sqlite3'];
 
         $output->writeln('Checking gruver dependencies... ');
 
         /**
+         * SQLite3
+         * @todo confirm minium version of SQLite
+         */
+        if ($sqlite3->binaryExists()) {
+            $output->writeln('<info>(✓) SQLite3 installed on server</info>');
+        } else {
+            $output->writeln('<error>(x) SQLite3 not installed on server</error>');
+        }
+
+        if (extension_loaded('sqlite3')) {
+            $output->writeln('<info>(✓) SQLite extension for PHP loaded</info>');
+        } else {
+            $output->writeln('<error>(x) SQLite extension for PHP not loaded</error>');
+        }
+        $version = $sqlite3->getVersion();
+        if ((float)($version['major'] . '.' . $version['minor']) < 3.0) {
+            $output->writeln('<error>(x) SQLite version < 3.0</error>');
+        } else {
+            $output->writeln('<info>(✓) SQLite version >= 3.0</info>');
+        }
+
+        /**
          * Docker
+         * @todo confirm minimum version of SQLite
          */
         if ($docker->binaryExists()) {
             $output->writeln('<info>(✓) Docker installed</info>');
@@ -49,6 +73,7 @@ class InstallCommand extends Command
 
         /**
          * Docker Compose
+         * @todo confirm minimum version of Docker-Compose
          */
         if ($dockerCompose->binaryExists()) {
             $output->writeln('<info>(✓) Docker-Compose installed</info>');
