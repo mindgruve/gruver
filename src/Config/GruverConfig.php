@@ -43,6 +43,7 @@ class GruverConfig
          *      (2) The config loaded at /etc/gruver/gruver.yml
          *      (3) The local config ${PWD}/gruver.yml
          */
+        $gruverConfigs = array();
         $gruverConfigs[] = Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml');
         if (file_exists('/etc/gruver/gruver.yml')) {
             $gruverConfigs[] = Yaml::parse('/etc/gruver/gruver.yml');

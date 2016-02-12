@@ -27,7 +27,7 @@ class Command extends BaseCommand
         $gruverYaml = $input->hasOption('gruver_file') ? $input->getOption('gruver_file') : null;
 
         $container = new Container();
-        $container['config'] = function ($c) use ($gruverYaml) {
+        $container['config'] = function() use ($gruverYaml) {
             return new GruverConfig($gruverYaml);
         };
         $container['dispatcher'] = function ($c) use ($output) {
