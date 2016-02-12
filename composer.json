@@ -13,7 +13,9 @@
     "symfony/process": "~2.8",
     "symfony/property-access": "~2.8",
     "monolog/monolog": "^1.17",
-    "pimple/pimple": "^3.0"
+    "pimple/pimple": "^3.0",
+    "doctrine/dbal": "^2.5",
+    "doctrine/orm": "^2.5"
   },
   "require-dev": {
     "mockery/mockery": "~0.9",

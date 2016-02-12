@@ -34,3 +34,7 @@ chmod +x /usr/local/bin/docker-compose
 curl -LSs https://box-project.github.io/box2/installer.php | php
 mv box.phar /usr/bin/box
 chmod +x /usr/bin/box
+
+# Install SQLite3
+apt-get install -y sqlite3
+apt-get install php5-sqlite

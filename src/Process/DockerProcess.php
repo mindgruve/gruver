@@ -25,7 +25,7 @@ class DockerProcess
      */
     public function binaryExists()
     {
-        $process = new Process('which ' . $this->config->get('[config][docker_binary]'));
+        $process = new Process('which ' . $this->config->get('[binaries][docker_binary]'));
         $process->run();
         if ($process->getOutput()) {
             return true;
@@ -39,7 +39,7 @@ class DockerProcess
      */
     public function getRemoveExitedContainersCommand()
     {
-        return $this->config->get('[config][docker_binary]') . ' rm -v $(docker ps -a -q -f status=exited)';
+        return $this->config->get('[binaries][docker_binary]') . ' rm -v $(docker ps -a -q -f status=exited)';
     }
 
     /**
@@ -47,7 +47,7 @@ class DockerProcess
      */
     public function getRemoveOrphanImagesCommand()
     {
-        return $this->config->get('[config][docker_binary]') . ' rmi $(docker images -f "dangling=true" -q)';
+        return $this->config->get('[binaries][docker_binary]') . ' rmi $(docker images -f "dangling=true" -q)';
     }
 
     /**
@@ -55,7 +55,7 @@ class DockerProcess
      */
     public function getVersion()
     {
-        $process = new Process($this->config->get('[config][docker_binary]') . ' --version');
+        $process = new Process($this->config->get('[binaries][docker_binary]') . ' --version');
         $process->run();
         $version = preg_match('/version ([0-9]).([0-9]).([0-9])/', trim($process->getOutput()), $matches);
         if ($version) {

@@ -6,11 +6,17 @@ staging:
     url_pattern:  '%s-$d.staging1.mindgruve.com'
 production:
     hosts: []
-config:
-    automatic_deployment: false
+binaries:
     docker_binary: 'docker'
     docker_compose_binary: 'docker-compose'
     sqlite3_binary: 'sqlite3'
+database:
+    driver: 'pdo_sqlite'
+    user: ~
+    password: ~
+    path: '/var/lib/gruver.db'
+config:
+    automatic_deployment: false
     docker_compose_files: []
     date_format: 'Ymd'
     health_checks: []

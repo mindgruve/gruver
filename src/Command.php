@@ -3,6 +3,7 @@
 namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\GruverConfig;
+use Mindgruve\Gruver\Factory\EntityManagerFactory;
 use Mindgruve\Gruver\Factory\LoggerFactory;
 use Mindgruve\Gruver\Factory\UrlFactory;
 use Mindgruve\Gruver\Process\DockerComposeProcess;
@@ -47,9 +48,12 @@ class Command extends BaseCommand
         $container['logger'] = function ($c) {
             return $c['logger.factory']->getLogger();
         };
-
         $container['url.factory'] = function ($c) {
             return new UrlFactory($c['config']);
+        };
+        $container['entity.manager'] = function($c){
+            $factory = new EntityManagerFactory($c['config']);
+            return $factory->getEntityManager();
         };
 
         $this->container = $container;

@@ -5,12 +5,32 @@ staging:
     allowed_ips: []
     url_pattern:  '%s-$d.staging1.mindgruve.com'
 production:
-    hosts: [ 'www.mindgruve.com', 'mindgruve.com' ]
+    hosts: ['mindgruve.com']
+binaries:
+    docker_binary: 'docker'
+    docker_compose_binary: 'docker-compose'
+    sqlite3_binary: 'sqlite3'
+database:
+    driver: 'pdo_sqlite'
+    user: ~
+    password: ~
+    path: '/var/lib/gruver.db'
 config:
     automatic_deployment: false
-    docker_binary: '/usr/bin/docker'
-    docker_compose_binary: '/usr/local/bin/docker-compose'
+    docker_compose_files: []
+    date_format: 'Ymd'
     health_checks: []
+    logging:
+        default_directory: '/var/log/gruver'
+        adapters:
+            deployment:
+                type: 'stream'
+                path: '/var/log/gruver/deployment.log'
+                level: 'info'
+            error:
+                type: 'stream'
+                path: '/var/log/gruver/deployment.log'
+                level: 'error'
     remove_exited_containers: true
     remove_orphan_images: true
 events:

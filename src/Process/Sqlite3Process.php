@@ -26,7 +26,7 @@ class Sqlite3Process
      */
     public function binaryExists()
     {
-        $process = new Process('which ' . $this->config->get('[config][sqlite3_binary]'));
+        $process = new Process('which ' . $this->config->get('[binaries][sqlite3_binary]'));
         $process->run();
         if ($process->getOutput()) {
             return true;
@@ -40,7 +40,7 @@ class Sqlite3Process
      */
     public function getVersion()
     {
-        $process = new Process($this->config->get('[config][sqlite3_binary]') . ' --version');
+        $process = new Process($this->config->get('[binaries][sqlite3_binary]') . ' --version');
         $process->run();
         $version = preg_match('/([0-9]).([0-9]).([0-9])/', trim($process->getOutput()), $matches);
         if ($version) {

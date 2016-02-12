@@ -53,7 +53,7 @@ class DockerComposeProcess
 
     public function binaryExists()
     {
-        $process = new Process('which ' . $this->config->get('[config][docker_compose_binary]'));
+        $process = new Process('which ' . $this->config->get('[binaries][docker_compose_binary]'));
         $process->run();
         if ($process->getOutput()) {
             return true;
@@ -64,7 +64,7 @@ class DockerComposeProcess
 
     public function getVersion()
     {
-        $process = new Process($this->config->get('[config][docker_compose_binary]') . ' --version');
+        $process = new Process($this->config->get('[binaries][docker_compose_binary]') . ' --version');
         $process->run();
         $version = preg_match('/version ([0-9]).([0-9]).([0-9])/', trim($process->getOutput()), $matches);
         if ($version) {
@@ -87,7 +87,7 @@ class DockerComposeProcess
      */
     public function getBuildCommand()
     {
-        $cmd = $this->config->get('[config][docker_compose_binary]');
+        $cmd = $this->config->get('[binaries][docker_compose_binary]');
 
         foreach ($this->files as $file) {
             $cmd .= ' -f ' . $file;
@@ -105,7 +105,7 @@ class DockerComposeProcess
      */
     public function getUpCommand($serviceName, $detached = true)
     {
-        $cmd = $this->config->get('[config][docker_compose_binary]');
+        $cmd = $this->config->get('[binaries][docker_compose_binary]');
 
         foreach ($this->files as $file) {
             $cmd .= ' -f ' . $file;
