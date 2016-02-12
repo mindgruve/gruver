@@ -27,7 +27,7 @@ class Command extends BaseCommand
         $gruverYaml = $input->hasOption('gruver_file') ? $input->getOption('gruver_file') : null;
 
         $container = new Container();
-        $container['config'] = function() use ($gruverYaml) {
+        $container['config'] = function () use ($gruverYaml) {
             return new GruverConfig($gruverYaml);
         };
         $container['dispatcher'] = function ($c) use ($output) {
@@ -39,7 +39,7 @@ class Command extends BaseCommand
         $container['docker'] = function ($c) {
             return new DockerProcess($c['config']);
         };
-        $container['sqlite3'] = function($c) {
+        $container['sqlite3'] = function ($c) {
             return new Sqlite3Process($c['config']);
         };
         $container['logger.factory'] = function ($c) use ($output) {
@@ -51,8 +51,9 @@ class Command extends BaseCommand
         $container['url.factory'] = function ($c) {
             return new UrlFactory($c['config']);
         };
-        $container['entity.manager'] = function($c){
+        $container['entity.manager'] = function ($c) {
             $factory = new EntityManagerFactory($c['config']);
+
             return $factory->getEntityManager();
         };
 
@@ -61,10 +62,9 @@ class Command extends BaseCommand
         parent::initialize($input, $output);
     }
 
-
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;
+        $cmd = $config->getEnvironmentalVariableExport().' '.$cmd;
 
         $process = new Process($cmd);
         $process->setTimeout($timeout);
@@ -79,7 +79,7 @@ class Command extends BaseCommand
 
     protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;
+        $cmd = $config->getEnvironmentalVariableExport().' '.$cmd;
 
         $process = new Process($cmd);
         $process->setTimeout($timeout);

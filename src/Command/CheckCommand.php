@@ -3,7 +3,6 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Command;
-use Symfony\Component\Console\Input\InputArgument;
 
 class CheckCommand extends Command
 {
@@ -16,5 +15,4 @@ class CheckCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION);
     }
-
 }

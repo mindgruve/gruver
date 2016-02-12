@@ -50,23 +50,24 @@ class ConsoleOutputHandler implements HandlerInterface
      * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
      * calling further handlers in the stack with a given log record.
      *
-     * @param  array $record The record to handle
-     * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
-     *                        false means the record was either not processed or that this handler allows bubbling.
+     * @param array $record The record to handle
+     *
+     * @return bool true means that this handler handled the record, and that bubbling is not permitted.
+     *              false means the record was either not processed or that this handler allows bubbling.
      */
     public function handle(array $record)
     {
-        if ((int)$record['level'] >= Logger::ERROR) {
-            $this->output->writeln('<error>' . (string)$record['message'] . '</error>');
+        if ((int) $record['level'] >= Logger::ERROR) {
+            $this->output->writeln('<error>'.(string) $record['message'].'</error>');
 
             return false;
-        } elseif ((int)$record['level'] >= Logger::INFO) {
-            $this->output->writeln('<info>' . (string)$record['message'] . '</info>');
+        } elseif ((int) $record['level'] >= Logger::INFO) {
+            $this->output->writeln('<info>'.(string) $record['message'].'</info>');
 
             return false;
         }
 
-        $this->output->writeln((string)$record['message']);
+        $this->output->writeln((string) $record['message']);
 
         return false;
     }
@@ -94,7 +95,7 @@ class ConsoleOutputHandler implements HandlerInterface
      *
      * @param array $record Partial log record containing only a level key
      *
-     * @return Boolean
+     * @return bool
      */
     public function isHandling(array $record)
     {
@@ -114,7 +115,8 @@ class ConsoleOutputHandler implements HandlerInterface
     /**
      * Adds a processor in the stack.
      *
-     * @param  callable $callback
+     * @param callable $callback
+     *
      * @return self
      */
     public function pushProcessor($callback)
@@ -127,7 +129,8 @@ class ConsoleOutputHandler implements HandlerInterface
     /**
      * Sets the formatter.
      *
-     * @param  FormatterInterface $formatter
+     * @param FormatterInterface $formatter
+     *
      * @return self
      */
     public function setFormatter(FormatterInterface $formatter)

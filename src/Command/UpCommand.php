@@ -2,9 +2,6 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Process\DockerComposeProcess;
-use Mindgruve\Gruver\Config\GruverConfig;
-use Mindgruve\Gruver\EventDispatcher;
 use Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,11 +33,10 @@ class UpCommand extends Command
         $logger = $this->container['logger'];
 
         try {
-            $logger->addInfo('Running container for ' . $config->getApplicationName());
+            $logger->addInfo('Running container for '.$config->getApplicationName());
             $eventDispatcher->dispatchPreRun();
             $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
             $eventDispatcher->dispatchPostRun();
-
         } catch (\Exception $e) {
             $logger->addError('Error encountered running docker-compose');
             $logger->addError($e->getMessage());

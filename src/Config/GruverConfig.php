@@ -30,21 +30,22 @@ class GruverConfig
 
     /**
      * @param null|string $gruverYaml
+     *
      * @throws \Exception
      */
     public function __construct($gruverYaml = null)
     {
         $this->pwd = $_SERVER['PWD'];
-        $gruverYaml = $gruverYaml ? $gruverYaml : $this->pwd . '/gruver.yml';
+        $gruverYaml = $gruverYaml ? $gruverYaml : $this->pwd.'/gruver.yml';
 
-        /**
+        /*
          * Load these configs, each one can potentially overwrite the configs before.
          *      (1) Config packaged with Gruver
          *      (2) The config loaded at /etc/gruver/gruver.yml
          *      (3) The local config ${PWD}/gruver.yml
          */
         $gruverConfigs = array();
-        $gruverConfigs[] = Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml');
+        $gruverConfigs[] = Yaml::parse(__DIR__.'/../Resources/config/gruver.yml');
         if (file_exists('/etc/gruver/gruver.yml')) {
             $gruverConfigs[] = Yaml::parse('/etc/gruver/config.yml');
         }
@@ -52,7 +53,7 @@ class GruverConfig
             $gruverConfigs[] = Yaml::parse($gruverYaml);
         }
 
-        /**
+        /*
          * Process to validate schema
          */
         $processor = new Processor();
@@ -82,12 +83,13 @@ class GruverConfig
 
     /**
      * @param $key
+     *
      * @return string|array
+     *
      * @throws \Exception
      */
     public function get($key)
     {
-
         $accessor = PropertyAccess::createPropertyAccessor();
 
         switch ($key) {

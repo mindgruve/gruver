@@ -29,5 +29,4 @@ class Application
     {
         return $this->name;
     }
-
 }

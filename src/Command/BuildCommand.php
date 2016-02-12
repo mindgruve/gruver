@@ -2,9 +2,6 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Config\GruverConfig;
-use Mindgruve\Gruver\Process\DockerComposeProcess;
-use Mindgruve\Gruver\EventDispatcher;
 use Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +32,7 @@ class BuildCommand extends Command
         $logger = $this->container['logger'];
 
         try {
-            $logger->addInfo('Building container for ' . $config->getApplicationName());
+            $logger->addInfo('Building container for '.$config->getApplicationName());
             $eventDispatcher->dispatchPreBuild();
             $this->mustRunProcess($dockerCompose->getBuildCommand(), $config, 3600, $output);
             $eventDispatcher->dispatchPostBuild();

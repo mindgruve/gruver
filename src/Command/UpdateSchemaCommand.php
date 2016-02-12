@@ -3,7 +3,6 @@
 namespace Mindgruve\Gruver\Command;
 
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Mindgruve\Gruver\Command;
@@ -15,7 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateSchemaCommand extends Command
 {
-
     protected function configure()
     {
         parent::configure();
@@ -44,7 +42,7 @@ class UpdateSchemaCommand extends Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

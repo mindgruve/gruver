@@ -4,7 +4,6 @@ namespace Mindgruve\Gruver\Factory;
 
 use Mindgruve\Gruver\Handler\ConsoleOutputHandler;
 use Monolog\ErrorHandler;
-use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
@@ -37,7 +36,7 @@ class LoggerFactory
         $logger = new Logger('default');
 
         foreach ($adapterConfigs as $adapterConfig) {
-            $this->addAdapter($logger, $adapterConfig, $this->defaultLogDirectory . '/default.log');
+            $this->addAdapter($logger, $adapterConfig, $this->defaultLogDirectory.'/default.log');
         }
         $logger->pushHandler(new ConsoleOutputHandler($this->output));
 
@@ -59,8 +58,9 @@ class LoggerFactory
         } elseif ($type == 'error') {
             $logger->pushHandler(new ErrorHandler());
         } else {
-            throw new \Exception('Unknown log handler type - ' . $type);
+            throw new \Exception('Unknown log handler type - '.$type);
         }
+
         return $logger;
     }
 

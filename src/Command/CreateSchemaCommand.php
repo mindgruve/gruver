@@ -14,7 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateSchemaCommand extends Command
 {
-
     protected function configure()
     {
         parent::configure();
@@ -31,7 +30,7 @@ class CreateSchemaCommand extends Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

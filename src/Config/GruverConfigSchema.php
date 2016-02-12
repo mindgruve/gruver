@@ -126,6 +126,7 @@ class GruverConfigSchema implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+
         return $treeBuilder;
     }
 }

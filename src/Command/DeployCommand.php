@@ -3,7 +3,6 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Command;
-use Symfony\Component\Console\Input\InputArgument;
 
 class DeployCommand extends Command
 {
