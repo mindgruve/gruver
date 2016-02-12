@@ -24,7 +24,7 @@ class GruverConfig
     protected $dockerCompose;
 
     /**
-     * @var array
+     * @var EnvironmentalVariables
      */
     protected $envVar;
 
@@ -59,6 +59,8 @@ class GruverConfig
             new GruverConfigSchema(),
             $gruverConfigs
         );
+
+        $this->envVar = new EnvironmentalVariables($this);
     }
 
     /**
@@ -74,10 +76,6 @@ class GruverConfig
      */
     public function getEnvironmentalVariableExport()
     {
-        if (!$this->envVar) {
-            $this->envVar = new EnvironmentalVariables($this);
-        }
-
         return $this->envVar->buildExport();
     }
 
