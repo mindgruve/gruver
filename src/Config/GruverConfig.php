@@ -46,7 +46,7 @@ class GruverConfig
         $gruverConfigs = array();
         $gruverConfigs[] = Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml');
         if (file_exists('/etc/gruver/gruver.yml')) {
-            $gruverConfigs[] = Yaml::parse('/etc/gruver/gruver.yml');
+            $gruverConfigs[] = Yaml::parse('/etc/gruver/config.yml');
         }
         if (file_exists($gruverYaml)) {
             $gruverConfigs[] = Yaml::parse($gruverYaml);

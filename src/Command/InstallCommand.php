@@ -93,13 +93,19 @@ class InstallCommand extends Command
          */
         $process = new Process('mkdir -p /etc/gruver');
         $process->run();
-        if (!file_exists('/etc/gruver/gruver.yml')) {
-            copy(__DIR__ . '/../Resources/config/gruver.yml', '/etc/gruver/gruver.yml');
+        if (!file_exists('/etc/gruver/config.yml')) {
+            copy(__DIR__ . '/../Resources/config/gruver.yml', '/etc/gruver/config.yml');
         }
-        if (file_exists('/etc/gruver/gruver.yml')) {
+        if (file_exists('/etc/gruver/config.yml')) {
             $output->writeln('<info>(✓) Able to write to /etc/gruver</info>');
         } else {
             $output->writeln('<error>(x) Unable to write to /etc/gruver</error>');
         }
+
+        /**
+         * SQLite Database
+         */
+        $process = new Process('mkdir -p /var/lib/gruver');
+        $process->run();
     }
 }

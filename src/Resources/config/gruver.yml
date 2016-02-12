@@ -14,7 +14,7 @@ database:
     driver: 'pdo_sqlite'
     user: ~
     password: ~
-    path: '/var/lib/gruver.db'
+    path: '/var/lib/gruver/releases.db'
 config:
     automatic_deployment: false
     docker_compose_files: []
