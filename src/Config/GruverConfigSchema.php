@@ -20,7 +20,6 @@ class GruverConfigSchema implements ConfigurationInterface
             ->children()
                 ->arrayNode('application')
                     ->children()
-                        ->scalarNode('name')->isRequired()->end()
                         ->arrayNode('email_notifications')
                             ->prototype('scalar')->end()
                         ->end()

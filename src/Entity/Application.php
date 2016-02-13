@@ -2,7 +2,10 @@
 
 namespace Mindgruve\Gruver\Entity;
 
-/** @Entity */
+/**
+ * @Entity
+ * @Table(name="application")
+ */
 class Application
 {
     /**
@@ -13,6 +16,17 @@ class Application
 
     /** @Column(length=140) */
     protected $name;
+
+    /**
+     * @OneToMany(targetEntity="Release", mappedBy="application")
+     */
+    protected $releases;
+
+    /**
+     * @OneToOne(targetEntity="Release")
+     * @JoinColumn(name="current_release_id", referencedColumnName="id")
+     */
+    protected $currentRelease;
 
     /**
      * @return int
@@ -29,4 +43,5 @@ class Application
     {
         return $this->name;
     }
+
 }
