@@ -5,6 +5,7 @@ namespace Mindgruve\Gruver\Entity;
 /**
  * @Entity(repositoryClass="Mindgruve\Gruver\Repository\ReleaseRepository")
  * @Table(name="release")
+ * @HasLifecycleCallbacks
  */
 class Release
 {
@@ -34,6 +35,16 @@ class Release
      * @JoinColumn(name="next_release_id", referencedColumnName="id")
      */
     protected $nextRelease;
+
+    /**
+     * @Column(type="datetime",name="created_at")
+     */
+    protected $createdAt;
+
+    /**
+     * @Column(type="datetime",name="modified_at")
+     */
+    protected $modifiedAt;
 
     /**
      * @return mixed
@@ -111,6 +122,20 @@ class Release
         $this->nextRelease = $release;
 
         return $this;
+    }
+
+    /**
+     * @PrePersist
+     * @PreUpdate
+     */
+    public function updateTimestamps()
+    {
+        $date = new \DateTime(date('Y-m-d H:i:s'));
+        $this->setModifiedAt($date);
+
+        if ($this->getCreatedAt() == null) {
+            $this->setCreatedAt($date);
+        }
     }
 }
 
