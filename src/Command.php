@@ -51,7 +51,7 @@ class Command extends BaseCommand
         $container['url.factory'] = function ($c) {
             return new UrlFactory($c['config']);
         };
-        $container['entity.manager'] = function ($c) {
+        $container['entity_manager'] = function ($c) {
             $factory = new EntityManagerFactory($c['config']);
 
             return $factory->getEntityManager();

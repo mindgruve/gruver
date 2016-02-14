@@ -72,7 +72,7 @@ class UpCommand extends Command
         $eventDispatcher = $this->get('dispatcher');
         $dockerCompose = $this->get('docker_compose');
         $logger = $this->get('logger');
-        $em = $this->get('entity.manager');
+        $em = $this->get('entity_manager');
 
         /**
          * Get Service Entity
@@ -92,13 +92,16 @@ class UpCommand extends Command
             $currentRelease = new Release();
             $currentRelease->setService($service);
             $currentRelease->setTag($tag);
+            $currentRelease->setStatus(Release::STATUS_PENDING);
 
             if ($oldRelease) {
                 $currentRelease->setPreviousRelease($oldRelease);
                 $oldRelease->setNextRelease($currentRelease);
+                $oldRelease->setStatus(Release::STATUS_NULL);
             }
 
             $service->setCurrentRelease($currentRelease);
+            $service->addRelease($currentRelease);
             $em->persist($currentRelease);
             $em->flush();
 

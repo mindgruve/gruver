@@ -9,13 +9,20 @@ namespace Mindgruve\Gruver\Entity;
  */
 class Release
 {
+
+    const STATUS_LIVE = 'live';
+    const STATUS_PENDING = 'pending';
+    const STATUS_NULL = '---';
+
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
      */
     private $id;
 
-    /** @Column(length=140) */
+    /**
+     * @Column(length=140)
+     */
     protected $tag;
 
     /**
@@ -47,6 +54,11 @@ class Release
     protected $modifiedAt;
 
     /**
+     * @Column(length=140)
+     */
+    protected $status = self::STATUS_NULL;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -57,7 +69,8 @@ class Release
     /**
      * @return Service
      */
-    public function getService(){
+    public function getService()
+    {
         return $this->service;
     }
 
@@ -65,8 +78,10 @@ class Release
      * @param Service $service
      * @return $this
      */
-    public function setService(Service $service){
+    public function setService(Service $service)
+    {
         $this->service = $service;
+
         return $this;
     }
 
@@ -158,6 +173,26 @@ class Release
     public function setCreatedAt(\DateTime $dateTime)
     {
         $this->createdAt = $dateTime;
+
+        return $this;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function getStatusOptions()
+    {
+        return array(self::STATUS_PENDING, self::STATUS_LIVE, self::STATUS_NULL);
+    }
+
+    public function setStatus($status)
+    {
+        if (!in_array($status, $this->getStatusOptions())) {
+            throw new \Exception('Uknown release status - ' . $status);
+        }
+        $this->status = $status;
 
         return $this;
     }

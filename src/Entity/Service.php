@@ -2,6 +2,8 @@
 
 namespace Mindgruve\Gruver\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity(repositoryClass="Mindgruve\Gruver\Repository\ServiceRepository")
  * @Table(name="service",uniqueConstraints={@UniqueConstraint(name="service_name_constraint", columns={"name"})})
@@ -38,6 +40,35 @@ class Service
      * @Column(type="datetime",name="modified_at")
      */
     protected $modifiedAt;
+
+    public function __construct()
+    {
+        $this->releases = new ArrayCollection();
+    }
+
+    /**
+     * @param Release $release
+     */
+    public function addRelease(Release $release)
+    {
+        if (!$this->releases->contains($release)) {
+            $this->releases->add($release);
+        }
+    }
+
+    /**
+     * @param Release $release
+     */
+    public function removeRelease(Release $release)
+    {
+        if (!$this->releases->contains($release)) {
+            $this->releases->removeElement($release);
+        }
+    }
+
+    public function getReleases(){
+        return $this->releases;
+    }
 
     /**
      * @return int
