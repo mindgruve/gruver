@@ -32,6 +32,12 @@ class Service
     protected $currentRelease;
 
     /**
+     * @OneToOne(targetEntity="Release")
+     * @JoinColumn(name="pending_release_id", referencedColumnName="id")
+     */
+    protected $pendingRelease;
+
+    /**
      * @Column(type="datetime",name="created_at")
      */
     protected $createdAt;
@@ -135,14 +141,40 @@ class Service
         return $this;
     }
 
+    /**
+     * @return Release
+     */
     public function getCurrentRelease()
     {
         return $this->currentRelease;
     }
 
+    /**
+     * @param Release $release
+     * @return $this
+     */
     public function setCurrentRelease(Release $release)
     {
         $this->currentRelease = $release;
+
+        return $this;
+    }
+
+    /**
+     * @return Release
+     */
+    public function getPendingRelease()
+    {
+        return $this->pendingRelease;
+    }
+
+    /**
+     * @param Release $release
+     * @return $this
+     */
+    public function setPendingRelease(Release $release)
+    {
+        $this->pendingRelease = $release;
 
         return $this;
     }

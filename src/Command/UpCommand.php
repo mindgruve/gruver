@@ -100,7 +100,7 @@ class UpCommand extends Command
                 $oldRelease->setStatus(Release::STATUS_NULL);
             }
 
-            $service->setCurrentRelease($currentRelease);
+            $service->setPendingRelease($currentRelease);
             $service->addRelease($currentRelease);
             $em->persist($currentRelease);
             $em->flush();

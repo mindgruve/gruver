@@ -10,8 +10,9 @@ namespace Mindgruve\Gruver\Entity;
 class Release
 {
 
-    const STATUS_LIVE = 'live';
+    const STATUS_CURRENT = 'current';
     const STATUS_PENDING = 'pending';
+    const STATUS_TRASHED = 'trashed';
     const STATUS_NULL = '---';
 
     /**
@@ -184,7 +185,7 @@ class Release
 
     public function getStatusOptions()
     {
-        return array(self::STATUS_PENDING, self::STATUS_LIVE, self::STATUS_NULL);
+        return array(self::STATUS_PENDING, self::STATUS_CURRENT, self::STATUS_NULL);
     }
 
     public function setStatus($status)

@@ -41,12 +41,26 @@ class StatusCommand extends Command
         $output->writeln('');
         $output->writeln('<info>Service</info> : ' . $serviceName);
 
+        /**
+         * Current Release
+         */
         $currentRelease = $service->getCurrentRelease();
         $currentReleaseTag = 'n/a';
         if ($currentRelease) {
             $currentReleaseTag = $currentRelease->getTag();
         }
         $output->writeln('<info>Current Release:</info>  ' . $currentReleaseTag);
+
+        /**
+         * Pending Release
+         */
+        $pendingRelease = $service->getPendingRelease();
+        $pendingReleaseTag = 'n/a';
+        if ($pendingRelease) {
+            $pendingReleaseTag = $pendingRelease->getTag();
+        }
+        $output->writeln('<info>Pending Release:</info>  ' . $pendingReleaseTag);
+
         $output->writeln('');
 
         $releases = $service->getReleases();
@@ -56,7 +70,7 @@ class StatusCommand extends Command
         }
 
         $table = new Table($output);
-        $table->setHeaders(array('Tag', 'Status', 'Container'));
+        $table->setHeaders(array('Tag', 'Status', 'Container','Heath Check'));
         $table->addRows($rows);
         $table->render();
     }
