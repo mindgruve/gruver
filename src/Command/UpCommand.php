@@ -75,11 +75,22 @@ class UpCommand extends Command
         $em = $this->get('entity_manager');
 
         /**
-         * Get Service Entity
+         * Get Entities
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
+        $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
+
         $service = $serviceRepository->getServiceOrCreate($serviceName);
         $oldRelease = $service->getCurrentRelease();
+        $oldPendingRelease = $service->getPendingRelease();
+
+        /**
+         * Check if Tag Exists
+         */
+        if ($releaseRepository->tagExistsForService($service, $tag)) {
+            $output->writeln('<error>Service ' . $serviceName . ' already has tag ' . $tag . '</error>');
+            exit;
+        }
 
         /**
          * Bring up service
@@ -92,12 +103,14 @@ class UpCommand extends Command
             $currentRelease = new Release();
             $currentRelease->setService($service);
             $currentRelease->setTag($tag);
-            $currentRelease->setStatus(Release::STATUS_PENDING);
 
             if ($oldRelease) {
                 $currentRelease->setPreviousRelease($oldRelease);
                 $oldRelease->setNextRelease($currentRelease);
-                $oldRelease->setStatus(Release::STATUS_NULL);
+            }
+
+            if ($oldPendingRelease) {
+                $oldPendingRelease->setNextRelease($currentRelease);
             }
 
             $service->setPendingRelease($currentRelease);

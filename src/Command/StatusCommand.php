@@ -40,7 +40,7 @@ class StatusCommand extends Command
 
         $output->writeln('');
         $output->writeln('<info>Service</info> : ' . $serviceName);
-
+        
         /**
          * Current Release
          */
@@ -61,16 +61,39 @@ class StatusCommand extends Command
         }
         $output->writeln('<info>Pending Release:</info>  ' . $pendingReleaseTag);
 
+        /**
+         * Rollback Release
+         */
+        $rollbackRelease = $service->getRollbackRelease();
+        $rollbacktReleaseTag = 'n/a';
+        if ($rollbackRelease) {
+            $rollbacktReleaseTag = $rollbackRelease->getTag();
+        }
+        $output->writeln('<info>Rollback Release:</info>  ' . $rollbacktReleaseTag);
         $output->writeln('');
 
         $releases = $service->getReleases();
         $rows = array();
         foreach ($releases as $release) {
-            $rows[] = array($release->getTag(), $release->getStatus());
+
+            $status = '';
+            if ($pendingRelease && ($release->getId() == $pendingRelease->getId())) {
+                $status = 'pending';
+            }
+
+            if ($currentRelease && ($release->getId() == $currentRelease->getId())) {
+                $status = 'current';
+            }
+
+            if ($rollbackRelease && ($release->getId() == $rollbackRelease->getId())) {
+                $status = 'rollback';
+            }
+
+            $rows[] = array($release->getTag(), $status);
         }
 
         $table = new Table($output);
-        $table->setHeaders(array('Tag', 'Status', 'Container','Heath Check'));
+        $table->setHeaders(array('Tag', 'Status', 'Container', 'Heath Check'));
         $table->addRows($rows);
         $table->render();
     }

@@ -4,16 +4,11 @@ namespace Mindgruve\Gruver\Entity;
 
 /**
  * @Entity(repositoryClass="Mindgruve\Gruver\Repository\ReleaseRepository")
- * @Table(name="release")
+ * @Table(name="release",uniqueConstraints={@UniqueConstraint(name="tag_constraint", columns={"service_id","tag"})})
  * @HasLifecycleCallbacks
  */
 class Release
 {
-
-    const STATUS_CURRENT = 'current';
-    const STATUS_PENDING = 'pending';
-    const STATUS_TRASHED = 'trashed';
-    const STATUS_NULL = '---';
 
     /**
      * @Id @Column(type="integer")
@@ -54,10 +49,6 @@ class Release
      */
     protected $modifiedAt;
 
-    /**
-     * @Column(length=140)
-     */
-    protected $status = self::STATUS_NULL;
 
     /**
      * @return mixed
@@ -174,26 +165,6 @@ class Release
     public function setCreatedAt(\DateTime $dateTime)
     {
         $this->createdAt = $dateTime;
-
-        return $this;
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function getStatusOptions()
-    {
-        return array(self::STATUS_PENDING, self::STATUS_CURRENT, self::STATUS_NULL);
-    }
-
-    public function setStatus($status)
-    {
-        if (!in_array($status, $this->getStatusOptions())) {
-            throw new \Exception('Uknown release status - ' . $status);
-        }
-        $this->status = $status;
 
         return $this;
     }

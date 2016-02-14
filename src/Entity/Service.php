@@ -38,6 +38,12 @@ class Service
     protected $pendingRelease;
 
     /**
+     * @OneToOne(targetEntity="Release")
+     * @JoinColumn(name="rollback_release_id", referencedColumnName="id")
+     */
+    protected $rollbackRelease;
+
+    /**
      * @Column(type="datetime",name="created_at")
      */
     protected $createdAt;
@@ -72,8 +78,22 @@ class Service
         }
     }
 
-    public function getReleases(){
-        return $this->releases;
+    public function getReleases()
+    {
+        $releases = $this->releases->toArray();
+
+        uasort(
+            $releases,
+            function ($a, $b) {
+                if ($a->getCreatedAt() < $b->getCreatedAt()) {
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        return $releases;
     }
 
     /**
@@ -153,7 +173,7 @@ class Service
      * @param Release $release
      * @return $this
      */
-    public function setCurrentRelease(Release $release)
+    public function setCurrentRelease(Release $release = null)
     {
         $this->currentRelease = $release;
 
@@ -172,9 +192,28 @@ class Service
      * @param Release $release
      * @return $this
      */
-    public function setPendingRelease(Release $release)
+    public function setPendingRelease(Release $release = null)
     {
         $this->pendingRelease = $release;
+
+        return $this;
+    }
+
+    /**
+     * @return Release
+     */
+    public function getRollbackRelease()
+    {
+        return $this->rollbackRelease;
+    }
+
+    /**
+     * @param Release $release
+     * @return $this
+     */
+    public function setRollbackRelease(Release $release = null)
+    {
+        $this->rollbackRelease = $release;
 
         return $this;
     }
