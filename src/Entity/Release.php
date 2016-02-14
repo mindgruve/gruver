@@ -3,7 +3,7 @@
 namespace Mindgruve\Gruver\Entity;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="Mindgruve\Gruver\Repository\ReleaseRepository")
  * @Table(name="release")
  */
 class Release
@@ -18,10 +18,10 @@ class Release
     protected $tag;
 
     /**
-     * @ManyToOne(targetEntity="Application", inversedBy="releases")
-     * @JoinColumn(name="application_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Service", inversedBy="releases")
+     * @JoinColumn(name="service_id", referencedColumnName="id")
      */
-    protected $application;
+    protected $service;
 
     /**
      * @OneToOne(targetEntity="Release")
@@ -41,6 +41,22 @@ class Release
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return Service
+     */
+    public function getService(){
+        return $this->service;
+    }
+
+    /**
+     * @param Service $service
+     * @return $this
+     */
+    public function setService(Service $service){
+        $this->service = $service;
+        return $this;
     }
 
     /**

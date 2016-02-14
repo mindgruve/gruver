@@ -3,9 +3,13 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\Entity\Release;
+use Mindgruve\Gruver\Entity\Service;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class UpCommand extends Command
 {
@@ -18,24 +22,86 @@ class UpCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
             ->addArgument(
-                'service_name',
-                InputArgument::OPTIONAL,
+                'service',
+                InputArgument::REQUIRED,
                 'What service do you want to run?'
+            )
+            ->addOption(
+                'tag',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'What tag do you want to name this release?'
             );
     }
 
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $service = $input->getArgument('service');
+        $tag = $input->getOption('tag');
+
+        $helper = $this->getHelper('question');
+
+        // Double check service entered
+        if(!$service){
+            $question = new Question('What service do you want bring up?  ');
+            $service = $helper->ask($input, $output,$question);
+        }
+
+        // Double check tag entered
+        if(!$tag){
+            $question = new Question('What do you want to tag this release?  ');
+            $tag = $helper->ask($input, $output,$question);
+        }
+
+        $input->setOption('tag', $tag);
+        $input->setArgument('service', $service);
+
+        parent::initialize($input, $output);
+    }
+
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $serviceName = $input->getArgument('service_name');
+        $serviceName = $input->getArgument('service');
+        $tag = $input->getOption('tag');
+
+        /**
+         * Container Service
+         */
         $config = $this->container['config'];
         $eventDispatcher = $this->container['dispatcher'];
         $dockerCompose = $this->container['docker_compose'];
         $logger = $this->container['logger'];
+        $em = $this->container['entity.manager'];
 
+        /**
+         * Get Service Entity
+         */
+        $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
+        $service = $serviceRepository->getServiceOrCreate($serviceName);
+        $oldRelease = $service->getCurrentRelease();
+
+        /**
+         * Bring up service
+         */
         try {
-            $logger->addInfo('Running container for '.$config->getApplicationName());
+            $logger->addInfo('Running container for ' . $config->getApplicationName());
             $eventDispatcher->dispatchPreRun();
             $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
+
+            $currentRelease = new Release();
+            $currentRelease->setService($service);
+            $currentRelease->setTag($tag);
+
+            if($oldRelease){
+                $currentRelease->setPreviousRelease($oldRelease);
+                $oldRelease->setNextRelease($currentRelease);
+            }
+
+            $service->setCurrentRelease($currentRelease);
+            $em->persist($currentRelease);
+            $em->flush();
+
             $eventDispatcher->dispatchPostRun();
         } catch (\Exception $e) {
             $logger->addError('Error encountered running docker-compose');
