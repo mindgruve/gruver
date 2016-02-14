@@ -45,8 +45,17 @@ class RollbackCommand extends Command
          * Get Entities
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
+        $service = $serviceRepository->findOneByName($serviceName);
 
-        $service = $serviceRepository->getServiceOrCreate($serviceName);
+        /**
+         * Check if Service Exists
+         */
+        if (!$service) {
+            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+            exit;
+        }
+
+
         $pendingRelease = $service->getCurrentRelease();
         $targetRelease = $service->getRollbackRelease();
 

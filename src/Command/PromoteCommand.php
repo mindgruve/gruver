@@ -46,7 +46,16 @@ class PromoteCommand extends Command
          * Get Entities
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
-        $service = $serviceRepository->getServiceOrCreate($serviceName);
+        $service = $serviceRepository->findOneByName($serviceName);
+
+        /**
+         * Check if Service Exists
+         */
+        if (!$service) {
+            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+            exit;
+        }
+
         $targetRelease = $service->getPendingRelease();
 
         if ($targetRelease) {

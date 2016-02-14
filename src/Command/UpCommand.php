@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
 class UpCommand extends Command
@@ -36,16 +37,37 @@ class UpCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $service = $input->getArgument('service_name');
+        parent::initialize($input, $output);
+
+        $serviceName = $input->getArgument('service_name');
         $tag = $input->getOption('tag');
 
         $helper = $this->getHelper('question');
 
         // Double check service entered
-        if (!$service) {
+        if (!$serviceName) {
             $question = new Question('What service do you want bring up?  ');
-            $service = $helper->ask($input, $output, $question);
+            $serviceName = $helper->ask($input, $output, $question);
         }
+
+        $em = $this->get('entity_manager');
+        $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
+        $service = $serviceRepository->findOneBy(array('name' => $serviceName));
+
+        if (!$service) {
+
+            $question = new ConfirmationQuestion('Service <info>' . $serviceName . '</info> not found.  Do you want to create it? (<info>y/n</info>)  ');
+            $createNew = $helper->ask($input, $output, $question);
+            if ($createNew) {
+                $service = new Service();
+                $service->setName($serviceName);
+                $em->persist($service);
+                $em->flush($service);
+            } else {
+                $output->writeln('<error>Service not found - ' . $serviceName . '</error>');
+            }
+        }
+
 
         // Double check tag entered
         if (!$tag) {
@@ -54,9 +76,7 @@ class UpCommand extends Command
         }
 
         $input->setOption('tag', $tag);
-        $input->setArgument('service_name', $service);
-
-        parent::initialize($input, $output);
+        $input->setArgument('service_name', $serviceName);
     }
 
 
@@ -79,6 +99,15 @@ class UpCommand extends Command
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
+
+        $service = $serviceRepository->findOneBy(array('name' => $serviceName));
+        /**
+         * Check if Service Exists
+         */
+        if (!$service) {
+            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+            exit;
+        }
 
         $service = $serviceRepository->getServiceOrCreate($serviceName);
         $oldRelease = $service->getCurrentRelease();
