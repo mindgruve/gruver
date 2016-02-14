@@ -21,9 +21,9 @@ class InstallCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $docker = $this->container['docker'];
-        $dockerCompose = $this->container['docker_compose'];
-        $sqlite3 = $this->container['sqlite3'];
+        $docker = $this->get('docker');
+        $dockerCompose = $this->get('docker_compose');
+        $sqlite3 = $this->get('sqlite3');
 
         $output->writeln('Checking gruver dependencies... ');
 

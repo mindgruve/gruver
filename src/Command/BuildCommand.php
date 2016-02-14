@@ -26,13 +26,13 @@ class BuildCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->container['config'];
-        $eventDispatcher = $this->container['dispatcher'];
-        $dockerCompose = $this->container['docker_compose'];
-        $logger = $this->container['logger'];
+        $config = $this->get('config');
+        $eventDispatcher = $this->get('dispatcher');
+        $dockerCompose = $this->get('docker_compose');
+        $logger = $this->get('logger');
 
         try {
-            $logger->addInfo('Building container for '.$config->getApplicationName());
+            $logger->addInfo('Building container for ' . $config->getApplicationName());
             $eventDispatcher->dispatchPreBuild();
             $this->mustRunProcess($dockerCompose->getBuildCommand(), $config, 3600, $output);
             $eventDispatcher->dispatchPostBuild();

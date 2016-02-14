@@ -20,7 +20,9 @@ class DoctrineUpdateSchemaCommand extends Command
 
         $this
             ->setName('doctrine:schema:update')
-            ->setDescription('Executes (or dumps) the SQL needed to update the database schema to match the current mapping metadata.')
+            ->setDescription(
+                'Executes (or dumps) the SQL needed to update the database schema to match the current mapping metadata.'
+            )
             ->addOption(
                 'complete',
                 null,
@@ -46,7 +48,7 @@ class DoctrineUpdateSchemaCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->container['entity.manager'];
+        $em = $this->get('entity.manager');
 
         $helperSet = new HelperSet();
         $helperSet->set(new ConnectionHelper($em->getConnection()), 'db');

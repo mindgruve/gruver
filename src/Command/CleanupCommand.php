@@ -20,12 +20,12 @@ class CleanupCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->container['config'];
-        $eventDispatcher = $this->container['dispatcher'];
-        $docker = $this->container['docker'];
-        $logger = $this->container['logger'];
+        $config = $this->get('config');
+        $eventDispatcher = $this->get('dispatcher');
+        $docker = $this->get('docker');
+        $logger = $this->get('logger');
 
-        $logger->addInfo('Running cleanup for '.$config->getApplicationName());
+        $logger->addInfo('Running cleanup for ' . $config->getApplicationName());
         try {
             $eventDispatcher->dispatchPreCleanup();
 

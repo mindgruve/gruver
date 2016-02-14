@@ -62,9 +62,24 @@ class Command extends BaseCommand
         parent::initialize($input, $output);
     }
 
+    /**
+     * @return Container
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    protected function get($serviceKey)
+    {
+        $container = $this->getContainer();
+
+        return $container[$serviceKey];
+    }
+
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->getEnvironmentalVariableExport().' '.$cmd;
+        $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;
 
         $process = new Process($cmd);
         $process->setTimeout($timeout);
@@ -79,7 +94,7 @@ class Command extends BaseCommand
 
     protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->getEnvironmentalVariableExport().' '.$cmd;
+        $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;
 
         $process = new Process($cmd);
         $process->setTimeout($timeout);

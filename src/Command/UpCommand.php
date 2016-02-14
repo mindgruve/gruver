@@ -22,7 +22,7 @@ class UpCommand extends Command
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
             ->addArgument(
-                'service',
+                'service_name',
                 InputArgument::REQUIRED,
                 'What service do you want to run?'
             )
@@ -36,25 +36,25 @@ class UpCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $service = $input->getArgument('service');
+        $service = $input->getArgument('service_name');
         $tag = $input->getOption('tag');
 
         $helper = $this->getHelper('question');
 
         // Double check service entered
-        if(!$service){
+        if (!$service) {
             $question = new Question('What service do you want bring up?  ');
-            $service = $helper->ask($input, $output,$question);
+            $service = $helper->ask($input, $output, $question);
         }
 
         // Double check tag entered
-        if(!$tag){
+        if (!$tag) {
             $question = new Question('What do you want to tag this release?  ');
-            $tag = $helper->ask($input, $output,$question);
+            $tag = $helper->ask($input, $output, $question);
         }
 
         $input->setOption('tag', $tag);
-        $input->setArgument('service', $service);
+        $input->setArgument('service_name', $service);
 
         parent::initialize($input, $output);
     }
@@ -62,17 +62,17 @@ class UpCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $serviceName = $input->getArgument('service');
+        $serviceName = $input->getArgument('service_name');
         $tag = $input->getOption('tag');
 
         /**
          * Container Service
          */
-        $config = $this->container['config'];
-        $eventDispatcher = $this->container['dispatcher'];
-        $dockerCompose = $this->container['docker_compose'];
-        $logger = $this->container['logger'];
-        $em = $this->container['entity.manager'];
+        $config = $this->get('config');
+        $eventDispatcher = $this->get('dispatcher');
+        $dockerCompose = $this->get('docker_compose');
+        $logger = $this->get('logger');
+        $em = $this->get('entity.manager');
 
         /**
          * Get Service Entity
@@ -93,7 +93,7 @@ class UpCommand extends Command
             $currentRelease->setService($service);
             $currentRelease->setTag($tag);
 
-            if($oldRelease){
+            if ($oldRelease) {
                 $currentRelease->setPreviousRelease($oldRelease);
                 $oldRelease->setNextRelease($currentRelease);
             }

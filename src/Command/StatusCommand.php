@@ -3,6 +3,9 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class StatusCommand extends Command
 {
@@ -13,6 +16,17 @@ class StatusCommand extends Command
     {
         $this
             ->setName(self::COMMAND)
-            ->setDescription(self::DESCRIPTION);
+            ->setDescription(self::DESCRIPTION)
+            ->addArgument(
+                'service_name',
+                InputArgument::REQUIRED,
+                'What service do you want to run?'
+            );
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $serviceName = $input->getArgument('service_name');
+
     }
 }

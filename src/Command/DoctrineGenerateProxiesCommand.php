@@ -29,7 +29,7 @@ class DoctrineGenerateProxiesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->container['entity.manager'];
+        $em = $this->get('entity.manager');
 
         $helperSet = new HelperSet();
         $helperSet->set(new ConnectionHelper($em->getConnection()), 'db');
