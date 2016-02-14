@@ -125,6 +125,45 @@ class Release
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     * @return $this
+     */
+    public function setModifiedAt(\DateTime $dateTime)
+    {
+        $this->modifiedAt = $dateTime;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     * @return $this
+     */
+    public function setCreatedAt(\DateTime $dateTime)
+    {
+        $this->createdAt = $dateTime;
+
+        return $this;
+    }
+
+
+    /**
      * @PrePersist
      * @PreUpdate
      */
