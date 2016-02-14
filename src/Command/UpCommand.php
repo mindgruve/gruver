@@ -100,22 +100,23 @@ class UpCommand extends Command
             $eventDispatcher->dispatchPreRun();
             $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
 
-            $currentRelease = new Release();
-            $currentRelease->setService($service);
-            $currentRelease->setTag($tag);
+            $pendingRelease = new Release();
+            $pendingRelease->setService($service);
+            $pendingRelease->setTag($tag);
 
             if ($oldRelease) {
-                $currentRelease->setPreviousRelease($oldRelease);
-                $oldRelease->setNextRelease($currentRelease);
+                $pendingRelease->setPreviousRelease($oldRelease);
+                $oldRelease->setNextRelease($pendingRelease);
             }
 
             if ($oldPendingRelease) {
-                $oldPendingRelease->setNextRelease($currentRelease);
+                $pendingRelease->setPreviousRelease($oldPendingRelease);
+                $oldPendingRelease->setNextRelease($pendingRelease);
             }
 
-            $service->setPendingRelease($currentRelease);
-            $service->addRelease($currentRelease);
-            $em->persist($currentRelease);
+            $service->setPendingRelease($pendingRelease);
+            $service->addRelease($pendingRelease);
+            $em->persist($pendingRelease);
             $em->flush();
 
             $eventDispatcher->dispatchPostRun();

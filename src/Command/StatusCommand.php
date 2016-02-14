@@ -39,8 +39,7 @@ class StatusCommand extends Command
         }
 
         $output->writeln('');
-        $output->writeln('<info>Service</info> : ' . $serviceName);
-        
+
         /**
          * Current Release
          */
@@ -89,11 +88,16 @@ class StatusCommand extends Command
                 $status = 'rollback';
             }
 
-            $rows[] = array($release->getTag(), $status);
+            $date = 'n/a';
+            if ($release->getCreatedAt()) {
+                $date = $release->getCreatedAt()->format('n/j/y g:iA');
+            }
+
+            $rows[] = array($release->getTag(), $date, $status);
         }
 
         $table = new Table($output);
-        $table->setHeaders(array('Tag', 'Status', 'Container', 'Heath Check'));
+        $table->setHeaders(array('Tag', 'Run Date', 'Status', 'Container', 'Heath Check'));
         $table->addRows($rows);
         $table->render();
     }

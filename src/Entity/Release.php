@@ -28,13 +28,13 @@ class Release
     protected $service;
 
     /**
-     * @OneToOne(targetEntity="Release")
+     * @ManyToOne(targetEntity="Release")
      * @JoinColumn(name="previous_release_id", referencedColumnName="id")
      */
     protected $previousRelease;
 
     /**
-     * @OneToOne(targetEntity="Release")
+     * @ManyToOne(targetEntity="Release")
      * @JoinColumn(name="next_release_id", referencedColumnName="id")
      */
     protected $nextRelease;

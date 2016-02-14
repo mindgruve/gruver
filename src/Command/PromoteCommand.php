@@ -46,14 +46,19 @@ class PromoteCommand extends Command
          * Get Entities
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
-
         $service = $serviceRepository->getServiceOrCreate($serviceName);
-        $oldRelease = $service->getCurrentRelease();
         $targetRelease = $service->getPendingRelease();
 
         if ($targetRelease) {
+
+            $oldRelease = $targetRelease->getPreviousRelease();
+            if ($oldRelease) {
+                $targetRelease->setPreviousRelease($oldRelease);
+                $oldRelease->setNextRelease($targetRelease);
+            }
+
             $service->setCurrentRelease($targetRelease);
-            $service->setPendingRelease(null);
+            $service->setPendingRelease($targetRelease->getNextRelease());
             $service->setRollbackRelease($oldRelease);
             $em->flush();
         }
