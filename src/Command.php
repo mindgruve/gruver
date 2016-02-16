@@ -4,6 +4,7 @@ namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Config\GruverConfig;
+use Mindgruve\Gruver\Entity\Service;
 use Mindgruve\Gruver\Factory\EntityManagerFactory;
 use Mindgruve\Gruver\Factory\LoggerFactory;
 use Mindgruve\Gruver\Factory\UrlFactory;

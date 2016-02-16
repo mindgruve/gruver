@@ -68,6 +68,7 @@ class DockerComposeProcess
         $contents = $this->twig->render(
             'docker-compose.yml.twig',
             array(
+                'project_name' => $env->getProjectName(),
                 'service_name' => $env->getServiceName(),
                 'release' => $env->getRelease(),
                 'uuid' => $uuid
@@ -135,6 +136,7 @@ class DockerComposeProcess
      */
     public function getUpCommand($serviceName, $detached = true)
     {
+        return $this->getRunCommand($serviceName, $detached);
         $cmd = $this->config->get('[binaries][docker_compose_binary]');
         $cmd = $this->env->buildExport() . ' ' . $cmd;
 
@@ -146,6 +148,38 @@ class DockerComposeProcess
 
         if ($detached) {
             $cmd = $cmd . ' -d';
+        }
+
+        if ($serviceName) {
+            $cmd = $cmd . ' ' . $serviceName;
+        }
+
+        return $cmd;
+    }
+
+    /**
+     * @param $serviceName
+     * @param bool $detached
+     *
+     * @return string
+     */
+    public function getRunCommand($serviceName, $detached = true, $servicePorts = true)
+    {
+        $cmd = $this->config->get('[binaries][docker_compose_binary]');
+        $cmd = $this->env->buildExport() . ' ' . $cmd;
+
+        foreach ($this->files as $file) {
+            $cmd .= ' -f ' . $file;
+        }
+
+        $cmd .= ' run';
+
+        if ($detached) {
+            $cmd = $cmd . ' -d';
+        }
+
+        if($servicePorts){
+            $cmd = $cmd .' --service-ports';
         }
 
         if ($serviceName) {

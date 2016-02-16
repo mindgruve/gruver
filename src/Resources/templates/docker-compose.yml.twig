@@ -1,5 +1,11 @@
 {{ service_name }}:
     labels:
         - "gruver.uuid={{ uuid }}"
+        - "gruver.project={{ project_name }}"
         - "gruver.service={{ service_name }}"
         - "gruver.release={{ release }}"
+    environment:
+        - GVR_UUID={{ uuid }}
+        - GVR_PROJECT={{ project_name }}
+        - GVR_SERVICE={{ service_name }}
+        - GVR_RELEASE={{ release }}
