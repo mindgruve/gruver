@@ -1,4 +1,5 @@
-application:
+project:
+    name: ~
     email_notifications: []
 staging:
     allowed_ips: []

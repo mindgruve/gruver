@@ -21,6 +21,12 @@ class Service
     protected $name;
 
     /**
+     * @ManyToOne(targetEntity="Project", inversedBy="services")
+     * @JoinColumn(name="project_id", referencedColumnName="id")
+     */
+    protected $project;
+
+    /**
      * @OneToMany(targetEntity="Release", mappedBy="service")
      */
     protected $releases;

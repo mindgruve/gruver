@@ -3,15 +3,10 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Command;
-use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Entity\Release;
-use Mindgruve\Gruver\Entity\Service;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 
 class UpCommand extends Command
 {
@@ -23,9 +18,16 @@ class UpCommand extends Command
         $this
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
-            ->addArgument(
+            ->addOption(
+                'project_name',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'What do you want to name your project?'
+            )
+            ->addOption(
                 'service_name',
-                InputArgument::REQUIRED,
+                null,
+                InputOption::VALUE_REQUIRED,
                 'What service do you want to run?'
             )
             ->addOption(
@@ -36,67 +38,10 @@ class UpCommand extends Command
             );
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
-    {
-        parent::initialize($input, $output);
-
-        $serviceName = $input->getArgument('service_name');
-        $tag = $input->getOption('tag');
-
-        $helper = $this->getHelper('question');
-
-        // Double check service entered
-        if (!$serviceName) {
-            $question = new Question('What service do you want bring up?  ');
-            $serviceName = $helper->ask($input, $output, $question);
-        }
-
-        $em = $this->get('entity_manager');
-        $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
-        $service = $serviceRepository->findOneBy(array('name' => $serviceName));
-
-        if (!$service) {
-
-            $question = new ConfirmationQuestion(
-                'Service <info>' . $serviceName . '</info> not found.  Do you want to create it? (<info>y/n</info>)  '
-            );
-            $createNew = $helper->ask($input, $output, $question);
-            if ($createNew) {
-                $service = new Service();
-                $service->setName($serviceName);
-                $em->persist($service);
-                $em->flush($service);
-            } else {
-                $output->writeln('<error>Service not found - ' . $serviceName . '</error>');
-            }
-        }
-
-        // Double check tag entered
-        if (!$tag) {
-            $question = new Question('What do you want to tag this release?  ');
-            $tag = $helper->ask($input, $output, $question);
-        }
-
-        $input->setOption('tag', $tag);
-        $input->setArgument('service_name', $serviceName);
-
-        $this->container['env_vars'] = function ($c) use ($serviceName, $tag) {
-            return new EnvironmentalVariables($c['config'], $serviceName, $tag);
-        };
-    }
-
-
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $serviceName = $input->getArgument('service_name');
+        $serviceName = $input->getOption('service_name');
         $tag = $input->getOption('tag');
-
-        if (!$serviceName) {
-            throw new \Exception('Service name is required.');
-        }
-        if (!$tag) {
-            throw new \Exception('Tag is required.');
-        }
 
         /**
          * Container Service

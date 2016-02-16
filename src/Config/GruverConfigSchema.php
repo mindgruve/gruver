@@ -18,8 +18,9 @@ class GruverConfigSchema implements ConfigurationInterface
         $rootNode = $treeBuilder->root('gruver');
         $rootNode
             ->children()
-                ->arrayNode('application')
+                ->arrayNode('project')
                     ->children()
+                        ->scalarNode('name')->end()
                         ->arrayNode('email_notifications')
                             ->prototype('scalar')->end()
                         ->end()

@@ -22,6 +22,12 @@ class Release
     protected $tag;
 
     /**
+     * @ManyToOne(targetEntity="Project", inversedBy="releases")
+     * @JoinColumn(name="project_id", referencedColumnName="id")
+     */
+    protected $project;
+
+    /**
      * @ManyToOne(targetEntity="Service", inversedBy="releases")
      * @JoinColumn(name="service_id", referencedColumnName="id")
      */
