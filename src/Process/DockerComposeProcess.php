@@ -63,18 +63,18 @@ class DockerComposeProcess
             }
         }
 
-//        $uuid = Uuid::generate();
-//        $releaseFile = $this->pwd . '/' . $uuid;
-//        $contents = $this->twig->render(
-//            'docker-compose.yml.twig',
-//            array(
-//                'service_name' => $env->getServiceName(),
-//                'release' => $env->getRelease(),
-//                'uuid' => $uuid
-//            )
-//        );
-//        file_put_contents($releaseFile, $contents);
-//        $files[] = $uuid;
+        $uuid = Uuid::generate();
+        $releaseFile = '/var/lib/gruver/releases/' . $uuid . '.yml';
+        $contents = $this->twig->render(
+            'docker-compose.yml.twig',
+            array(
+                'service_name' => $env->getServiceName(),
+                'release' => $env->getRelease(),
+                'uuid' => $uuid
+            )
+        );
+        file_put_contents($releaseFile, $contents);
+        $files[] = $releaseFile;
 
         $this->files = $files;
     }
@@ -151,8 +151,6 @@ class DockerComposeProcess
         if ($serviceName) {
             $cmd = $cmd . ' ' . $serviceName;
         }
-
-        echo $cmd;exit;
 
         return $cmd;
     }
