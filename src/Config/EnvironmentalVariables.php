@@ -12,7 +12,7 @@ class EnvironmentalVariables
     /**
      * @var string
      */
-    protected $GVR_APPLICATION;
+    protected $GVR_SERVICE;
 
     /**
      * @var string
@@ -21,12 +21,14 @@ class EnvironmentalVariables
 
     /**
      * @param GruverConfig $config
+     * @param string $serviceName
+     * @param string $tag
      */
-    public function __construct(GruverConfig $config)
+    public function __construct(GruverConfig $config, $serviceName = null, $tag = null)
     {
         $this->config = $config;
-        $this->GVR_APPLICATION = $this->config->getApplicationName();
-        $this->GVR_RELEASE = '1.0.0';
+        $this->GVR_SERVICE = $serviceName;
+        $this->GVR_RELEASE = $tag;
     }
 
     /**
@@ -34,9 +36,25 @@ class EnvironmentalVariables
      */
     public function buildExport()
     {
-        $env = 'export GVR_APPLICATION='.$this->GVR_APPLICATION.';';
-        $env .= ' export GVR_RELEASE='.$this->GVR_RELEASE.';';
+        $env = '';
+
+        if($this->GVR_SERVICE ){
+            $env .= ' export GVR_SERVICE=' . $this->GVR_SERVICE . ';';
+        }
+        if($this->GVR_RELEASE){
+            $env .= ' export GVR_RELEASE=' . $this->GVR_RELEASE . ';';
+        }
 
         return $env;
+    }
+
+    public function getServiceName()
+    {
+        return $this->GVR_SERVICE;
+    }
+
+    public function getRelease()
+    {
+        return $this->GVR_RELEASE;
     }
 }

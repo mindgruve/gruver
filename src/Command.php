@@ -2,6 +2,7 @@
 
 namespace Mindgruve\Gruver;
 
+use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\Factory\EntityManagerFactory;
 use Mindgruve\Gruver\Factory\LoggerFactory;
@@ -34,7 +35,13 @@ class Command extends BaseCommand
             return new EventDispatcher($c['config'], $output);
         };
         $container['docker_compose'] = function ($c) {
-            return new DockerComposeProcess($c['config']);
+            return new DockerComposeProcess($c['config'], $c['env_vars'], $c['twig']);
+        };
+        $container['twig'] = function ($c) {
+            \Twig_Autoloader::register();
+            $loader = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates');
+
+            return new \Twig_Environment($loader);
         };
         $container['docker'] = function ($c) {
             return new DockerProcess($c['config']);
@@ -55,6 +62,9 @@ class Command extends BaseCommand
             $factory = new EntityManagerFactory($c['config']);
 
             return $factory->getEntityManager();
+        };
+        $container['env_vars'] = function($c){
+            return new EnvironmentalVariables($c['config']);
         };
 
         $this->container = $container;
@@ -79,8 +89,6 @@ class Command extends BaseCommand
 
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;
-
         $process = new Process($cmd);
         $process->setTimeout($timeout);
         $process->run(
@@ -94,8 +102,6 @@ class Command extends BaseCommand
 
     protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
-        $cmd = $config->getEnvironmentalVariableExport() . ' ' . $cmd;
-
         $process = new Process($cmd);
         $process->setTimeout($timeout);
         $process->mustRun(

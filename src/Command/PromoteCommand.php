@@ -3,6 +3,7 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Entity\Release;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,6 +31,18 @@ class PromoteCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'What tag do you want to promote?'
             );
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+
+        $serviceName = $input->getArgument('service_name');
+        $tag = $input->getOption('tag');
+
+        $this->container['env_vars'] = function ($c) use ($serviceName, $tag) {
+            return new EnvironmentalVariables($c['config'], $serviceName, $tag);
+        };
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

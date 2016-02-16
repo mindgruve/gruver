@@ -1,11 +1,10 @@
 application:
-    name: 'mindgruve.com'
-    email_notifications: ['ksimpson@mindgruve.com']
+    email_notifications: []
 staging:
     allowed_ips: []
     url_pattern:  '%s-$d.staging1.mindgruve.com'
 production:
-    hosts: ['mindgruve.com']
+    hosts: []
 binaries:
     docker_binary: 'docker'
     docker_compose_binary: 'docker-compose'
@@ -14,25 +13,26 @@ database:
     driver: 'pdo_sqlite'
     user: ~
     password: ~
-    path: '/var/lib/gruver.db'
+    path: '/var/lib/gruver/data.db'
+logging:
+  default_directory: '/var/log/gruver'
+  adapters:
+    deployment:
+        type: 'stream'
+        path: '/var/log/gruver/deployment.log'
+        level: 'info'
+    error:
+        type: 'stream'
+        path: '/var/log/gruver/error.log'
+        level: 'error'
 config:
     automatic_deployment: false
     docker_compose_files: []
     date_format: 'Ymd'
     health_checks: []
-    logging:
-        default_directory: '/var/log/gruver'
-        adapters:
-            deployment:
-                type: 'stream'
-                path: '/var/log/gruver/deployment.log'
-                level: 'info'
-            error:
-                type: 'stream'
-                path: '/var/log/gruver/deployment.log'
-                level: 'error'
     remove_exited_containers: true
     remove_orphan_images: true
+    email_notifications: []
 events:
     pre_build:
       - echo 'processing pre_build'

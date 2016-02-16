@@ -3,6 +3,7 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Entity\Release;
 use Mindgruve\Gruver\Entity\Service;
 use Symfony\Component\Console\Input\InputArgument;
@@ -56,7 +57,9 @@ class UpCommand extends Command
 
         if (!$service) {
 
-            $question = new ConfirmationQuestion('Service <info>' . $serviceName . '</info> not found.  Do you want to create it? (<info>y/n</info>)  ');
+            $question = new ConfirmationQuestion(
+                'Service <info>' . $serviceName . '</info> not found.  Do you want to create it? (<info>y/n</info>)  '
+            );
             $createNew = $helper->ask($input, $output, $question);
             if ($createNew) {
                 $service = new Service();
@@ -68,7 +71,6 @@ class UpCommand extends Command
             }
         }
 
-
         // Double check tag entered
         if (!$tag) {
             $question = new Question('What do you want to tag this release?  ');
@@ -77,6 +79,10 @@ class UpCommand extends Command
 
         $input->setOption('tag', $tag);
         $input->setArgument('service_name', $serviceName);
+
+        $this->container['env_vars'] = function ($c) use ($serviceName, $tag) {
+            return new EnvironmentalVariables($c['config'], $serviceName, $tag);
+        };
     }
 
 
@@ -84,6 +90,13 @@ class UpCommand extends Command
     {
         $serviceName = $input->getArgument('service_name');
         $tag = $input->getOption('tag');
+
+        if (!$serviceName) {
+            throw new \Exception('Service name is required.');
+        }
+        if (!$tag) {
+            throw new \Exception('Tag is required.');
+        }
 
         /**
          * Container Service
@@ -125,7 +138,7 @@ class UpCommand extends Command
          * Bring up service
          */
         try {
-            $logger->addInfo('Running container for ' . $config->getApplicationName());
+            $logger->addInfo('Running container for ' . $serviceName);
             $eventDispatcher->dispatchPreRun();
             $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
 

@@ -61,24 +61,6 @@ class GruverConfig
             new GruverConfigSchema(),
             $gruverConfigs
         );
-
-        $this->envVar = new EnvironmentalVariables($this);
-    }
-
-    /**
-     * @return string
-     */
-    public function getApplicationName()
-    {
-        return $this->get('[application][name]');
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnvironmentalVariableExport()
-    {
-        return $this->envVar->buildExport();
     }
 
     /**

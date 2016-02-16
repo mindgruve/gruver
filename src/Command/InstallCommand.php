@@ -27,7 +27,7 @@ class InstallCommand extends Command
 
         $output->writeln('Checking gruver dependencies... ');
 
-        /*
+        /**
          * SQLite3
          * @todo confirm minium version of SQLite
          */
@@ -49,7 +49,7 @@ class InstallCommand extends Command
             $output->writeln('<info>(✓) SQLite version >= 3.0</info>');
         }
 
-        /*
+        /**
          * Docker
          * @todo confirm minimum version of SQLite
          */
@@ -60,13 +60,13 @@ class InstallCommand extends Command
         }
 
         $version = $docker->getVersion();
-        if ((float) ($version['major'].'.'.$version['minor']) < 1.9) {
-            $output->writeln('<error>(x) Docker version < 1.9</error>');
+        if ((float) ($version['major'].'.'.$version['minor']) < 1.9 && $version['patch'] < 1) {
+            $output->writeln('<error>(x) Docker version < 1.9.1</error>');
         } else {
-            $output->writeln('<info>(✓) Docker version >= 1.9</info>');
+            $output->writeln('<info>(✓) Docker version >= 1.9.1</info>');
         }
 
-        /*
+        /**
          * Docker Compose
          * @todo confirm minimum version of Docker-Compose
          */
@@ -77,13 +77,13 @@ class InstallCommand extends Command
         }
 
         $version = $docker->getVersion();
-        if ((float) ($version['major'].'.'.$version['minor']) < 1.4) {
-            $output->writeln('<error>(x) Docker-Compose version < 1.4</error>');
+        if ((float) ($version['major'].'.'.$version['minor']) < 1.6) {
+            $output->writeln('<error>(x) Docker-Compose version < 1.6</error>');
         } else {
-            $output->writeln('<info>(✓) Docker-Compose version >= 1.4</info>');
+            $output->writeln('<info>(✓) Docker-Compose version >= 1.6</info>');
         }
 
-        /*
+        /**
          * Config Directory /etc/gruver
          */
         $process = new Process('mkdir -p /etc/gruver');
@@ -97,10 +97,16 @@ class InstallCommand extends Command
             $output->writeln('<error>(x) Unable to write to /etc/gruver</error>');
         }
 
-        /*
+        /**
          * SQLite Database
          */
         $process = new Process('mkdir -p /var/lib/gruver');
+        $process->run();
+
+        /**
+         * Releases Directory
+         */
+        $process = new Process('mkdir -p /var/lib/gruver/releases');
         $process->run();
     }
 }

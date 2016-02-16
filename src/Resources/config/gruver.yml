@@ -13,25 +13,26 @@ database:
     driver: 'pdo_sqlite'
     user: ~
     password: ~
-    path: '/var/lib/gruver/releases.db'
+    path: '/var/lib/gruver/data.db'
+logging:
+  default_directory: '/var/log/gruver'
+  adapters:
+    deployment:
+        type: 'stream'
+        path: '/var/log/gruver/deployment.log'
+        level: 'info'
+    error:
+        type: 'stream'
+        path: '/var/log/gruver/error.log'
+        level: 'error'
 config:
     automatic_deployment: false
     docker_compose_files: []
     date_format: 'Ymd'
     health_checks: []
-    logging:
-        default_directory: '/var/log/gruver'
-        adapters:
-            deployment:
-                type: 'stream'
-                path: '/var/log/gruver/deployment.log'
-                level: 'info'
-            error:
-                type: 'stream'
-                path: '/var/log/gruver/deployment.log'
-                level: 'error'
     remove_exited_containers: true
     remove_orphan_images: true
+    email_notifications: [ 'ksimpson@mindgruve.com' ]
 events:
     pre_build:
       - echo 'processing pre_build'
