@@ -48,5 +48,7 @@ class DoctrineCreateSchemaCommand extends BaseCommand
         $command = new CreateCommand();
         $command->setHelperSet($helperSet);
         $returnCode = $command->run(new ArrayInput($arguments), $output);
+
+        return $returnCode;
     }
 }

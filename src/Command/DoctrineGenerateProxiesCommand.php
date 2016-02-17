@@ -36,5 +36,7 @@ class DoctrineGenerateProxiesCommand extends BaseCommand
         $command = new GenerateProxiesCommand();
         $command->setHelperSet($helperSet);
         $returnCode = $command->run(new ArrayInput(array()), $output);
+
+        return $returnCode;
     }
 }

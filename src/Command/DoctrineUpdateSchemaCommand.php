@@ -68,5 +68,7 @@ class DoctrineUpdateSchemaCommand extends BaseCommand
         $command = new UpdateCommand();
         $command->setHelperSet($helperSet);
         $returnCode = $command->run(new ArrayInput($arguments), $output);
+
+        return $returnCode;
     }
 }
