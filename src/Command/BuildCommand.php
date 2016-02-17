@@ -2,12 +2,12 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BuildCommand extends Command
+class BuildCommand extends BaseCommand
 {
     const COMMAND = 'build';
     const DESCRIPTION = 'Build a docker container.';

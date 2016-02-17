@@ -2,9 +2,9 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 
-class DeployCommand extends Command
+class DeployCommand extends BaseCommand
 {
     const COMMAND = 'deploy';
     const DESCRIPTION = 'Deploy an application.';

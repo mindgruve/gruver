@@ -2,15 +2,12 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
-use Mindgruve\Gruver\Config\EnvironmentalVariables;
-use Mindgruve\Gruver\Entity\Release;
-use Symfony\Component\Console\Input\InputArgument;
+use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PromoteCommand extends Command
+class PromoteCommand extends BaseCommand
 {
     const COMMAND = 'promote';
     const DESCRIPTION = 'Promote a container to accept live traffic.';

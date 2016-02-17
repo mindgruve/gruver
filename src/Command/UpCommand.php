@@ -2,13 +2,13 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 use Mindgruve\Gruver\Entity\Release;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpCommand extends Command
+class UpCommand extends BaseCommand
 {
     const COMMAND = 'up';
     const DESCRIPTION = 'Run a docker container.';

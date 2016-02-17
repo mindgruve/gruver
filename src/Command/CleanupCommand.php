@@ -2,11 +2,11 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanupCommand extends Command
+class CleanupCommand extends BaseCommand
 {
     const COMMAND = 'cleanup';
     const DESCRIPTION = 'Remove unused containers.';

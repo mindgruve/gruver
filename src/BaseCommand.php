@@ -11,14 +11,14 @@ use Mindgruve\Gruver\Process\DockerComposeProcess;
 use Mindgruve\Gruver\Process\DockerProcess;
 use Mindgruve\Gruver\Process\Sqlite3Process;
 use Pimple\Container;
-use Symfony\Component\Console\Command\Command as BaseCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 
-class Command extends BaseCommand
+class BaseCommand extends Command
 {
     /**
      * @var Container

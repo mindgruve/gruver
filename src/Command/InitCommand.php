@@ -2,13 +2,13 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 use Mindgruve\Gruver\Entity\Project;
 use Mindgruve\Gruver\Entity\Service;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InitCommand extends Command
+class InitCommand extends BaseCommand
 {
 
     const COMMAND = 'init';

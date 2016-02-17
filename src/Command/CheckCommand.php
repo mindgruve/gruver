@@ -2,9 +2,9 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 
-class CheckCommand extends Command
+class CheckCommand extends BaseCommand
 {
     const COMMAND = 'check';
     const DESCRIPTION = 'Run health checks on an application.';

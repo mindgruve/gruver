@@ -4,16 +4,14 @@ namespace Mindgruve\Gruver\Command;
 
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand;
-use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DoctrineGenerateProxiesCommand extends Command
+class DoctrineGenerateProxiesCommand extends BaseCommand
 {
     protected function configure()
     {

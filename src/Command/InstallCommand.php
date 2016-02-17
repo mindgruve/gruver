@@ -2,12 +2,12 @@
 
 namespace Mindgruve\Gruver\Command;
 
-use Mindgruve\Gruver\Command;
+use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
-class InstallCommand extends Command
+class InstallCommand extends BaseCommand
 {
     const COMMAND = 'install';
     const DESCRIPTION = 'Install gruver.';
