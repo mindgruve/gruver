@@ -16,38 +16,28 @@ class RollbackCommand extends Command
 
     public function configure()
     {
+        $this->questionServiceName = 'What service do you want to rollback?  ';
+
         $this
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
-            ->addArgument(
-                'service_name',
-                InputArgument::REQUIRED,
-                'What service do you want to promote?'
-            )
             ->addOption(
-                'tag',
+                'project_name',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'What tag do you want to promote?'
+                'What do you want to name your project?'
+            )
+            ->addOption(
+                'service_name',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'What service do you want to run?'
             );
-    }
-
-    protected function initialize(InputInterface $input, OutputInterface $output)
-    {
-        parent::initialize($input, $output);
-
-        $serviceName = $input->getArgument('service_name');
-        $tag = $input->getOption('tag');
-
-        $this->container['env_vars'] = function ($c) use ($serviceName, $tag) {
-            return new EnvironmentalVariables($c['config'], $serviceName, $tag);
-        };
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $serviceName = $input->getArgument('service_name');
-        $tag = $input->getOption('tag');
+        $serviceName = $input->getOption('service_name');
 
         /**
          * Container Service
@@ -67,7 +57,7 @@ class RollbackCommand extends Command
             $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
             exit;
         }
-        
+
         $pendingRelease = $service->getCurrentRelease();
         $targetRelease = $service->getRollbackRelease();
 
@@ -75,7 +65,7 @@ class RollbackCommand extends Command
 
             $rollbackRelease = $targetRelease->getPreviousRelease();
 
-            if($rollbackRelease){
+            if ($rollbackRelease) {
                 $targetRelease->setPreviousRelease($rollbackRelease);
                 $rollbackRelease->setNextRelease($targetRelease);
             }

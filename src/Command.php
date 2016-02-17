@@ -63,11 +63,16 @@ class Command extends BaseCommand
         if ($input->hasOption('service_name')) {
             $serviceName = $input->getOption('service_name');
             if (!$serviceName) {
-                $question = new ChoiceQuestion(
-                    $this->questionServiceName,
-                    $services
-                );
-                $serviceName = $helper->ask($input, $output, $question);
+                if (count($services) == 1) {
+                    $serviceName = $services[0];
+                } else {
+                    $question = new ChoiceQuestion(
+                        $this->questionServiceName,
+                        $services
+                    );
+                    $serviceName = $helper->ask($input, $output, $question);
+                }
+
                 $input->setOption('service_name', $serviceName);
             }
         }

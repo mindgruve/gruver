@@ -6,6 +6,7 @@ use Mindgruve\Gruver\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class StatusCommand extends Command
@@ -15,28 +16,32 @@ class StatusCommand extends Command
 
     public function configure()
     {
+        $this->questionServiceName = 'What service are you interested in?  ';
+
         $this
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
-            ->addArgument(
+            ->addOption(
+                'project_name',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'What do you want to name your project?'
+            )
+            ->addOption(
                 'service_name',
-                InputArgument::REQUIRED,
+                null,
+                InputOption::VALUE_REQUIRED,
                 'What service do you want to run?'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $serviceName = $input->getArgument('service_name');
+        $serviceName = $input->getOption('service_name');
 
         $em = $this->get('entity_manager');
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $service = $serviceRepository->findOneByName($serviceName);
-
-        if (!$service) {
-            $output->writeln('<error>Unknown service - ' . $serviceName . '</error>');
-            exit;
-        }
 
         $output->writeln('');
 

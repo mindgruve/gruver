@@ -60,8 +60,8 @@ class UpCommand extends Command
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
-
         $service = $serviceRepository->findOneBy(array('name' => $serviceName));
+
         /**
          * Check if Service Exists
          */

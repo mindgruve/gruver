@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity(repositoryClass="Mindgruve\Gruver\Repository\ServiceRepository")
- * @Table(name="service",uniqueConstraints={@UniqueConstraint(name="service_name_constraint", columns={"name"})})
+ * @Table(name="service",uniqueConstraints={@UniqueConstraint(name="service_name_constraint", columns={"project_id","name"})})
  * @HasLifecycleCallbacks
  */
 class Service
@@ -236,5 +236,17 @@ class Service
         if ($this->getCreatedAt() == null) {
             $this->setCreatedAt($date);
         }
+    }
+
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    public function setProject(Project $project)
+    {
+        $this->project = $project;
+
+        return $this;
     }
 }
