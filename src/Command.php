@@ -4,8 +4,6 @@ namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Config\GruverConfig;
-use Mindgruve\Gruver\Entity\Project;
-use Mindgruve\Gruver\Entity\Service;
 use Mindgruve\Gruver\Factory\EntityManagerFactory;
 use Mindgruve\Gruver\Factory\LoggerFactory;
 use Mindgruve\Gruver\Factory\UrlFactory;
@@ -16,6 +14,8 @@ use Pimple\Container;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 
 class Command extends BaseCommand
@@ -25,22 +25,59 @@ class Command extends BaseCommand
      */
     protected $container;
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    /**
+     * @var GruverConfig
+     */
+    protected $config;
+
+    /**
+     * @var EnvironmentalVariables
+     */
+    protected $envVar;
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $gruverYaml = $input->hasOption('gruver_file') ? $input->getOption('gruver_file') : null;
+        $helper = $this->getHelper('question');
+        $container = $this->container;
+        $config = $container['config'];
 
-        $container = new Container();
-        $config = new GruverConfig($gruverYaml);
+        $projectName = $config->get('[project][name]');
+        $services = $config->get('[project][services]');
+        $serviceName = null;
 
-        $container['config'] = $config;
-        $container['dispatcher'] = function ($c) use ($output) {
-            return new EventDispatcher($c['config'], $output);
-        };
-        $container['env_vars'] = function ($c) {
-            return new EnvironmentalVariables($c['config'], null, null, null);
-        };
+        if ($input->hasOption('service_name')) {
+            $serviceName = $input->getOption('service_name');
+            if (!$serviceName) {
+                $question = new ChoiceQuestion(
+                    'Service:',
+                    $services
+                );
+                $helper->ask($input, $output, $question);
+            }
+        }
+
+        $container['env_vars'] = new EnvironmentalVariables($config, $projectName, $serviceName);
         $container['docker_compose'] = function ($c) {
             return new DockerComposeProcess($c['config'], $c['env_vars'], $c['twig']);
+        };
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+
+        $container = new Container();
+        $container['config'] = new GruverConfig();
+        $container['env_vars'] = $this->envVar;
+        $container['dispatcher'] = function ($c) use ($output) {
+            return new EventDispatcher($c['config'], $output);
         };
         $container['twig'] = function ($c) {
             \Twig_Autoloader::register();
@@ -80,6 +117,10 @@ class Command extends BaseCommand
         return $this->container;
     }
 
+    /**
+     * @param $serviceKey
+     * @return mixed
+     */
     protected function get($serviceKey)
     {
         $container = $this->getContainer();
@@ -87,6 +128,12 @@ class Command extends BaseCommand
         return $container[$serviceKey];
     }
 
+    /**
+     * @param $cmd
+     * @param GruverConfig $config
+     * @param int $timeout
+     * @param OutputInterface $output
+     */
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
         $process = new Process($cmd);
@@ -100,6 +147,12 @@ class Command extends BaseCommand
         );
     }
 
+    /**
+     * @param $cmd
+     * @param GruverConfig $config
+     * @param int $timeout
+     * @param OutputInterface $output
+     */
     protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
         $process = new Process($cmd);

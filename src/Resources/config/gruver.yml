@@ -1,11 +1,7 @@
 project:
     name: ~
+    services: []
     email_notifications: []
-staging:
-    allowed_ips: []
-    url_pattern:  '%s-$d.staging1.mindgruve.com'
-production:
-    hosts: []
 binaries:
     docker_binary: 'docker'
     docker_compose_binary: 'docker-compose'

@@ -33,10 +33,14 @@ class GruverConfig
      *
      * @throws \Exception
      */
-    public function __construct($gruverYaml = null)
+    public function __construct()
     {
         $this->pwd = $_SERVER['PWD'];
-        $gruverYaml = $gruverYaml ? $gruverYaml : $this->pwd.'/gruver.yml';
+        $gruverYaml = $this->pwd.'/gruver.yml';
+
+        if(!file_exists($gruverYaml)){
+            throw new \Exception('Gruver file not found');
+        }
 
         /*
          * Load these configs, each one can potentially overwrite the configs before.
