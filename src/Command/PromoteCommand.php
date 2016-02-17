@@ -54,7 +54,7 @@ class PromoteCommand extends BaseCommand
          */
         if (!$service) {
             $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
-            exit;
+            return;
         }
 
         $targetRelease = $service->getPendingRelease();

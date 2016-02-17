@@ -53,7 +53,7 @@ class RollbackCommand extends BaseCommand
          */
         if (!$service) {
             $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
-            exit;
+            return;
         }
 
         $pendingRelease = $service->getCurrentRelease();
