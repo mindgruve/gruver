@@ -6,15 +6,6 @@ use Mindgruve\Gruver\Config\GruverConfig;
 
 class GruverConfigTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group config
-     */
-    public function testValidFixture()
-    {
-        $gruverFixture = __DIR__.'/../Data/gruver-fixture.yml';
-        $composeFixture = __DIR__.'/../Data/docker-compose-fixture.yml';
-        $sut = new GruverConfig($gruverFixture, $composeFixture);
-    }
 
     /**
      * @group config

@@ -136,7 +136,6 @@ class DockerComposeProcess
      */
     public function getUpCommand($serviceName, $detached = true)
     {
-        return $this->getRunCommand($serviceName, $detached);
         $cmd = $this->config->get('[binaries][docker_compose_binary]');
         $cmd = $this->env->buildExport().' '.$cmd;
 
