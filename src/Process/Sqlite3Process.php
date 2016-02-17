@@ -27,10 +27,10 @@ class Sqlite3Process
     {
         $process = new Process('which '.$this->config->get('[binaries][sqlite3_binary]'));
         $process->run();
-        if ($process->getOutput()) {
-            return true;
-        } else {
+        if ($process->getOutput() == '') {
             return false;
+        } else {
+            return true;
         }
     }
 

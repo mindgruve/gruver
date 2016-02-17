@@ -27,10 +27,10 @@ class DockerProcess
     {
         $process = new Process('which '.$this->config->get('[binaries][docker_binary]'));
         $process->run();
-        if ($process->getOutput()) {
-            return true;
-        } else {
+        if ($process->getOutput() == '') {
             return false;
+        } else {
+            return true;
         }
     }
 
