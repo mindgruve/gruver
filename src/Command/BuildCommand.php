@@ -5,6 +5,7 @@ namespace Mindgruve\Gruver\Command;
 use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class BuildCommand extends BaseCommand
@@ -17,10 +18,17 @@ class BuildCommand extends BaseCommand
         $this
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
-            ->addArgument(
+            ->addOption(
+                'project_name',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'What do you want to name your project?'
+            )
+            ->addOption(
                 'service_name',
-                InputArgument::OPTIONAL,
-                'What service do you want to build?'
+                null,
+                InputOption::VALUE_REQUIRED,
+                'What service do you want to run?'
             );
     }
 
@@ -32,7 +40,7 @@ class BuildCommand extends BaseCommand
         $logger = $this->get('logger');
 
         try {
-            $logger->addInfo('Building container for '.$config->getApplicationName());
+            $logger->addInfo('Building container for '.$config->get('[project][name]'));
             $eventDispatcher->dispatchPreBuild();
             $this->mustRunProcess($dockerCompose->getBuildCommand(), $config, 3600, $output);
             $eventDispatcher->dispatchPostBuild();

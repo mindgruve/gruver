@@ -8,14 +8,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpCommand extends BaseCommand
+class RunCommand extends BaseCommand
 {
-    const COMMAND = 'up';
+    const COMMAND = 'run';
     const DESCRIPTION = 'Run a docker container.';
 
     public function configure()
     {
-        $this->questionServiceName = 'What service do you want to bring up?  ';
+        $this->questionServiceName = 'What service do you want to run?  ';
         $this->questionTag = 'What do you want to tag this release?  ';
 
         $this
@@ -89,7 +89,7 @@ class UpCommand extends BaseCommand
         try {
             $logger->addInfo('Running container for '.$serviceName);
             $eventDispatcher->dispatchPreRun();
-            $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
+            $this->mustRunProcess($dockerCompose->getRunCommand($serviceName), $config, 3600, $output);
 
             $pendingRelease = new Release();
             $pendingRelease->setService($service);
