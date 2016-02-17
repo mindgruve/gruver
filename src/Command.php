@@ -36,6 +36,16 @@ class Command extends BaseCommand
     protected $envVar;
 
     /**
+     * @var string
+     */
+    protected $questionServiceName = '';
+
+    /**
+     * @var string
+     */
+    protected $questionTag = '';
+
+    /**
      * @param InputInterface $input
      * @param OutputInterface $output
      */
@@ -48,19 +58,30 @@ class Command extends BaseCommand
         $projectName = $config->get('[project][name]');
         $services = $config->get('[project][services]');
         $serviceName = null;
+        $tag = null;
 
         if ($input->hasOption('service_name')) {
             $serviceName = $input->getOption('service_name');
             if (!$serviceName) {
                 $question = new ChoiceQuestion(
-                    'Service:',
+                    $this->questionServiceName,
                     $services
                 );
-                $helper->ask($input, $output, $question);
+                $serviceName = $helper->ask($input, $output, $question);
+                $input->setOption('service_name', $serviceName);
             }
         }
 
-        $container['env_vars'] = new EnvironmentalVariables($config, $projectName, $serviceName);
+        if ($input->hasOption('tag')) {
+            $tag = $input->getOption('tag');
+            if (!$tag) {
+                $question = new Question($this->questionTag);
+                $tag = $helper->ask($input, $output, $question);
+                $input->setOption('tag', $tag);
+            }
+        }
+
+        $container['env_vars'] = new EnvironmentalVariables($config, $projectName, $serviceName, $tag);
         $container['docker_compose'] = function ($c) {
             return new DockerComposeProcess($c['config'], $c['env_vars'], $c['twig']);
         };

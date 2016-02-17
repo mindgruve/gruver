@@ -15,6 +15,9 @@ class UpCommand extends Command
 
     public function configure()
     {
+        $this->questionServiceName = 'What service do you want to bring up?  ';
+        $this->questionTag = 'What do you want to tag this release?  ';
+
         $this
             ->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
@@ -64,20 +67,19 @@ class UpCommand extends Command
          */
         if (!$service) {
             $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
-            exit;
+            return;
         }
-
-        $service = $serviceRepository->getServiceOrCreate($serviceName);
-        $oldRelease = $service->getCurrentRelease();
-        $oldPendingRelease = $service->getPendingRelease();
 
         /**
          * Check if Tag Exists
          */
-        if ($releaseRepository->tagExistsForService($service, $tag)) {
+        if ($releaseRepository->checkIfTagExistsForService($service, $tag)) {
             $output->writeln('<error>Service ' . $serviceName . ' already has tag ' . $tag . '</error>');
-            exit;
+            return;
         }
+
+        $oldRelease = $service->getCurrentRelease();
+        $oldPendingRelease = $service->getPendingRelease();
 
         /**
          * Bring up service

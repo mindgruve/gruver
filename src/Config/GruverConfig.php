@@ -29,9 +29,9 @@ class GruverConfig
     protected $envVar;
 
     /**
-     * @param null|string $gruverYaml
-     *
      * @throws \Exception
+     * @internal param null|string $gruverYaml
+     *
      */
     public function __construct()
     {
