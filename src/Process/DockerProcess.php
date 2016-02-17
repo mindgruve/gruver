@@ -57,7 +57,7 @@ class DockerProcess
     {
         $process = new Process($this->config->get('[binaries][docker_binary]').' --version');
         $process->run();
-        $version = preg_match('/version ([0-9]).([0-9]).([0-9])/', trim($process->getOutput()), $matches);
+        $version = preg_match('/version ([0-9]+).([0-9]+).([0-9]+)/', trim($process->getOutput()), $matches);
         if ($version) {
             $dockerMajorVersion = $matches[1];
             $dockerMinorVersion = $matches[2];

@@ -51,24 +51,21 @@ class InstallCommand extends Command
 
         /**
          * Docker
-         * @todo confirm minimum version of SQLite
          */
         if ($docker->binaryExists()) {
             $output->writeln('<info>(✓) Docker installed</info>');
         } else {
             $output->writeln('<error>(x) Docker needs to be installed</error>');
         }
-
         $version = $docker->getVersion();
-        if ((float) ($version['major'].'.'.$version['minor']) < 1.9 && $version['patch'] < 1) {
-            $output->writeln('<error>(x) Docker version < 1.9.1</error>');
+        if ((float) ($version['major'].'.'.$version['minor']) < 1.10) {
+            $output->writeln('<error>(x) Docker version < 1.10</error>');
         } else {
-            $output->writeln('<info>(✓) Docker version >= 1.9.1</info>');
+            $output->writeln('<info>(✓) Docker version >= 1.10</info>');
         }
 
         /**
          * Docker Compose
-         * @todo confirm minimum version of Docker-Compose
          */
         if ($dockerCompose->binaryExists()) {
             $output->writeln('<info>(✓) Docker-Compose installed</info>');
@@ -76,7 +73,7 @@ class InstallCommand extends Command
             $output->writeln('<error>(x) Docker-Compose needs to be installed</error>');
         }
 
-        $version = $docker->getVersion();
+        $version = $dockerCompose->getVersion();
         if ((float) ($version['major'].'.'.$version['minor']) < 1.6) {
             $output->writeln('<error>(x) Docker-Compose version < 1.6</error>');
         } else {
