@@ -30,15 +30,15 @@ class GruverConfig
 
     /**
      * @throws \Exception
-     * @internal param null|string $gruverYaml
      *
+     * @internal param null|string $gruverYaml
      */
     public function __construct()
     {
         $this->pwd = $_SERVER['PWD'];
         $gruverYaml = $this->pwd.'/gruver.yml';
 
-        if(!file_exists($gruverYaml)){
+        if (!file_exists($gruverYaml)) {
             throw new \Exception('Gruver file not found');
         }
 

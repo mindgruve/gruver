@@ -120,6 +120,7 @@ class Service
 
     /**
      * @param $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -139,6 +140,7 @@ class Service
 
     /**
      * @param \DateTime $dateTime
+     *
      * @return $this
      */
     public function setModifiedAt(\DateTime $dateTime)
@@ -158,6 +160,7 @@ class Service
 
     /**
      * @param \DateTime $dateTime
+     *
      * @return $this
      */
     public function setCreatedAt(\DateTime $dateTime)
@@ -177,6 +180,7 @@ class Service
 
     /**
      * @param Release $release
+     *
      * @return $this
      */
     public function setCurrentRelease(Release $release = null)
@@ -196,6 +200,7 @@ class Service
 
     /**
      * @param Release $release
+     *
      * @return $this
      */
     public function setPendingRelease(Release $release = null)
@@ -215,6 +220,7 @@ class Service
 
     /**
      * @param Release $release
+     *
      * @return $this
      */
     public function setRollbackRelease(Release $release = null)

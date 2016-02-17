@@ -27,7 +27,7 @@ class InstallCommand extends BaseCommand
 
         $output->writeln('Checking gruver dependencies... ');
 
-        /**
+        /*
          * SQLite3
          * @todo confirm minium version of SQLite
          */
@@ -49,7 +49,7 @@ class InstallCommand extends BaseCommand
             $output->writeln('<info>(✓) SQLite version >= 3.0</info>');
         }
 
-        /**
+        /*
          * Docker
          */
         if ($docker->binaryExists()) {
@@ -64,7 +64,7 @@ class InstallCommand extends BaseCommand
             $output->writeln('<info>(✓) Docker version >= 1.10</info>');
         }
 
-        /**
+        /*
          * Docker Compose
          */
         if ($dockerCompose->binaryExists()) {
@@ -80,7 +80,7 @@ class InstallCommand extends BaseCommand
             $output->writeln('<info>(✓) Docker-Compose version >= 1.6</info>');
         }
 
-        /**
+        /*
          * Config Directory /etc/gruver
          */
         $process = new Process('mkdir -p /etc/gruver');
@@ -94,13 +94,13 @@ class InstallCommand extends BaseCommand
             $output->writeln('<error>(x) Unable to write to /etc/gruver</error>');
         }
 
-        /**
+        /*
          * SQLite Database
          */
         $process = new Process('mkdir -p /var/lib/gruver');
         $process->run();
 
-        /**
+        /*
          * Releases Directory
          */
         $process = new Process('mkdir -p /var/lib/gruver/releases');

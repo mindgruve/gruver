@@ -37,22 +37,23 @@ class RollbackCommand extends BaseCommand
     {
         $serviceName = $input->getOption('service_name');
 
-        /**
+        /*
          * Container Service
          */
         $em = $this->get('entity_manager');
 
-        /**
+        /*
          * Get Entities
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $service = $serviceRepository->findOneByName($serviceName);
 
-        /**
+        /*
          * Check if Service Exists
          */
         if (!$service) {
-            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+            $output->writeln('<error>Service '.$serviceName.' does not exist </error>');
+
             return;
         }
 
@@ -60,14 +61,12 @@ class RollbackCommand extends BaseCommand
         $targetRelease = $service->getRollbackRelease();
 
         if ($targetRelease) {
-
             $rollbackRelease = $targetRelease->getPreviousRelease();
 
             if ($rollbackRelease) {
                 $targetRelease->setPreviousRelease($rollbackRelease);
                 $rollbackRelease->setNextRelease($targetRelease);
             }
-
 
             $service->setCurrentRelease($targetRelease);
             $service->setPendingRelease($pendingRelease);

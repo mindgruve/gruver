@@ -46,7 +46,7 @@ class UpCommand extends BaseCommand
         $serviceName = $input->getOption('service_name');
         $tag = $input->getOption('tag');
 
-        /**
+        /*
          * Container Service
          */
         $config = $this->get('config');
@@ -55,37 +55,39 @@ class UpCommand extends BaseCommand
         $logger = $this->get('logger');
         $em = $this->get('entity_manager');
 
-        /**
+        /*
          * Get Entities
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
         $service = $serviceRepository->findOneBy(array('name' => $serviceName));
 
-        /**
+        /*
          * Check if Service Exists
          */
         if (!$service) {
-            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+            $output->writeln('<error>Service '.$serviceName.' does not exist </error>');
+
             return;
         }
 
-        /**
+        /*
          * Check if Tag Exists
          */
         if ($releaseRepository->checkIfTagExistsForService($service, $tag)) {
-            $output->writeln('<error>Service ' . $serviceName . ' already has tag ' . $tag . '</error>');
+            $output->writeln('<error>Service '.$serviceName.' already has tag '.$tag.'</error>');
+
             return;
         }
 
         $oldRelease = $service->getCurrentRelease();
         $oldPendingRelease = $service->getPendingRelease();
 
-        /**
+        /*
          * Bring up service
          */
         try {
-            $logger->addInfo('Running container for ' . $serviceName);
+            $logger->addInfo('Running container for '.$serviceName);
             $eventDispatcher->dispatchPreRun();
             $this->mustRunProcess($dockerCompose->getUpCommand($serviceName), $config, 3600, $output);
 

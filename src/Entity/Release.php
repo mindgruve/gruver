@@ -9,7 +9,6 @@ namespace Mindgruve\Gruver\Entity;
  */
 class Release
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -55,7 +54,6 @@ class Release
      */
     protected $modifiedAt;
 
-
     /**
      * @return mixed
      */
@@ -74,6 +72,7 @@ class Release
 
     /**
      * @param Service $service
+     *
      * @return $this
      */
     public function setService(Service $service)
@@ -85,6 +84,7 @@ class Release
 
     /**
      * @param $tag
+     *
      * @return $this
      */
     public function setTag($tag)
@@ -109,6 +109,7 @@ class Release
 
     /**
      * @param Release $release
+     *
      * @return $this
      */
     public function setPreviousRelease(Release $release)
@@ -128,6 +129,7 @@ class Release
 
     /**
      * @param Release $release
+     *
      * @return $this
      */
     public function setNextRelease(Release $release)
@@ -147,6 +149,7 @@ class Release
 
     /**
      * @param \DateTime $dateTime
+     *
      * @return $this
      */
     public function setModifiedAt(\DateTime $dateTime)
@@ -166,6 +169,7 @@ class Release
 
     /**
      * @param \DateTime $dateTime
+     *
      * @return $this
      */
     public function setCreatedAt(\DateTime $dateTime)
@@ -174,7 +178,6 @@ class Release
 
         return $this;
     }
-
 
     /**
      * @PrePersist
@@ -190,4 +193,3 @@ class Release
         }
     }
 }
-

@@ -25,7 +25,7 @@ class CleanupCommand extends BaseCommand
         $docker = $this->get('docker');
         $logger = $this->get('logger');
 
-        $logger->addInfo('Running cleanup for ' . $config->getApplicationName());
+        $logger->addInfo('Running cleanup for '.$config->getApplicationName());
         try {
             $eventDispatcher->dispatchPreCleanup();
 

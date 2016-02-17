@@ -32,7 +32,7 @@ class BuildCommand extends BaseCommand
         $logger = $this->get('logger');
 
         try {
-            $logger->addInfo('Building container for ' . $config->getApplicationName());
+            $logger->addInfo('Building container for '.$config->getApplicationName());
             $eventDispatcher->dispatchPreBuild();
             $this->mustRunProcess($dockerCompose->getBuildCommand(), $config, 3600, $output);
             $eventDispatcher->dispatchPostBuild();

@@ -26,8 +26,8 @@ class EnvironmentalVariables
 
     /**
      * @param GruverConfig $config
-     * @param string $serviceName
-     * @param string $tag
+     * @param string       $serviceName
+     * @param string       $tag
      */
     public function __construct(GruverConfig $config, $projectName = null, $serviceName = null, $tag = null)
     {
@@ -45,13 +45,13 @@ class EnvironmentalVariables
         $env = '';
 
         if ($this->GVR_PROJECT) {
-            $env .= ' export GVR_PROJECT=' . $this->GVR_PROJECT . ';';
+            $env .= ' export GVR_PROJECT='.$this->GVR_PROJECT.';';
         }
         if ($this->GVR_SERVICE) {
-            $env .= ' export GVR_SERVICE=' . $this->GVR_SERVICE . ';';
+            $env .= ' export GVR_SERVICE='.$this->GVR_SERVICE.';';
         }
         if ($this->GVR_RELEASE) {
-            $env .= ' export GVR_RELEASE=' . $this->GVR_RELEASE . ';';
+            $env .= ' export GVR_RELEASE='.$this->GVR_RELEASE.';';
         }
 
         return $env;

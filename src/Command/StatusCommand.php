@@ -44,7 +44,7 @@ class StatusCommand extends BaseCommand
 
         $output->writeln('');
 
-        /**
+        /*
          * Current Release
          */
         $currentRelease = $service->getCurrentRelease();
@@ -52,9 +52,9 @@ class StatusCommand extends BaseCommand
         if ($currentRelease) {
             $currentReleaseTag = $currentRelease->getTag();
         }
-        $output->writeln('<info>Current Release:</info>  ' . $currentReleaseTag);
+        $output->writeln('<info>Current Release:</info>  '.$currentReleaseTag);
 
-        /**
+        /*
          * Pending Release
          */
         $pendingRelease = $service->getPendingRelease();
@@ -62,9 +62,9 @@ class StatusCommand extends BaseCommand
         if ($pendingRelease) {
             $pendingReleaseTag = $pendingRelease->getTag();
         }
-        $output->writeln('<info>Pending Release:</info>  ' . $pendingReleaseTag);
+        $output->writeln('<info>Pending Release:</info>  '.$pendingReleaseTag);
 
-        /**
+        /*
          * Rollback Release
          */
         $rollbackRelease = $service->getRollbackRelease();
@@ -72,13 +72,12 @@ class StatusCommand extends BaseCommand
         if ($rollbackRelease) {
             $rollbacktReleaseTag = $rollbackRelease->getTag();
         }
-        $output->writeln('<info>Rollback Release:</info>  ' . $rollbacktReleaseTag);
+        $output->writeln('<info>Rollback Release:</info>  '.$rollbacktReleaseTag);
         $output->writeln('');
 
         $releases = $service->getReleases();
         $rows = array();
         foreach ($releases as $release) {
-
             $status = '';
             if ($pendingRelease && ($release->getId() == $pendingRelease->getId())) {
                 $status = 'pending';

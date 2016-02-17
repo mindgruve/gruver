@@ -10,7 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InitCommand extends BaseCommand
 {
-
     const COMMAND = 'init';
     const DESCRIPTION = 'Initialize a gruver project.';
 
@@ -34,7 +33,7 @@ class InitCommand extends BaseCommand
 
         $project = $projectRepository->findByName($projectName);
         if (!$project) {
-            $output->writeln('<info>Adding PROJECT: ' . $projectName);
+            $output->writeln('<info>Adding PROJECT: '.$projectName);
             $project = new Project();
             $project->setName($projectName);
             $em->persist($project);
@@ -44,7 +43,7 @@ class InitCommand extends BaseCommand
         foreach ($services as $serviceName) {
             $service = $serviceRepository->findOneBy(array('name' => $serviceName, 'project' => $project));
             if (!$service) {
-                $output->writeln('<info>Adding SERVICE: ' . $serviceName);
+                $output->writeln('<info>Adding SERVICE: '.$serviceName);
                 $service = new Service();
                 $service->setName($serviceName);
                 $service->setProject($project);

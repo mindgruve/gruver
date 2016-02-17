@@ -33,34 +33,33 @@ class PromoteCommand extends BaseCommand
             );
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $serviceName = $input->getOption('service_name');
 
-        /**
+        /*
          * Container Service
          */
         $em = $this->get('entity_manager');
 
-        /**
+        /*
          * Get Entities
          */
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $service = $serviceRepository->findOneByName($serviceName);
 
-        /**
+        /*
          * Check if Service Exists
          */
         if (!$service) {
-            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+            $output->writeln('<error>Service '.$serviceName.' does not exist </error>');
+
             return;
         }
 
         $targetRelease = $service->getPendingRelease();
 
         if ($targetRelease) {
-
             $oldRelease = $targetRelease->getPreviousRelease();
             if ($oldRelease) {
                 $targetRelease->setPreviousRelease($oldRelease);

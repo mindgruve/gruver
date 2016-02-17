@@ -46,7 +46,7 @@ class BaseCommand extends Command
     protected $questionTag = '';
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -93,12 +93,11 @@ class BaseCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-
         $container = new Container();
         $container['config'] = new GruverConfig();
         $container['env_vars'] = $this->envVar;
@@ -107,7 +106,7 @@ class BaseCommand extends Command
         };
         $container['twig'] = function ($c) {
             \Twig_Autoloader::register();
-            $loader = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates');
+            $loader = new \Twig_Loader_Filesystem(__DIR__.'/Resources/templates');
 
             return new \Twig_Environment($loader);
         };
@@ -145,6 +144,7 @@ class BaseCommand extends Command
 
     /**
      * @param $serviceKey
+     *
      * @return mixed
      */
     protected function get($serviceKey)
@@ -156,8 +156,8 @@ class BaseCommand extends Command
 
     /**
      * @param $cmd
-     * @param GruverConfig $config
-     * @param int $timeout
+     * @param GruverConfig    $config
+     * @param int             $timeout
      * @param OutputInterface $output
      */
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
@@ -175,8 +175,8 @@ class BaseCommand extends Command
 
     /**
      * @param $cmd
-     * @param GruverConfig $config
-     * @param int $timeout
+     * @param GruverConfig    $config
+     * @param int             $timeout
      * @param OutputInterface $output
      */
     protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)

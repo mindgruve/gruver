@@ -3,7 +3,6 @@
 namespace Mindgruve\Gruver\Factory;
 
 use Mindgruve\Gruver\Handler\ConsoleOutputHandler;
-use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;

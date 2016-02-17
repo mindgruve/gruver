@@ -7,7 +7,6 @@ use Mindgruve\Gruver\Entity\Service;
 
 class ReleaseRepository extends EntityRepository
 {
-
     public function checkIfTagExistsForService(Service $service, $tag)
     {
         $results = $this->findOneBy(array('service' => $service, 'tag' => $tag));
@@ -18,5 +17,4 @@ class ReleaseRepository extends EntityRepository
 
         return false;
     }
-
 }
