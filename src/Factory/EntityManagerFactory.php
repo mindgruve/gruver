@@ -22,6 +22,7 @@ class EntityManagerFactory
     {
         $paths = array(__DIR__.'/../Entity');
         $isDevMode = false;
+        $proxyDir = __DIR__.'/../Cache/';
 
         // the connection configuration
         $dbParams = array(
@@ -31,7 +32,7 @@ class EntityManagerFactory
             'path' => $this->config->get('[database][path]'),
         );
 
-        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, $proxyDir);
         $entityManager = EntityManager::create($dbParams, $config);
 
         return $entityManager;

@@ -4,3 +4,4 @@ documentation/.vagrant/*
 bin/*
 src/Tests/Temp/*
 source-code/*
+src/Cache/*
