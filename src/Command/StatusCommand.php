@@ -49,37 +49,15 @@ class StatusCommand extends BaseCommand
          * Current Release
          */
         $currentRelease = $service->getCurrentRelease();
-        $currentReleaseTag = 'n/a';
-        if ($currentRelease) {
-            $currentReleaseTag = $currentRelease->getTag();
-        }
-        $output->writeln('<info>Current Release:</info>  '.$currentReleaseTag);
-
-        /*
-         * Pending Release
-         */
         $pendingRelease = $service->getPendingRelease();
-        $pendingReleaseTag = 'n/a';
-        if ($pendingRelease) {
-            $pendingReleaseTag = $pendingRelease->getTag();
-        }
-        $output->writeln('<info>Pending Release:</info>  '.$pendingReleaseTag);
-
-        /*
-         * Rollback Release
-         */
         $rollbackRelease = $service->getRollbackRelease();
-        $rollbacktReleaseTag = 'n/a';
-        if ($rollbackRelease) {
-            $rollbacktReleaseTag = $rollbackRelease->getTag();
-        }
-        $output->writeln('<info>Rollback Release:</info>  '.$rollbacktReleaseTag);
-        $output->writeln('');
 
         $releases = $service->getReleases();
         $rows = array();
         foreach ($releases as $release) {
             $status = '';
+            $tag = $release->getTag();
+
             if ($pendingRelease && ($release->getId() == $pendingRelease->getId())) {
                 $status = '<comment>pending</comment>';
             }
@@ -97,11 +75,11 @@ class StatusCommand extends BaseCommand
                 $date = DateTimeHelper::humanTimeDiff($release->getCreatedAt()->getTimestamp());
             }
 
-            $rows[] = array($release->getTag(), $date, $status, $release->getContainerID());
+            $rows[] = array($tag . ' '. $status, $date, $release->getContainerID());
         }
 
         $table = new Table($output);
-        $table->setHeaders(array('Tag', 'Run Date', 'Status', 'Container', 'Heath Check'));
+        $table->setHeaders(array('Tag', 'Run Date', 'Container', 'Heath Check'));
         $table->addRows($rows);
         $table->render();
     }
