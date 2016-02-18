@@ -5,7 +5,6 @@ namespace Mindgruve\Gruver\Process;
 use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Symfony\Component\Process\Process;
-use Webpatser\Uuid\Uuid;
 
 class DockerComposeProcess
 {
@@ -62,20 +61,6 @@ class DockerComposeProcess
                 $files[] = 'docker-compose.overrides.yml';
             }
         }
-
-        $uuid = Uuid::generate();
-        $releaseFile = '/var/lib/gruver/releases/'.$uuid.'.yml';
-        $contents = $this->twig->render(
-            'docker-compose.yml.twig',
-            array(
-                'project_name' => $env->getProjectName(),
-                'service_name' => $env->getServiceName(),
-                'release' => $env->getRelease(),
-                'uuid' => $uuid,
-            )
-        );
-        file_put_contents($releaseFile, $contents);
-        $files[] = $releaseFile;
 
         $this->files = $files;
     }
@@ -134,36 +119,23 @@ class DockerComposeProcess
      *
      * @return string
      */
-    public function getUpCommand($serviceName, $detached = true)
+    public function getRunCommand($serviceName, $uuid, $detached = true, $servicePorts = true)
     {
-        $cmd = $this->config->get('[binaries][docker_compose_binary]');
-        $cmd = $this->env->buildExport().' '.$cmd;
-
-        foreach ($this->files as $file) {
-            $cmd .= ' -f '.$file;
+        $releaseFile = '/var/lib/gruver/releases/'.$uuid.'.yml';
+        if(!file_exists($releaseFile)){
+            $contents = $this->twig->render(
+                'docker-compose.yml.twig',
+                array(
+                    'project_name' => $this->env->getProjectName(),
+                    'service_name' => $this->env->getServiceName(),
+                    'release' => $this->env->getRelease(),
+                    'uuid' => $uuid,
+                )
+            );
+            file_put_contents($releaseFile, $contents);
+            $this->files[] = $releaseFile;
         }
 
-        $cmd .= ' up';
-
-        if ($detached) {
-            $cmd = $cmd.' -d';
-        }
-
-        if ($serviceName) {
-            $cmd = $cmd.' '.$serviceName;
-        }
-
-        return $cmd;
-    }
-
-    /**
-     * @param $serviceName
-     * @param bool $detached
-     *
-     * @return string
-     */
-    public function getRunCommand($serviceName, $detached = true, $servicePorts = true)
-    {
         $cmd = $this->config->get('[binaries][docker_compose_binary]');
         $cmd = $this->env->buildExport().' '.$cmd;
 

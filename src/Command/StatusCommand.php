@@ -96,7 +96,7 @@ class StatusCommand extends BaseCommand
                 $date = $release->getCreatedAt()->format('n/j/y g:iA');
             }
 
-            $rows[] = array($release->getTag(), $date, $status);
+            $rows[] = array($release->getTag(), $date, $status, $release->getContainerID());
         }
 
         $table = new Table($output);

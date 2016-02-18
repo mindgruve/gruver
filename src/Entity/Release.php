@@ -55,6 +55,11 @@ class Release
     protected $modifiedAt;
 
     /**
+     * @Column(length=140)
+     */
+    protected $containerId;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -165,6 +170,18 @@ class Release
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    public function getContainerId()
+    {
+        return $this->containerId;
+    }
+
+    public function setContainerId($containerId)
+    {
+        $this->containerId = $containerId;
+
+        return $this;
     }
 
     /**

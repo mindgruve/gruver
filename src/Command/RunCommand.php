@@ -7,6 +7,7 @@ use Mindgruve\Gruver\Entity\Release;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Webpatser\Uuid\Uuid;
 
 class RunCommand extends BaseCommand
 {
@@ -52,6 +53,7 @@ class RunCommand extends BaseCommand
         $config = $this->get('config');
         $eventDispatcher = $this->get('dispatcher');
         $dockerCompose = $this->get('docker_compose');
+        $docker = $this->get('docker');
         $logger = $this->get('logger');
         $em = $this->get('entity_manager');
 
@@ -89,11 +91,18 @@ class RunCommand extends BaseCommand
         try {
             $logger->addInfo('Running container for '.$serviceName);
             $eventDispatcher->dispatchPreRun();
-            $this->mustRunProcess($dockerCompose->getRunCommand($serviceName), $config, 3600, $output);
+
+            $uuid = Uuid::generate();
+            $this->mustRunProcess($dockerCompose->getRunCommand($serviceName, $uuid), $config, 3600, $output);
+
+            $process = $this->mustRunProcess($docker->getFilterContainersCommand('label=gruver.uuid='.$uuid), $config);
+            $containerId = trim($process->getOutput());
+
 
             $pendingRelease = new Release();
             $pendingRelease->setService($service);
             $pendingRelease->setTag($tag);
+            $pendingRelease->setContainerId($containerId);
 
             if ($oldRelease) {
                 $pendingRelease->setPreviousRelease($oldRelease);

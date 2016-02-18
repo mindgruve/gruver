@@ -156,9 +156,10 @@ class BaseCommand extends Command
 
     /**
      * @param $cmd
-     * @param GruverConfig    $config
-     * @param int             $timeout
+     * @param GruverConfig $config
+     * @param int $timeout
      * @param OutputInterface $output
+     * @return Process
      */
     protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
@@ -171,13 +172,16 @@ class BaseCommand extends Command
                 }
             }
         );
+
+        return $process;
     }
 
     /**
      * @param $cmd
-     * @param GruverConfig    $config
-     * @param int             $timeout
+     * @param GruverConfig $config
+     * @param int $timeout
      * @param OutputInterface $output
+     * @return Process
      */
     protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
     {
@@ -190,5 +194,7 @@ class BaseCommand extends Command
                 }
             }
         );
+
+        return $process;
     }
 }
