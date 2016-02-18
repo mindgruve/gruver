@@ -90,6 +90,8 @@ class BaseCommand extends Command
         $container['docker_compose'] = function ($c) {
             return new DockerComposeProcess($c['config'], $c['env_vars'], $c['twig']);
         };
+
+        $input->setOption('project_name', $projectName);
     }
 
     /**

@@ -35,6 +35,7 @@ class PromoteCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $projectName = $input->getOption('project_name');
         $serviceName = $input->getOption('service_name');
 
         /*
@@ -45,30 +46,34 @@ class PromoteCommand extends BaseCommand
         /*
          * Get Entities
          */
+        $projectRepository = $em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
-        $service = $serviceRepository->findOneByName($serviceName);
+
+        $project = $projectRepository->loadProjectByName($projectName);
+
+        /*
+         * Check if Project Exists
+         */
+        if (!$project) {
+            $output->writeln('<error>Project ' . $projectName . ' does not exist </error>');
+
+            return;
+        }
+
+        $service = $serviceRepository->loadServiceByName($project, $serviceName);
 
         /*
          * Check if Service Exists
          */
         if (!$service) {
-            $output->writeln('<error>Service '.$serviceName.' does not exist </error>');
+            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
 
             return;
         }
 
         $targetRelease = $service->getPendingRelease();
-
         if ($targetRelease) {
-            $oldRelease = $targetRelease->getPreviousRelease();
-            if ($oldRelease) {
-                $targetRelease->setPreviousRelease($oldRelease);
-                $oldRelease->setNextRelease($targetRelease);
-            }
-
             $service->setCurrentRelease($targetRelease);
-            $service->setPendingRelease($targetRelease->getNextRelease());
-            $service->setRollbackRelease($oldRelease);
             $em->flush();
         }
     }

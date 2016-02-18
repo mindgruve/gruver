@@ -44,6 +44,7 @@ class RunCommand extends BaseCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $projectName = $input->getOption('project_name');
         $serviceName = $input->getOption('service_name');
         $tag = $input->getOption('tag');
 
@@ -60,15 +61,26 @@ class RunCommand extends BaseCommand
         /*
          * Get Entities
          */
+        $projectRepository = $em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
-        $service = $serviceRepository->findOneBy(array('name' => $serviceName));
+
+
+        $project = $projectRepository->loadProjectByName($projectName);
+
+        if (!$project) {
+            $output->writeln('<error>Project ' . $projectName . ' does not exist </error>');
+
+            return;
+        }
+
+        $service = $serviceRepository->loadServiceByName($project, $serviceName);
 
         /*
          * Check if Service Exists
          */
         if (!$service) {
-            $output->writeln('<error>Service '.$serviceName.' does not exist </error>');
+            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
 
             return;
         }
@@ -76,20 +88,17 @@ class RunCommand extends BaseCommand
         /*
          * Check if Tag Exists
          */
-        if ($releaseRepository->checkIfTagExistsForService($service, $tag)) {
-            $output->writeln('<error>Service '.$serviceName.' already has tag '.$tag.'</error>');
+        if ($releaseRepository->checkIfTagExists($project, $service, $tag)) {
+            $output->writeln('<error>Service ' . $serviceName . ' already has tag ' . $tag . '</error>');
 
             return;
         }
-
-        $oldRelease = $service->getCurrentRelease();
-        $oldPendingRelease = $service->getPendingRelease();
 
         /*
          * Bring up service
          */
         try {
-            $logger->addInfo('Running container for '.$serviceName);
+            $logger->addInfo('Running container for ' . $serviceName);
             $eventDispatcher->dispatchPreRun();
 
             $uuid = Uuid::generate();
@@ -98,25 +107,20 @@ class RunCommand extends BaseCommand
             $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid), $config);
             $containerId = trim($process->getOutput());
 
+            $release = new Release();
+            $release->setService($service);
+            $release->setTag($tag);
+            $release->setContainerId($containerId);
 
-            $pendingRelease = new Release();
-            $pendingRelease->setService($service);
-            $pendingRelease->setTag($tag);
-            $pendingRelease->setContainerId($containerId);
-
-            if ($oldRelease) {
-                $pendingRelease->setPreviousRelease($oldRelease);
-                $oldRelease->setNextRelease($pendingRelease);
+            $mostRecentRelease = $service->getMostRecentRelease();
+            if ($mostRecentRelease) {
+                $release->setPreviousRelease($mostRecentRelease);
+                $mostRecentRelease->setNextRelease($release);
             }
 
-            if ($oldPendingRelease) {
-                $pendingRelease->setPreviousRelease($oldPendingRelease);
-                $oldPendingRelease->setNextRelease($pendingRelease);
-            }
-
-            $service->setPendingRelease($pendingRelease);
-            $service->addRelease($pendingRelease);
-            $em->persist($pendingRelease);
+            $service->setMostRecentRelease($release);
+            $service->addRelease($release);
+            $em->persist($release);
             $em->flush();
 
             $eventDispatcher->dispatchPostRun();

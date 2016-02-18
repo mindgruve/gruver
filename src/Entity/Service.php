@@ -45,6 +45,12 @@ class Service
 
     /**
      * @OneToOne(targetEntity="Release")
+     * @JoinColumn(name="most_recent_release_id", referencedColumnName="id")
+     */
+    protected $mostRecentRelease;
+
+    /**
+     * @OneToOne(targetEntity="Release")
      * @JoinColumn(name="rollback_release_id", referencedColumnName="id")
      */
     protected $rollbackRelease;
@@ -195,39 +201,41 @@ class Service
      */
     public function getPendingRelease()
     {
-        return $this->pendingRelease;
+        if ($this->currentRelease) {
+            return $this->currentRelease->getNextRelease();
+        }
+
+        if($this->mostRecentRelease){
+            return $this->mostRecentRelease;
+        }
+
+        return null;
     }
 
-    /**
-     * @param Release $release
-     *
-     * @return $this
-     */
-    public function setPendingRelease(Release $release = null)
-    {
-        $this->pendingRelease = $release;
-
-        return $this;
-    }
 
     /**
      * @return Release
      */
     public function getRollbackRelease()
     {
-        return $this->rollbackRelease;
+        if ($this->currentRelease) {
+            return $this->currentRelease->getPreviousRelease();
+        }
+
+        return null;
     }
 
-    /**
-     * @param Release $release
-     *
-     * @return $this
-     */
-    public function setRollbackRelease(Release $release = null)
+
+    public function setMostRecentRelease(Release $release = null)
     {
-        $this->rollbackRelease = $release;
+        $this->mostRecentRelease = $release;
 
         return $this;
+    }
+
+    public function getMostRecentRelease()
+    {
+        return $this->mostRecentRelease;
     }
 
     /**
