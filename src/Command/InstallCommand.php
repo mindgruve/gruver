@@ -43,7 +43,7 @@ class InstallCommand extends BaseCommand
             $output->writeln('<error>(x) SQLite extension for PHP not loaded</error>');
         }
         $version = $sqlite3->getVersion();
-        if ((float) ($version['major'].'.'.$version['minor']) < 3.0) {
+        if ((float)($version['major'] . '.' . $version['minor']) < 3.0) {
             $output->writeln('<error>(x) SQLite version < 3.0</error>');
         } else {
             $output->writeln('<info>(✓) SQLite version >= 3.0</info>');
@@ -58,7 +58,7 @@ class InstallCommand extends BaseCommand
             $output->writeln('<error>(x) Docker needs to be installed</error>');
         }
         $version = $docker->getVersion();
-        if ((float) ($version['major'].'.'.$version['minor']) < 1.10) {
+        if ((float)($version['major'] . '.' . $version['minor']) < 1.10) {
             $output->writeln('<error>(x) Docker version < 1.10</error>');
         } else {
             $output->writeln('<info>(✓) Docker version >= 1.10</info>');
@@ -74,7 +74,7 @@ class InstallCommand extends BaseCommand
         }
 
         $version = $dockerCompose->getVersion();
-        if ((float) ($version['major'].'.'.$version['minor']) < 1.6) {
+        if ((float)($version['major'] . '.' . $version['minor']) < 1.6) {
             $output->writeln('<error>(x) Docker-Compose version < 1.6</error>');
         } else {
             $output->writeln('<info>(✓) Docker-Compose version >= 1.6</info>');
@@ -86,13 +86,28 @@ class InstallCommand extends BaseCommand
         $process = new Process('mkdir -p /etc/gruver');
         $process->run();
         if (!file_exists('/etc/gruver/config.yml')) {
-            copy(__DIR__.'/../Resources/config/gruver.yml', '/etc/gruver/config.yml');
+            copy(__DIR__ . '/../Resources/config/gruver.yml', '/etc/gruver/config.yml');
         }
         if (file_exists('/etc/gruver/config.yml')) {
             $output->writeln('<info>(✓) Able to write to /etc/gruver</info>');
         } else {
             $output->writeln('<error>(x) Unable to write to /etc/gruver</error>');
         }
+
+        /**
+         * Template Directory
+         */
+        $process = new Process('mkdir -p /etc/gruver/templates');
+        $process->run();
+        if (!file_exists('/etc/gruver/templates/haproxy.cfg.twig')) {
+            copy(__DIR__ . '/../Resources/templates/haproxy.cfg.twig', '/etc/gruver/templates/haproxy.cfg.twig');
+        }
+        if (file_exists('/etc/gruver/templates/haproxy.cfg.twig')) {
+            $output->writeln('<info>(✓) Able to write to /etc/gruver/templates</info>');
+        } else {
+            $output->writeln('<error>(x) Unable to write to /etc/gruver/templates</error>');
+        }
+
 
         /*
          * SQLite Database

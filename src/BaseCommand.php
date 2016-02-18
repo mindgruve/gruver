@@ -46,7 +46,7 @@ class BaseCommand extends Command
     protected $questionTag = '';
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -60,7 +60,7 @@ class BaseCommand extends Command
         $serviceName = null;
         $tag = null;
 
-        if($input->hasOption('project_name')){
+        if ($input->hasOption('project_name')) {
             $input->setOption('project_name', $projectName);
         }
 
@@ -97,7 +97,7 @@ class BaseCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -110,7 +110,12 @@ class BaseCommand extends Command
         };
         $container['twig'] = function ($c) {
             \Twig_Autoloader::register();
-            $loader = new \Twig_Loader_Filesystem(__DIR__.'/Resources/templates');
+            $loader = new \Twig_Loader_Filesystem(
+                array(
+                    '/etc/gruver/templates',
+                    __DIR__ . '/Resources/templates'
+                )
+            );
 
             return new \Twig_Environment($loader);
         };
