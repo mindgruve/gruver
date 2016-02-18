@@ -50,9 +50,20 @@ class DockerProcess
         return $this->config->get('[binaries][docker_binary]') . ' rmi $(docker images -f "dangling=true" -q)';
     }
 
-    public function getFilterContainersCommand($filter, $format = '{{.ID}}')
+    public function getFilterPSContainersCommand($filter, $format = null)
     {
-        return $this->config->get('[binaries][docker_binary]') . ' ps --filter "' . $filter . '" --format="'.$format.'"';
+        $cmd = $this->config->get('[binaries][docker_binary]') . ' ps --filter "' . $filter;
+
+        if ($format) {
+            $cmd = $cmd . '" --format="' . $format . '"';
+        }
+
+        return $cmd;
+    }
+
+    public function getContainerIdByGruverUUIDCommand($uuid)
+    {
+        return $this->getFilterPSContainersCommand('label=gruver.uuid=' . $uuid);
     }
 
     /**

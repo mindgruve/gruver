@@ -95,7 +95,7 @@ class RunCommand extends BaseCommand
             $uuid = Uuid::generate();
             $this->mustRunProcess($dockerCompose->getRunCommand($serviceName, $uuid), $config, 3600, $output);
 
-            $process = $this->mustRunProcess($docker->getFilterContainersCommand('label=gruver.uuid='.$uuid), $config);
+            $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid), $config);
             $containerId = trim($process->getOutput());
 
 

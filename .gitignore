@@ -5,3 +5,4 @@ bin/*
 src/Tests/Temp/*
 source-code/*
 src/Cache/*
+src/Resources/templates/haproxy.cfg.twig
