@@ -3,6 +3,7 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\BaseCommand;
+use Mindgruve\Gruver\Helper\DateTimeHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -80,11 +81,11 @@ class StatusCommand extends BaseCommand
         foreach ($releases as $release) {
             $status = '';
             if ($pendingRelease && ($release->getId() == $pendingRelease->getId())) {
-                $status = 'pending';
+                $status = '<comment>pending</comment>';
             }
 
             if ($currentRelease && ($release->getId() == $currentRelease->getId())) {
-                $status = 'current';
+                $status = '<info>current</info>';
             }
 
             if ($rollbackRelease && ($release->getId() == $rollbackRelease->getId())) {
@@ -93,7 +94,7 @@ class StatusCommand extends BaseCommand
 
             $date = 'n/a';
             if ($release->getCreatedAt()) {
-                $date = $release->getCreatedAt()->format('n/j/y g:iA');
+                $date = DateTimeHelper::humanTimeDiff($release->getCreatedAt()->getTimestamp());
             }
 
             $rows[] = array($release->getTag(), $date, $status, $release->getContainerID());
