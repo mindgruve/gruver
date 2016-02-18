@@ -22,7 +22,7 @@ class Service
 
     /**
      * @ManyToOne(targetEntity="Project", inversedBy="services")
-     * @JoinColumn(name="project_id", referencedColumnName="id")
+     * @JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
      */
     protected $project;
 

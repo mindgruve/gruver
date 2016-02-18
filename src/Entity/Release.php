@@ -22,13 +22,13 @@ class Release
 
     /**
      * @ManyToOne(targetEntity="Project", inversedBy="releases")
-     * @JoinColumn(name="project_id", referencedColumnName="id")
+     * @JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
      */
     protected $project;
 
     /**
      * @ManyToOne(targetEntity="Service", inversedBy="releases")
-     * @JoinColumn(name="service_id", referencedColumnName="id")
+     * @JoinColumn(name="service_id", referencedColumnName="id", nullable=false)
      */
     protected $service;
 
@@ -193,6 +193,15 @@ class Release
     {
         $this->createdAt = $dateTime;
 
+        return $this;
+    }
+
+    public function getProject(){
+        return $this->project;
+    }
+
+    public function setProject(Project $project){
+        $this->project=$project;
         return $this;
     }
 

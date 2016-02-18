@@ -108,6 +108,7 @@ class RunCommand extends BaseCommand
             $containerId = trim($process->getOutput());
 
             $release = new Release();
+            $release->setProject($project);
             $release->setService($service);
             $release->setTag($tag);
             $release->setContainerId($containerId);

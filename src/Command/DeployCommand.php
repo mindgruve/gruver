@@ -13,7 +13,6 @@ class DeployCommand extends BaseCommand
     const DESCRIPTION = 'Deploy an application.';
 
 
-
     public function configure()
     {
         $this->questionServiceName = 'What service do you want to deploy?  ';
@@ -44,8 +43,9 @@ class DeployCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $projectName = $input->getOption('project_name');
         $serviceName = $input->getOption('service_name');
-        $tag = $input->getOption('service_name');
+        $tag = $input->getOption('tag');
 
         /*
          * Container Service
@@ -55,24 +55,36 @@ class DeployCommand extends BaseCommand
         /*
          * Get Entities
          */
+        $projectRepository = $em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
-        $service = $serviceRepository->findOneBy(array('name' => $serviceName));
+        $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
+
+        $project = $projectRepository->loadProjectByName($projectName);
+
+        /*
+         * Check if Project Exists
+         */
+        if (!$project) {
+            $output->writeln('<error>Project ' . $projectName . ' does not exist </error>');
+
+            return;
+        }
+
+        $service = $serviceRepository->loadServiceByName($project, $serviceName);
 
         /*
          * Check if Service Exists
          */
         if (!$service) {
-            $output->writeln('<error>Service '.$serviceName.' does not exist </error>');
+            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
 
             return;
         }
 
-        $targetRelease = $service->getPendingRelease();
+        $targetRelease = $releaseRepository->findReleaseByTag($project, $service, $tag);
         if ($targetRelease) {
             $service->setCurrentRelease($targetRelease);
             $em->flush();
         }
     }
-
-
 }

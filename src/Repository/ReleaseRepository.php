@@ -10,17 +10,17 @@ class ReleaseRepository extends EntityRepository
 {
     public function checkIfTagExists(Project $project, Service $service, $tag)
     {
-        $results = $this->findOneBy(array('project' => $project, 'service' => $service, 'tag' => $tag));
+        $result = $this->findReleaseByTag($project, $service, (string) $tag);
 
-        if ($results) {
+        if ($result) {
             return true;
         }
 
         return false;
     }
 
-    public function findReleaseByTag($project, $service, $tag)
+    public function findReleaseByTag(Project $project, Service $service, $tag)
     {
-
+        return $this->findOneBy(array('project' => $project, 'service' => $service, 'tag' => (string)$tag));
     }
 }
