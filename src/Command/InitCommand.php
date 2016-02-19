@@ -25,28 +25,34 @@ class InitCommand extends BaseCommand
         $config = $this->get('config');
 
         $projectName = $config->get('[project][name]');
-        $services = $config->get('[project][services]');
+        $services = $config->get('[project][public_services]');
 
         $em = $this->get('entity_manager');
         $projectRepository = $em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
 
-        $project = $projectRepository->findByName($projectName);
+        $project = $projectRepository->loadProjectByName($projectName);
         if (!$project) {
-            $output->writeln('<info>Adding PROJECT: '.$projectName);
+            $output->writeln('<info>Adding PROJECT: ' . $projectName);
             $project = new Project();
             $project->setName($projectName);
             $em->persist($project);
             $em->flush();
         }
 
-        foreach ($services as $serviceName) {
+        foreach ($services as $item) {
+            $serviceName = $item['name'];
+            $hosts = $item['hosts'];
+            $port = $item['port'];
+
             $service = $serviceRepository->findOneBy(array('name' => $serviceName, 'project' => $project));
             if (!$service) {
-                $output->writeln('<info>Adding SERVICE: '.$serviceName);
+                $output->writeln('<info>Adding SERVICE: ' . $serviceName);
                 $service = new Service();
                 $service->setName($serviceName);
                 $service->setProject($project);
+                $service->setHosts($hosts);
+                $service->setPublicPort($port);
                 $project->addService($service);
                 $em->persist($service);
                 $em->flush();

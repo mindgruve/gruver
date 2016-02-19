@@ -1,15 +1,15 @@
 global
 
 defaults
-    mode http
-    timeout connect 5000ms
-    timeout client 50000ms
-    timeout server 50000ms
+    mode {{ config.default.mode }}
+    timeout connect {{ config.defaults.timeout_connect }}
+    timeout client {{ config.defaults.timeout_client }}
+    timeout server {{ config.defaults.timeout_server }}
 
 
 frontend http
-    bind       *:80
-    mode       http
+    bind       {{ config.frontend.bind }}
+    mode       {{ config.frontend.mode }}
 
 {% for service in services %}{% for host in service.hosts %}
     acl host_{{ service.name }}{{ service.id }} hdr_end(host) -i {{ host }}

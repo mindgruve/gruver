@@ -57,7 +57,7 @@ class BaseCommand extends Command
         $config = $container['config'];
 
         $projectName = $config->get('[project][name]');
-        $services = $config->get('[project][services]');
+        $services = $config->get('[project][public_services]');
         $serviceName = null;
         $tag = null;
 
@@ -69,11 +69,15 @@ class BaseCommand extends Command
             $serviceName = $input->getOption('service_name');
             if (!$serviceName) {
                 if (count($services) == 1) {
-                    $serviceName = $services[0];
+                    $serviceName = $services[0]['name'];
                 } else {
+                    $serviceNames= array();
+                    foreach($services as $service){
+                        $serviceNames[] = $service['name'];
+                    }
                     $question = new ChoiceQuestion(
                         $this->questionServiceName,
-                        $services
+                        $serviceNames
                     );
                     $serviceName = $helper->ask($input, $output, $question);
                 }
@@ -136,7 +140,7 @@ class BaseCommand extends Command
             return new UrlFactory($c['config']);
         };
         $container['haproxy.helper'] = function($c){
-            return new HAProxyHelper($c['twig']);
+            return new HAProxyHelper($c['twig'], $c['config']);
         };
         $container['entity_manager'] = function ($c) {
             $factory = new EntityManagerFactory($c['config']);

@@ -2,18 +2,25 @@
 
 namespace Mindgruve\Gruver\Helper;
 
+use Mindgruve\Gruver\Config\GruverConfig;
+
 class HAProxyHelper
 {
 
     protected $twig;
 
-    public function __construct(\Twig_Environment $twig)
+    protected $config;
+
+    public function __construct(\Twig_Environment $twig, GruverConfig $config)
     {
         $this->twig = $twig;
+        $this->config = $config;
     }
 
     public function render()
     {
+        $config = $this->config->get('[haproxy]');
+
         $services = array();
         $services[] = array(
             'id' => 1,
@@ -25,7 +32,7 @@ class HAProxyHelper
             'port' => '1242'
         );
 
-        return $this->twig->render('haproxy.cfg.twig', array('services' => $services));
+        return $this->twig->render('haproxy.cfg.twig', array('services' => $services, 'config' => $config));
     }
 
 }

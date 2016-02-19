@@ -20,6 +20,12 @@ class Service
     /** @Column(length=140) */
     protected $name;
 
+    /** @Column(type="array") */
+    protected $hosts;
+
+    /** @Column(length=8) */
+    protected $publicPort;
+
     /**
      * @ManyToOne(targetEntity="Project", inversedBy="services")
      * @JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
@@ -205,7 +211,7 @@ class Service
             return $this->currentRelease->getNextRelease();
         }
 
-        if($this->mostRecentRelease){
+        if ($this->mostRecentRelease) {
             return $this->mostRecentRelease;
         }
 
@@ -262,5 +268,25 @@ class Service
         $this->project = $project;
 
         return $this;
+    }
+
+    public function setHosts(array $hosts)
+    {
+        $this->hosts = $hosts;
+    }
+
+    public function getHosts()
+    {
+        return $this->hosts;
+    }
+
+    public function setPublicPort($port)
+    {
+        $this->publicPort = $port;
+    }
+
+    public function getPublicPort()
+    {
+        return $this->publicPort;
     }
 }
