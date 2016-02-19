@@ -43,7 +43,7 @@ class InitCommand extends BaseCommand
         foreach ($services as $item) {
             $serviceName = $item['name'];
             $hosts = $item['hosts'];
-            $port = $item['port'];
+            $ports = $item['ports'];
 
             $service = $serviceRepository->findOneBy(array('name' => $serviceName, 'project' => $project));
             if (!$service) {
@@ -51,8 +51,8 @@ class InitCommand extends BaseCommand
                 $service = new Service();
                 $service->setName($serviceName);
                 $service->setProject($project);
-                $service->setHosts($hosts);
-                $service->setPublicPort($port);
+                $service->setPublicHosts($hosts);
+                $service->setPublicPorts($ports);
                 $project->addService($service);
                 $em->persist($service);
                 $em->flush();

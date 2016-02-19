@@ -21,10 +21,10 @@ class Service
     protected $name;
 
     /** @Column(type="array") */
-    protected $hosts;
+    protected $publicHosts;
 
-    /** @Column(length=8) */
-    protected $publicPort;
+    /** @Column(type="array") */
+    protected $publicPorts;
 
     /**
      * @ManyToOne(targetEntity="Project", inversedBy="services")
@@ -270,23 +270,23 @@ class Service
         return $this;
     }
 
-    public function setHosts(array $hosts)
+    public function setPublicHosts(array $hosts)
     {
-        $this->hosts = $hosts;
+        $this->publicHosts = $hosts;
     }
 
-    public function getHosts()
+    public function getPublicHosts()
     {
-        return $this->hosts;
+        return $this->publicHosts;
     }
 
-    public function setPublicPort($port)
+    public function setPublicPorts($port)
     {
-        $this->publicPort = $port;
+        $this->publicPorts = $port;
     }
 
-    public function getPublicPort()
+    public function getPublicPorts()
     {
-        return $this->publicPort;
+        return $this->publicPorts;
     }
 }
