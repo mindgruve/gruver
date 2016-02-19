@@ -125,7 +125,7 @@ class RunCommand extends BaseCommand
             $em->flush();
 
             $haProxyHelper = $this->get('haproxy.helper');
-            echo $haProxyHelper->render();
+            //echo $haProxyHelper->render();
 
             $eventDispatcher->dispatchPostRun();
         } catch (\Exception $e) {

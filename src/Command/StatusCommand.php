@@ -37,11 +37,36 @@ class StatusCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $projectName = $input->getOption('project_name');
         $serviceName = $input->getOption('service_name');
 
         $em = $this->get('entity_manager');
+        /*
+         * Get Entities
+         */
+        $projectRepository = $em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
-        $service = $serviceRepository->findOneByName($serviceName);
+
+
+        $project = $projectRepository->loadProjectByName($projectName);
+
+        if (!$project) {
+            $output->writeln('<error>Project ' . $projectName . ' does not exist </error>');
+
+            return;
+        }
+
+        $service = $serviceRepository->loadServiceByName($project, $serviceName);
+
+
+        /*
+         * Check if Service Exists
+         */
+        if (!$service) {
+            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+
+            return;
+        }
 
         $output->writeln('');
 
