@@ -7,6 +7,7 @@ use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\Factory\EntityManagerFactory;
 use Mindgruve\Gruver\Factory\LoggerFactory;
 use Mindgruve\Gruver\Factory\UrlFactory;
+use Mindgruve\Gruver\Helper\HAProxyHelper;
 use Mindgruve\Gruver\Process\DockerComposeProcess;
 use Mindgruve\Gruver\Process\DockerProcess;
 use Mindgruve\Gruver\Process\Sqlite3Process;
@@ -133,6 +134,9 @@ class BaseCommand extends Command
         };
         $container['url.factory'] = function ($c) {
             return new UrlFactory($c['config']);
+        };
+        $container['haproxy.helper'] = function($c){
+            return new HAProxyHelper($c['twig']);
         };
         $container['entity_manager'] = function ($c) {
             $factory = new EntityManagerFactory($c['config']);

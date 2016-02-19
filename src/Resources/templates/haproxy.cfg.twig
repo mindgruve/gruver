@@ -1,0 +1,31 @@
+global
+
+defaults
+    mode http
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+
+frontend http
+    bind       *:80
+    mode       http
+
+{% for service in services %}{% for host in service.hosts %}
+    acl host_{{ service.name }}{{ service.id }} hdr_end(host) -i {{ host }}
+{% endfor %}{% endfor %}
+
+{% for service in services %}
+    use backend backend_{{ service.id}} if host_{{ service.id }}
+{% endfor %}
+
+{% for service in services %}
+
+backend backend_{{ service.id }}
+    mode http
+    balance roundrobin
+    option forwardfor
+    http-request set-header X-Forwarded-Port %[dst_port]
+    server web_{{ service.id}} {{ service.ip }}:{{ service.port }} check
+
+{% endfor %}

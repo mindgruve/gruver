@@ -124,6 +124,9 @@ class RunCommand extends BaseCommand
             $em->persist($release);
             $em->flush();
 
+            $haProxyHelper = $this->get('haproxy.helper');
+            echo $haProxyHelper->render();
+
             $eventDispatcher->dispatchPostRun();
         } catch (\Exception $e) {
             $logger->addError('Error encountered running docker-compose');
