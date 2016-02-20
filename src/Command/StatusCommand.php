@@ -100,11 +100,11 @@ class StatusCommand extends BaseCommand
                 $date = DateTimeHelper::humanTimeDiff($release->getCreatedAt()->getTimestamp());
             }
 
-            $rows[] = array($tag . ' '. $status, $date, $release->getContainerID());
+            $rows[] = array($tag . ' ' . $status, $date, $release->getContainerID(), $release->getContainerIp(), $release->getContainerPort());
         }
 
         $table = new Table($output);
-        $table->setHeaders(array('Tag', 'Run Date', 'Container', 'Heath Check'));
+        $table->setHeaders(array('Tag', 'Run Date', 'Container', 'IP', 'Port', 'Heath Check'));
         $table->addRows($rows);
         $table->render();
     }

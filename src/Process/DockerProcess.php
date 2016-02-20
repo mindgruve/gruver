@@ -52,13 +52,18 @@ class DockerProcess
 
     public function getFilterPSContainersCommand($filter, $format = null)
     {
-        $cmd = $this->config->get('[binaries][docker_binary]') . ' ps --filter "' . $filter .'"';
+        $cmd = $this->config->get('[binaries][docker_binary]') . ' ps --filter "' . $filter . '"';
 
         if ($format) {
             $cmd = $cmd . ' --format="' . $format . '"';
         }
 
         return $cmd;
+    }
+
+    public function getContainerPortsByGruverUUIDCommand($uuid)
+    {
+        return $this->getFilterPSContainersCommand('label=gruver.uuid=' . $uuid, '{{.Ports}}');
     }
 
     public function getContainerIdByGruverUUIDCommand($uuid)

@@ -104,14 +104,27 @@ class RunCommand extends BaseCommand
             $uuid = Uuid::generate();
             $this->mustRunProcess($dockerCompose->getRunCommand($serviceName, $uuid), $config, 3600, $output);
 
-            $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid), $config);
-            $containerId = trim($process->getOutput());
-
             $release = new Release();
             $release->setProject($project);
             $release->setService($service);
             $release->setTag($tag);
+
+            $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid), $config);
+            $containerId = trim($process->getOutput());
+
             $release->setContainerId($containerId);
+
+            $process = $this->mustRunProcess($docker->getContainerPortsByGruverUUIDCommand($uuid), $config);
+            $output = trim($process->getOutput());
+            if (preg_match('/(.*):(.*)->(.*)/', $output, $matches)) {
+                $ip = $matches[1];
+                $port = $matches[2];
+
+                $release->setContainerIp($ip);
+                $release->setContainerPort($port);
+            } else {
+                throw new \Exception('IP:Port needed for each container');
+            }
 
             $mostRecentRelease = $service->getMostRecentRelease();
             if ($mostRecentRelease) {
@@ -124,8 +137,8 @@ class RunCommand extends BaseCommand
             $em->persist($release);
             $em->flush();
 
-            $haProxyHelper = $this->get('haproxy.helper');
-            echo $haProxyHelper->render();
+//            $haProxyHelper = $this->get('haproxy.helper');
+//            echo $haProxyHelper->render();
 
             $eventDispatcher->dispatchPostRun();
         } catch (\Exception $e) {

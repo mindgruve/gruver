@@ -60,6 +60,16 @@ class Release
     protected $containerId;
 
     /**
+     * @Column(length=140)
+     */
+    protected $containerIp;
+
+    /**
+     * @Column(length=140)
+     */
+    protected $containerPort;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -184,6 +194,30 @@ class Release
         return $this;
     }
 
+    public function getContainerIp()
+    {
+        return $this->containerIp;
+    }
+
+    public function setContainerIp($ip)
+    {
+        $this->containerIp = $ip;
+
+        return $this;
+    }
+
+    public function getContainerPort()
+    {
+        return $this->containerPort;
+    }
+
+    public function setContainerPort($port)
+    {
+        $this->containerPort = $port;
+
+        return $this;
+    }
+
     /**
      * @param \DateTime $dateTime
      *
@@ -196,12 +230,15 @@ class Release
         return $this;
     }
 
-    public function getProject(){
+    public function getProject()
+    {
         return $this->project;
     }
 
-    public function setProject(Project $project){
-        $this->project=$project;
+    public function setProject(Project $project)
+    {
+        $this->project = $project;
+
         return $this;
     }
 
