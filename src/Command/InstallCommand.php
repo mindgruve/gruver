@@ -43,7 +43,7 @@ class InstallCommand extends BaseCommand
             $output->writeln('<error>(x) SQLite extension for PHP not loaded</error>');
         }
         $version = $sqlite3->getVersion();
-        if ((float)($version['major'] . '.' . $version['minor']) < 3.0) {
+        if ($version->compareVersion(3.0)) {
             $output->writeln('<error>(x) SQLite version < 3.0</error>');
         } else {
             $output->writeln('<info>(✓) SQLite version >= 3.0</info>');
@@ -58,7 +58,7 @@ class InstallCommand extends BaseCommand
             $output->writeln('<error>(x) Docker needs to be installed</error>');
         }
         $version = $docker->getVersion();
-        if ((float)($version['major'] . '.' . $version['minor']) < 1.10) {
+        if ($version->compareVersion(1, 10)) {
             $output->writeln('<error>(x) Docker version < 1.10</error>');
         } else {
             $output->writeln('<info>(✓) Docker version >= 1.10</info>');
@@ -74,7 +74,7 @@ class InstallCommand extends BaseCommand
         }
 
         $version = $dockerCompose->getVersion();
-        if ((float)($version['major'] . '.' . $version['minor']) < 1.6) {
+        if ($version->compareVersion(1, 6)) {
             $output->writeln('<error>(x) Docker-Compose version < 1.6</error>');
         } else {
             $output->writeln('<info>(✓) Docker-Compose version >= 1.6</info>');

@@ -5,7 +5,7 @@ namespace Mindgruve\Gruver\Process;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Symfony\Component\Process\Process;
 
-class Sqlite3Process
+class Sqlite3Process implements ProcessInterface
 {
     /**
      * @var GruverConfig
@@ -25,7 +25,7 @@ class Sqlite3Process
      */
     public function binaryExists()
     {
-        $process = new Process('which '.$this->config->get('[binaries][sqlite3_binary]'));
+        $process = new Process('which ' . $this->config->get('[binaries][sqlite3_binary]'));
         $process->run();
         if ($process->getOutput() == '') {
             return false;
@@ -35,25 +35,19 @@ class Sqlite3Process
     }
 
     /**
-     * @return array|null
+     * @return ProcessVersion
      */
     public function getVersion()
     {
-        $process = new Process($this->config->get('[binaries][sqlite3_binary]').' --version');
+        $process = new Process($this->config->get('[binaries][sqlite3_binary]') . ' --version');
         $process->run();
         $version = preg_match('/([0-9]).([0-9]).([0-9])/', trim($process->getOutput()), $matches);
         if ($version) {
-            $dockerMajorVersion = $matches[1];
-            $dockerMinorVersion = $matches[2];
-            $dockerPatch = $matches[3];
+            $major = $matches[1];
+            $minor = $matches[2];
+            $patch = $matches[3];
 
-            return array(
-                'major' => $dockerMajorVersion,
-                'minor' => $dockerMinorVersion,
-                'patch' => $dockerPatch,
-            );
+            return new ProcessVersion($major, $minor, $patch);
         }
-
-        return;
     }
 }

@@ -5,7 +5,7 @@ namespace Mindgruve\Gruver\Process;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Symfony\Component\Process\Process;
 
-class DockerProcess
+class DockerProcess implements ProcessInterface
 {
     /**
      * @var GruverConfig
@@ -72,7 +72,7 @@ class DockerProcess
     }
 
     /**
-     * @return array|null
+     * @return ProcessVersion
      */
     public function getVersion()
     {
@@ -80,17 +80,11 @@ class DockerProcess
         $process->run();
         $version = preg_match('/version ([0-9]+).([0-9]+).([0-9]+)/', trim($process->getOutput()), $matches);
         if ($version) {
-            $dockerMajorVersion = $matches[1];
-            $dockerMinorVersion = $matches[2];
-            $dockerPatch = $matches[3];
+            $major = $matches[1];
+            $minor = $matches[2];
+            $patch = $matches[3];
 
-            return array(
-                'major' => $dockerMajorVersion,
-                'minor' => $dockerMinorVersion,
-                'patch' => $dockerPatch,
-            );
+            return new ProcessVersion($major, $minor, $patch);
         }
-
-        return;
     }
 }

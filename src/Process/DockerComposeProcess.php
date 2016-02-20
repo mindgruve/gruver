@@ -6,7 +6,7 @@ use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Symfony\Component\Process\Process;
 
-class DockerComposeProcess
+class DockerComposeProcess implements ProcessInterface
 {
     /**
      * @var string
@@ -48,16 +48,16 @@ class DockerComposeProcess
         $this->pwd = $config->get('[application][directory]');
 
         foreach ($files as $key => $file) {
-            if (!file_exists($this->pwd.'/'.$file)) {
-                throw new \Exception('File does not exist - '.$file);
+            if (!file_exists($this->pwd . '/' . $file)) {
+                throw new \Exception('File does not exist - ' . $file);
             }
         }
 
         if (!$files) {
-            if (file_exists($this->pwd.'/docker-compose.yml')) {
+            if (file_exists($this->pwd . '/docker-compose.yml')) {
                 $files[] = 'docker-compose.yml';
             }
-            if (file_exists($this->pwd.'/docker-compose.overrides.yml')) {
+            if (file_exists($this->pwd . '/docker-compose.overrides.yml')) {
                 $files[] = 'docker-compose.overrides.yml';
             }
         }
@@ -67,7 +67,7 @@ class DockerComposeProcess
 
     public function binaryExists()
     {
-        $process = new Process('which '.$this->config->get('[binaries][docker_compose_binary]'));
+        $process = new Process('which ' . $this->config->get('[binaries][docker_compose_binary]'));
         $process->run();
         if ($process->getOutput() == '') {
             return false;
@@ -76,24 +76,21 @@ class DockerComposeProcess
         }
     }
 
+    /**
+     * @return ProcessVersion
+     */
     public function getVersion()
     {
-        $process = new Process($this->config->get('[binaries][docker_compose_binary]').' --version');
+        $process = new Process($this->config->get('[binaries][docker_compose_binary]') . ' --version');
         $process->run();
         $version = preg_match('/version ([0-9]).([0-9]).([0-9])/', trim($process->getOutput()), $matches);
         if ($version) {
-            $dockerMajorVersion = $matches[1];
-            $dockerMinorVersion = $matches[2];
-            $dockerPatch = $matches[3];
+            $major = $matches[1];
+            $minor = $matches[2];
+            $patch = $matches[3];
 
-            return array(
-                'major' => $dockerMajorVersion,
-                'minor' => $dockerMinorVersion,
-                'patch' => $dockerPatch,
-            );
+            return new ProcessVersion($major, $minor, $patch);
         }
-
-        return array();
     }
 
     /**
@@ -102,10 +99,10 @@ class DockerComposeProcess
     public function getBuildCommand()
     {
         $cmd = $this->config->get('[binaries][docker_compose_binary]');
-        $cmd = $this->env->buildExport().' '.$cmd;
+        $cmd = $this->env->buildExport() . ' ' . $cmd;
 
         foreach ($this->files as $file) {
-            $cmd .= ' -f '.$file;
+            $cmd .= ' -f ' . $file;
         }
 
         $cmd .= ' build';
@@ -121,8 +118,8 @@ class DockerComposeProcess
      */
     public function getRunCommand($serviceName, $uuid, $detached = true, $servicePorts = true)
     {
-        $releaseFile = '/var/lib/gruver/releases/'.$uuid.'.yml';
-        if(!file_exists($releaseFile)){
+        $releaseFile = '/var/lib/gruver/releases/' . $uuid . '.yml';
+        if (!file_exists($releaseFile)) {
             $contents = $this->twig->render(
                 'docker-compose.yml.twig',
                 array(
@@ -137,24 +134,24 @@ class DockerComposeProcess
         }
 
         $cmd = $this->config->get('[binaries][docker_compose_binary]');
-        $cmd = $this->env->buildExport().' '.$cmd;
+        $cmd = $this->env->buildExport() . ' ' . $cmd;
 
         foreach ($this->files as $file) {
-            $cmd .= ' -f '.$file;
+            $cmd .= ' -f ' . $file;
         }
 
         $cmd .= ' run';
 
         if ($detached) {
-            $cmd = $cmd.' -d';
+            $cmd = $cmd . ' -d';
         }
 
         if ($servicePorts) {
-            $cmd = $cmd.' --service-ports';
+            $cmd = $cmd . ' --service-ports';
         }
 
         if ($serviceName) {
-            $cmd = $cmd.' '.$serviceName;
+            $cmd = $cmd . ' ' . $serviceName;
         }
 
         return $cmd;
