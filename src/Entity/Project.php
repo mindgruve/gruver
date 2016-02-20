@@ -51,6 +51,10 @@ class Project
         return $this->name;
     }
 
+    public function getSafeName(){
+        return preg_replace('/[^\da-z]/i', '_', $this->name);
+    }
+
     /**
      * @param Release $release
      */
@@ -111,6 +115,6 @@ class Project
 
     public function getServices()
     {
-        return $this->releases;
+        return $this->services;
     }
 }

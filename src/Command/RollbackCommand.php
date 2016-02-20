@@ -77,5 +77,8 @@ class RollbackCommand extends BaseCommand
             $service->setCurrentRelease($targetRelease);
             $em->flush();
         }
+
+        $haProxyHelper = $this->get('haproxy.helper');
+        $haProxyHelper->updateConfig($project);
     }
 }

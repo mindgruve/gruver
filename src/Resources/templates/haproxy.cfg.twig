@@ -1,31 +1,35 @@
 global
 
 defaults
-    mode {{ config.default.mode }}
-    timeout connect {{ config.defaults.timeout_connect }}
-    timeout client {{ config.defaults.timeout_client }}
-    timeout server {{ config.defaults.timeout_server }}
+    mode http
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
 
 
 frontend http
-    bind       {{ config.frontend.bind }}
-    mode       {{ config.frontend.mode }}
+    bind       *:80
+    mode       http
 
-{% for service in services %}{% for host in service.hosts %}
-    acl host_{{ service.name }}{{ service.id }} hdr_end(host) -i {{ host }}
-{% endfor %}{% endfor %}
-
-{% for service in services %}
-    use backend backend_{{ service.id}} if host_{{ service.id }}
+{% for service in staging_services %}
+    acl service_{{ service.release_id }} hdr_sub(cookie) -i gruver={{ service.release_id }}
 {% endfor %}
 
-{% for service in services %}
+{% for service in staging_services %}
+    use_backend backend_{{ service.release_id}} if service_{{ service.release_id }}
+{% endfor %}
 
-backend backend_{{ service.id }}
+{% for service in live_services %}{% for host in service.hosts %}
+    acl service_{{ service.release_id }} hdr(host) -i {{ host }}
+{% endfor %}{% endfor %}
+
+{% for service in live_services %}
+    use_backend backend_{{ service.release_id}} if service_{{ service.release_id }}
+{% endfor %}
+
+{% for service in all_services %}
+backend backend_{{ service.release_id }}
     mode http
     balance roundrobin
-    option forwardfor
-    http-request set-header X-Forwarded-Port %[dst_port]
-    server web_{{ service.id}} {{ service.ip }}:{{ service.port }} check
-
+    server web_{{ service.release_id}} {{ service.ip }}:{{ service.port }} check
 {% endfor %}

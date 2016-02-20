@@ -130,6 +130,11 @@ class Service
         return $this->name;
     }
 
+    public function getSafeName()
+    {
+        return preg_replace('/[^\da-z]/i', '_', $this->name);
+    }
+
     /**
      * @param $name
      *
