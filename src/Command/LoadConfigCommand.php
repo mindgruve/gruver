@@ -8,9 +8,9 @@ use Mindgruve\Gruver\Entity\Service;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InitCommand extends BaseCommand
+class LoadConfigCommand extends BaseCommand
 {
-    const COMMAND = 'init';
+    const COMMAND = 'load-config';
     const DESCRIPTION = 'Initialize a gruver project.';
 
     public function configure()
@@ -45,18 +45,36 @@ class InitCommand extends BaseCommand
             $hosts = $item['hosts'];
             $ports = $item['ports'];
 
+            if($ports != array(80)){
+                throw new \Exception('Only port 80 is supported right now');
+            }
+
             $service = $serviceRepository->findOneBy(array('name' => $serviceName, 'project' => $project));
             if (!$service) {
+
                 $output->writeln('<info>Adding SERVICE: ' . $serviceName);
                 $service = new Service();
+
+                if ($ports != array(80)) {
+                    throw new \Exception('Only port 80 is supported at this time.');
+                }
                 $service->setName($serviceName);
                 $service->setProject($project);
-                $service->setPublicHosts($hosts);
-                $service->setPublicPorts($ports);
                 $project->addService($service);
                 $em->persist($service);
-                $em->flush();
             }
+
+            if($service->getPublicHosts() != $hosts){
+                $service->setPublicHosts($hosts);
+                $output->writeln('<info>Modifying hosts for SERVICE: ' . $serviceName);
+            }
+
+            if($service->getPublicPorts() != $ports){
+                $service->setPublicPorts($ports);
+                $output->writeln('<info>Modifying ports for SERVICE: ' . $serviceName);
+            }
+
+            $em->flush();
         }
     }
 }

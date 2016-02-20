@@ -20,7 +20,7 @@ $application->add(new \Mindgruve\Gruver\Command\RollbackCommand());
 $application->add(new \Mindgruve\Gruver\Command\CheckCommand());
 $application->add(new \Mindgruve\Gruver\Command\StatusCommand());
 $application->add(new \Mindgruve\Gruver\Command\CleanupCommand());
-$application->add(new \Mindgruve\Gruver\Command\InitCommand());
+$application->add(new \Mindgruve\Gruver\Command\LoadConfigCommand());
 $application->add(new \Mindgruve\Gruver\Command\DoctrineCreateSchemaCommand());
 $application->add(new \Mindgruve\Gruver\Command\DoctrineUpdateSchemaCommand());
 $application->add(new \Mindgruve\Gruver\Command\DoctrineGenerateProxiesCommand());
