@@ -2,15 +2,6 @@ project:
     name: ~
     email_notifications: []
     public_services: ~
-haproxy:
-    defaults:
-        mode: 'http'
-        timeout_connect: '5000ms'
-        timeout_client: '50000ms'
-        timeout_server: '50000ms'
-    frontend:
-        bind: '*:80'
-        mode: 'http'
 binaries:
     docker_binary: 'docker'
     docker_compose_binary: 'docker-compose'
