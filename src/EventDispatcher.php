@@ -18,6 +18,10 @@ class EventDispatcher
      */
     protected $output;
 
+    /**
+     * @param GruverConfig $config
+     * @param OutputInterface $output
+     */
     public function __construct(GruverConfig $config, OutputInterface $output)
     {
         $this->config = $config;

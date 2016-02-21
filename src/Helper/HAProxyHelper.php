@@ -2,7 +2,6 @@
 
 namespace Mindgruve\Gruver\Helper;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Twig_Environment;
 
@@ -18,10 +17,10 @@ class HAProxyHelper
      */
     protected $em;
 
-    public function __construct(Twig_Environment $twig, ManagerRegistry $registry)
+    public function __construct(Twig_Environment $twig, EntityManager $em)
     {
         $this->twig = $twig;
-        $this->em = $registry->getManager();
+        $this->em = $em;
     }
 
     public function updateConfig()
