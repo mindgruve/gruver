@@ -103,7 +103,7 @@ class RunCommand extends BaseCommand
             $eventDispatcher->dispatchPreRun();
 
             $uuid = Uuid::generate();
-            $this->mustRunProcess($dockerCompose->getRunCommand($serviceName, $uuid), $config, 3600, $output);
+            $this->mustRunProcess($dockerCompose->getRunCommand($serviceName, $uuid), 3600, $output);
 
             $release = new Release();
             $release->setProject($project);
@@ -111,12 +111,12 @@ class RunCommand extends BaseCommand
             $release->setStatus(StatusInterface::STATUS_ENABLED);
             $release->setTag($tag);
 
-            $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid), $config);
+            $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid));
             $containerId = trim($process->getOutput());
 
             $release->setContainerId($containerId);
 
-            $process = $this->mustRunProcess($docker->getContainerPortsByGruverUUIDCommand($uuid), $config);
+            $process = $this->mustRunProcess($docker->getContainerPortsByGruverUUIDCommand($uuid));
             $output = trim($process->getOutput());
             if (preg_match('/(.*):(.*)->(.*)/', $output, $matches)) {
                 $ip = $matches[1];

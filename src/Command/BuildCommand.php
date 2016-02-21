@@ -42,7 +42,7 @@ class BuildCommand extends BaseCommand
         try {
             $logger->addInfo('Building container for '.$config->get('[project][name]'));
             $eventDispatcher->dispatchPreBuild();
-            $this->mustRunProcess($dockerCompose->getBuildCommand(), $config, 3600, $output);
+            $this->mustRunProcess($dockerCompose->getBuildCommand(), 3600, $output);
             $eventDispatcher->dispatchPostBuild();
         } catch (\Exception $e) {
             $logger->addError('Error encountered running docker-compose');

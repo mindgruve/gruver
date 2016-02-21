@@ -127,12 +127,11 @@ class BaseCommand extends Command
 
     /**
      * @param $cmd
-     * @param GruverConfig $config
      * @param int $timeout
      * @param OutputInterface $output
      * @return Process
      */
-    protected function runProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
+    protected function runProcess($cmd, $timeout = 3600, OutputInterface $output = null)
     {
         $process = new Process($cmd);
         $process->setTimeout($timeout);
@@ -149,12 +148,11 @@ class BaseCommand extends Command
 
     /**
      * @param $cmd
-     * @param GruverConfig $config
      * @param int $timeout
      * @param OutputInterface $output
      * @return Process
      */
-    protected function mustRunProcess($cmd, GruverConfig $config, $timeout = 3600, OutputInterface $output = null)
+    protected function mustRunProcess($cmd, $timeout = 3600, OutputInterface $output = null)
     {
         $process = new Process($cmd);
         $process->setTimeout($timeout);

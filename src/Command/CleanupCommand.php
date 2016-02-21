@@ -30,11 +30,11 @@ class CleanupCommand extends BaseCommand
             $eventDispatcher->dispatchPreCleanup();
 
             if ($config->get('[config][remove_exited_containers]')) {
-                $this->runProcess($docker->getRemoveExitedContainersCommand(), $config);
+                $this->runProcess($docker->getRemoveExitedContainersCommand());
             }
 
             if ($config->get('[config][remove_orphan_images]')) {
-                $this->runProcess($docker->getRemoveOrphanImagesCommand(), $config);
+                $this->runProcess($docker->getRemoveOrphanImagesCommand());
             }
 
             $eventDispatcher->dispatchPostCleanup();
