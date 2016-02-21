@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Service implements StatusInterface
 {
     use StatusTrait;
+    use TimestampTrait;
 
     /**
      * @Id @Column(type="integer")
@@ -63,16 +64,6 @@ class Service implements StatusInterface
      */
     protected $rollbackRelease;
 
-    /**
-     * @Column(type="datetime",name="created_at")
-     */
-    protected $createdAt;
-
-    /**
-     * @Column(type="datetime",name="modified_at")
-     */
-    protected $modifiedAt;
-
     public function __construct()
     {
         $this->releases = new ArrayCollection();
@@ -100,20 +91,7 @@ class Service implements StatusInterface
 
     public function getReleases()
     {
-        $releases = $this->releases->toArray();
-
-        uasort(
-            $releases,
-            function ($a, $b) {
-                if ($a->getCreatedAt() < $b->getCreatedAt()) {
-                    return true;
-                }
-
-                return false;
-            }
-        );
-
-        return $releases;
+        return $this->releases;
     }
 
     /**
@@ -145,46 +123,6 @@ class Service implements StatusInterface
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getModifiedAt()
-    {
-        return $this->modifiedAt;
-    }
-
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return $this
-     */
-    public function setModifiedAt(\DateTime $dateTime)
-    {
-        $this->modifiedAt = $dateTime;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return $this
-     */
-    public function setCreatedAt(\DateTime $dateTime)
-    {
-        $this->createdAt = $dateTime;
 
         return $this;
     }
@@ -225,7 +163,6 @@ class Service implements StatusInterface
         return null;
     }
 
-
     /**
      * @return Release
      */
@@ -238,7 +175,6 @@ class Service implements StatusInterface
         return null;
     }
 
-
     public function setMostRecentRelease(Release $release = null)
     {
         $this->mostRecentRelease = $release;
@@ -249,20 +185,6 @@ class Service implements StatusInterface
     public function getMostRecentRelease()
     {
         return $this->mostRecentRelease;
-    }
-
-    /**
-     * @PrePersist
-     * @PreUpdate
-     */
-    public function updateTimestamps()
-    {
-        $date = new \DateTime(date('Y-m-d H:i:s'));
-        $this->setModifiedAt($date);
-
-        if ($this->getCreatedAt() == null) {
-            $this->setCreatedAt($date);
-        }
     }
 
     public function getProject()

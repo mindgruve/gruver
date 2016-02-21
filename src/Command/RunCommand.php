@@ -110,6 +110,7 @@ class RunCommand extends BaseCommand
             $release->setService($service);
             $release->setStatus(StatusInterface::STATUS_ENABLED);
             $release->setTag($tag);
+            $release->setUuid($uuid);
 
             $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid));
             $containerId = trim($process->getOutput());

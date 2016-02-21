@@ -35,13 +35,20 @@ class PromoteCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /**
+         * Services from Container
+         */
+        $haProxyHelper = $this->get('haproxy.helper');
+        $controlPanelHelper = $this->get('control_panel.helper');
+        $em = $this->get('entity_manager');
+
+
+        /**
+         * I/O
+         */
         $projectName = $input->getOption('project_name');
         $serviceName = $input->getOption('service_name');
 
-        /*
-         * Container Service
-         */
-        $em = $this->get('entity_manager');
 
         /*
          * Get Entities
@@ -77,7 +84,7 @@ class PromoteCommand extends BaseCommand
             $em->flush();
         }
 
-        $haProxyHelper = $this->get('haproxy.helper');
         $haProxyHelper->updateConfig();
+        $controlPanelHelper->update();
     }
 }

@@ -7,10 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @Entity(repositoryClass="Mindgruve\Gruver\Repository\ProjectRepository")
  * @Table(name="project",uniqueConstraints={@UniqueConstraint(name="project_name_constraint", columns={"name"})})
+ * @HasLifecycleCallbacks
  */
 class Project implements StatusInterface
 {
     use StatusTrait;
+    use TimestampTrait;
 
     /**
      * @Id @Column(type="integer")

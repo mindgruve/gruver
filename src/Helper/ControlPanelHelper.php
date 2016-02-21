@@ -2,6 +2,7 @@
 
 namespace Mindgruve\Gruver\Helper;
 
+use Doctrine\ORM\EntityManager;
 use \Twig_Environment;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -19,12 +20,12 @@ class ControlPanelHelper
 
     /**
      * @param Twig_Environment $twig
-     * @param ManagerRegistry $registry
+     * @param EntityManager $em
      */
-    public function __construct(Twig_Environment $twig, ManagerRegistry $registry)
+    public function __construct(Twig_Environment $twig, EntityManager $em)
     {
         $this->twig = $twig;
-        $this->em = $registry->getManager();
+        $this->em = $em;
     }
 
     public function update()

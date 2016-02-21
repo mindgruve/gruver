@@ -25,8 +25,12 @@ class ReleaseRepository extends EntityRepository
         return $this->findOneBy(array('project' => $project, 'service' => $service, 'tag' => (string)$tag));
     }
 
-    public function findAll(Project $project = null, Service $service = null, $status = StatusInterface::STATUS_ENABLED)
-    {
+    public function findAll(
+        Project $project = null,
+        Service $service = null,
+        $status = StatusInterface::STATUS_ENABLED,
+        $orderBy = array('createdAt' => 'DESC')
+    ) {
         $criteria = array();
 
         if ($project) {
@@ -41,6 +45,6 @@ class ReleaseRepository extends EntityRepository
             $criteria['status'] = $status;
         }
 
-        return $this->findBy($criteria);
+        return $this->findBy($criteria, $orderBy);
     }
 }

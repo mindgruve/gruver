@@ -14,7 +14,7 @@ class ProjectRepository extends EntityRepository
         return $this->findOneBy(array('name' => $projectName));
     }
 
-    public function findAll($status = StatusInterface::STATUS_ENABLED)
+    public function findAll($status = StatusInterface::STATUS_ENABLED, $orderBy = array('createdAt'=>'DESC'))
     {
         $criteria = array();
 
@@ -22,6 +22,6 @@ class ProjectRepository extends EntityRepository
             $criteria['status'] = $status;
         }
 
-        return $this->findBy($criteria);
+        return $this->findBy($criteria, $orderBy);
     }
 }

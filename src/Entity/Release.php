@@ -10,6 +10,7 @@ namespace Mindgruve\Gruver\Entity;
 class Release implements StatusInterface
 {
     use StatusTrait;
+    use TimestampTrait;
 
     /**
      * @Id @Column(type="integer")
@@ -35,6 +36,11 @@ class Release implements StatusInterface
     protected $service;
 
     /**
+     * @Column(length=140)
+     */
+    protected $uuid;
+
+    /**
      * @ManyToOne(targetEntity="Release")
      * @JoinColumn(name="previous_release_id", referencedColumnName="id")
      */
@@ -45,16 +51,6 @@ class Release implements StatusInterface
      * @JoinColumn(name="next_release_id", referencedColumnName="id")
      */
     protected $nextRelease;
-
-    /**
-     * @Column(type="datetime",name="created_at")
-     */
-    protected $createdAt;
-
-    /**
-     * @Column(type="datetime",name="modified_at")
-     */
-    protected $modifiedAt;
 
     /**
      * @Column(length=140)
@@ -156,34 +152,6 @@ class Release implements StatusInterface
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getModifiedAt()
-    {
-        return $this->modifiedAt;
-    }
-
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return $this
-     */
-    public function setModifiedAt(\DateTime $dateTime)
-    {
-        $this->modifiedAt = $dateTime;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
     public function getContainerId()
     {
         return $this->containerId;
@@ -220,18 +188,6 @@ class Release implements StatusInterface
         return $this;
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return $this
-     */
-    public function setCreatedAt(\DateTime $dateTime)
-    {
-        $this->createdAt = $dateTime;
-
-        return $this;
-    }
-
     public function getProject()
     {
         return $this->project;
@@ -244,17 +200,15 @@ class Release implements StatusInterface
         return $this;
     }
 
-    /**
-     * @PrePersist
-     * @PreUpdate
-     */
-    public function updateTimestamps()
+    public function getUuid()
     {
-        $date = new \DateTime(date('Y-m-d H:i:s'));
-        $this->setModifiedAt($date);
+        return $this->uuid;
+    }
 
-        if ($this->getCreatedAt() == null) {
-            $this->setCreatedAt($date);
-        }
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
     }
 }
