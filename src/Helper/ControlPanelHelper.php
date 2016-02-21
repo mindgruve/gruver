@@ -32,11 +32,19 @@ class ControlPanelHelper
     {
         $projectRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Service');
+        $releaseRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Release');
 
         $projects = $projectRepository->findAll();
-
-        foreach($projects as $project){
-            echo $project->getName();
+        foreach ($projects as $project) {
+            echo PHP_EOL . $project->getName() . PHP_EOL;
+            $services = $serviceRepository->findAll($project);
+            foreach ($services as $service) {
+                echo $service->getName() . PHP_EOL;
+                $releases = $releaseRepository->findAll($project, $service);
+                foreach ($releases as $release) {
+                    echo $release->getUuid() . PHP_EOL;
+                }
+            }
         }
     }
 }

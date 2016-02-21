@@ -30,7 +30,8 @@ curl -L https://github.com/docker/compose/releases/download/1.6.0/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
 # Install HAProxy
-#apt-get install -y haproxy
+apt-get install -y haproxy
+# vi /etc/default/haproxy  (Enabled=1)
 
 # Install Box - http://box-project.github.io/box2/
 curl -LSs https://box-project.github.io/box2/installer.php | php
@@ -40,3 +41,6 @@ chmod +x /usr/bin/box
 # Install SQLite3
 apt-get install -y sqlite3
 apt-get install php5-sqlite
+
+# Symlink gruver
+ln -s /bin/gruver /vagrant/gruver

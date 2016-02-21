@@ -113,10 +113,17 @@ class BaseCommand extends Command
         $container['dispatcher'] = function ($c) use ($output) {
             return new EventDispatcher($c['config'], $output);
         };
-        $container['twig_paths'] = array(
-            '/etc/gruver/templates',
-            __DIR__ . '/Resources/templates'
-        );
+
+        $twigPaths = array();
+        if (file_exists('/etc/gruver/templates')) {
+            $twigPaths[] = '/etc/gruver/templates';
+        }
+
+        if (file_exists(__DIR__ . '/Resources/templates')) {
+            $twigPaths[] = __DIR__ . '/Resources/templates';
+        }
+        $container['twig_paths'] = $twigPaths;
+
         $container['twig'] = function ($c) {
             \Twig_Autoloader::register();
             $loader = new \Twig_Loader_Filesystem(
