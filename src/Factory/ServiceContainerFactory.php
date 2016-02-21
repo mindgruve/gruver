@@ -8,26 +8,28 @@ use Mindgruve\Gruver\Helper\HAProxyHelper;
 use Mindgruve\Gruver\Process\DockerProcess;
 use Mindgruve\Gruver\Process\Sqlite3Process;
 use Pimple\Container;
-use Symfony\Component\Console\Output\Output;
 use Mindgruve\Gruver\EventDispatcher;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ServiceContainerFactory
 {
 
-    public static function build(EnvironmentalVariables $envVar, Output $output){
+    public static function build(EnvironmentalVariables $envVar, OutputInterface $output)
+    {
         $container = new Container();
         $container['config'] = new GruverConfig();
         $container['env_vars'] = $envVar;
         $container['dispatcher'] = function ($c) use ($output) {
             return new EventDispatcher($c['config'], $output);
         };
+        $container['twig_paths'] = array(
+            '/etc/gruver/templates',
+            __DIR__ . '/Resources/templates'
+        );
         $container['twig'] = function ($c) {
             \Twig_Autoloader::register();
             $loader = new \Twig_Loader_Filesystem(
-                array(
-                    '/etc/gruver/templates',
-                    __DIR__ . '/Resources/templates'
-                )
+                $c['twig_paths']
             );
 
             return new \Twig_Environment($loader);
