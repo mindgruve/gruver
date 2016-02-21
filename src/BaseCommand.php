@@ -140,7 +140,7 @@ class BaseCommand extends Command
             return new UrlFactory($c['config']);
         };
         $container['haproxy.helper'] = function($c){
-            return new HAProxyHelper($c['twig'], $c['config']);
+            return new HAProxyHelper($c['twig'], $c['config'], $c['entity_manager']);
         };
         $container['entity_manager'] = function ($c) {
             $factory = new EntityManagerFactory($c['config']);

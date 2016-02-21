@@ -8,8 +8,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity(repositoryClass="Mindgruve\Gruver\Repository\ProjectRepository")
  * @Table(name="project",uniqueConstraints={@UniqueConstraint(name="project_name_constraint", columns={"name"})})
  */
-class Project
+class Project implements StatusInterface
 {
+    use StatusTrait;
+
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -51,6 +53,9 @@ class Project
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function getSafeName(){
         return preg_replace('/[^\da-z]/i', '_', $this->name);
     }

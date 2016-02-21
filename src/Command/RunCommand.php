@@ -4,6 +4,7 @@ namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\BaseCommand;
 use Mindgruve\Gruver\Entity\Release;
+use Mindgruve\Gruver\Entity\StatusInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -107,6 +108,7 @@ class RunCommand extends BaseCommand
             $release = new Release();
             $release->setProject($project);
             $release->setService($service);
+            $release->setStatus(StatusInterface::STATUS_ENABLED);
             $release->setTag($tag);
 
             $process = $this->mustRunProcess($docker->getContainerIdByGruverUUIDCommand($uuid), $config);

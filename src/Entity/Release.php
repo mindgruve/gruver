@@ -7,8 +7,10 @@ namespace Mindgruve\Gruver\Entity;
  * @Table(name="release",uniqueConstraints={@UniqueConstraint(name="tag_constraint", columns={"service_id","tag"})})
  * @HasLifecycleCallbacks
  */
-class Release
+class Release implements StatusInterface
 {
+    use StatusTrait;
+
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue

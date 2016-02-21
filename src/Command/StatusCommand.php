@@ -46,6 +46,7 @@ class StatusCommand extends BaseCommand
          */
         $projectRepository = $em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
+        $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
 
 
         $project = $projectRepository->loadProjectByName($projectName);
@@ -77,7 +78,7 @@ class StatusCommand extends BaseCommand
         $pendingRelease = $service->getPendingRelease();
         $rollbackRelease = $service->getRollbackRelease();
 
-        $releases = $service->getReleases();
+        $releases = $releaseRepository->findAll($project, $service);
         $rows = array();
         foreach ($releases as $release) {
             $status = '';
@@ -100,7 +101,13 @@ class StatusCommand extends BaseCommand
                 $date = DateTimeHelper::humanTimeDiff($release->getCreatedAt()->getTimestamp());
             }
 
-            $rows[] = array($tag . ' ' . $status, $date, $release->getContainerID(), $release->getContainerIp(), $release->getContainerPort());
+            $rows[] = array(
+                $tag . ' ' . $status,
+                $date,
+                $release->getContainerID(),
+                $release->getContainerIp(),
+                $release->getContainerPort()
+            );
         }
 
         $table = new Table($output);

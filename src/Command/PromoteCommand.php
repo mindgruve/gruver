@@ -78,6 +78,6 @@ class PromoteCommand extends BaseCommand
         }
 
         $haProxyHelper = $this->get('haproxy.helper');
-        $haProxyHelper->updateConfig($project);
+        $haProxyHelper->updateConfig();
     }
 }

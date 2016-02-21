@@ -5,6 +5,7 @@ namespace Mindgruve\Gruver\Command;
 use Mindgruve\Gruver\BaseCommand;
 use Mindgruve\Gruver\Entity\Project;
 use Mindgruve\Gruver\Entity\Service;
+use Mindgruve\Gruver\Entity\StatusInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -36,6 +37,7 @@ class LoadConfigCommand extends BaseCommand
             $output->writeln('<info>Adding PROJECT: ' . $projectName);
             $project = new Project();
             $project->setName($projectName);
+            $project->setStatus(StatusInterface::STATUS_ENABLED);
             $em->persist($project);
             $em->flush();
         }
@@ -44,6 +46,14 @@ class LoadConfigCommand extends BaseCommand
             $serviceName = $item['name'];
             $hosts = $item['hosts'];
             $ports = $item['ports'];
+
+            /**
+             * @todo open up so more flexible
+             */
+
+            if($hosts == array()){
+                throw new \Exception('Each service must have a host right now');
+            }
 
             if($ports != array(80)){
                 throw new \Exception('Only port 80 is supported right now');
@@ -54,6 +64,7 @@ class LoadConfigCommand extends BaseCommand
 
                 $output->writeln('<info>Adding SERVICE: ' . $serviceName);
                 $service = new Service();
+                $service->setStatus(StatusInterface::STATUS_ENABLED);
 
                 if ($ports != array(80)) {
                     throw new \Exception('Only port 80 is supported at this time.');

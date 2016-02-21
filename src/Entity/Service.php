@@ -9,8 +9,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Table(name="service",uniqueConstraints={@UniqueConstraint(name="service_name_constraint", columns={"project_id","name"})})
  * @HasLifecycleCallbacks
  */
-class Service
+class Service implements StatusInterface
 {
+    use StatusTrait;
+
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue

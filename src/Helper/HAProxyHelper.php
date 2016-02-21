@@ -2,6 +2,7 @@
 
 namespace Mindgruve\Gruver\Helper;
 
+use Doctrine\ORM\EntityManager;
 use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\Entity\Project;
 use Symfony\Component\Process\Process;
@@ -13,15 +14,30 @@ class HAProxyHelper
 
     protected $config;
 
-    public function __construct(\Twig_Environment $twig, GruverConfig $config)
+    protected $em;
+
+    public function __construct(\Twig_Environment $twig, GruverConfig $config, EntityManager $em)
     {
         $this->twig = $twig;
         $this->config = $config;
+        $this->em = $em;
     }
 
-    public function updateConfig(Project $project)
+    public function updateConfig()
     {
-        $services = $project->getServices();
+
+        $projectRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Project');
+        $serviceRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Service');
+
+        $services = array();
+
+        $projects = $projectRepository->findAll();
+        foreach ($projects as $project) {
+            $projectServices = $serviceRepository->findAll($project);
+            foreach ($projectServices as $projectService) {
+                $services[] = $projectService;
+            }
+        }
 
         $liveServices = array();
         $stagingServices = array();
@@ -71,5 +87,4 @@ class HAProxyHelper
          */
         exec('/etc/init.d/haproxy restart');
     }
-
 }
