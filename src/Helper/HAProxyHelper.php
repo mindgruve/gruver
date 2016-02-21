@@ -3,23 +3,23 @@
 namespace Mindgruve\Gruver\Helper;
 
 use Doctrine\ORM\EntityManager;
-use Mindgruve\Gruver\Config\GruverConfig;
-use Mindgruve\Gruver\Entity\Project;
-use Symfony\Component\Process\Process;
+use Twig_Environment;
 
 class HAProxyHelper
 {
-
+    /**
+     * @var Twig_Environment
+     */
     protected $twig;
 
-    protected $config;
-
+    /**
+     * @var EntityManager
+     */
     protected $em;
 
-    public function __construct(\Twig_Environment $twig, GruverConfig $config, EntityManager $em)
+    public function __construct(Twig_Environment $twig, EntityManager $em)
     {
         $this->twig = $twig;
-        $this->config = $config;
         $this->em = $em;
     }
 
@@ -84,6 +84,8 @@ class HAProxyHelper
         /**
          * Execute Update Config
          * @todo put into container
+         * @todo test before switching config
+         * @doto backup config before switching
          */
         exec('/etc/init.d/haproxy restart');
     }
