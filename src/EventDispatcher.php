@@ -28,6 +28,10 @@ class EventDispatcher
     {
         $shellCommands = $this->config->get('[events][pre_build]');
 
+        if(!is_array($shellCommands)){
+            return;
+        }
+
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
                 $this->runProcess($shellCommand);
@@ -38,6 +42,10 @@ class EventDispatcher
     public function dispatchPostBuild()
     {
         $shellCommands = $this->config->get('[events][post_build]');
+
+        if(!is_array($shellCommands)){
+            return;
+        }
 
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
@@ -50,6 +58,10 @@ class EventDispatcher
     {
         $shellCommands = $this->config->get('[events][pre_run]');
 
+        if(!is_array($shellCommands)){
+            return;
+        }
+
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
                 $this->runProcess($shellCommand);
@@ -60,6 +72,10 @@ class EventDispatcher
     public function dispatchPostRun()
     {
         $shellCommands = $this->config->get('[events][post_run]');
+
+        if(!is_array($shellCommands)){
+            return;
+        }
 
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
@@ -72,6 +88,10 @@ class EventDispatcher
     {
         $shellCommands = $this->config->get('[events][pre_cleanup]');
 
+        if(!is_array($shellCommands)){
+            return;
+        }
+
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {
                 $this->runProcess($shellCommand);
@@ -82,6 +102,10 @@ class EventDispatcher
     public function dispatchPostCleanup()
     {
         $shellCommands = $this->config->get('[events][post_cleanup]');
+
+        if(!is_array($shellCommands)){
+            return;
+        }
 
         foreach ($shellCommands as $shellCommand) {
             if ($shellCommand) {

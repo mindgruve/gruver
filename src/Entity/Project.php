@@ -38,6 +38,13 @@ class Project implements StatusInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getId(){
+        return $this->id;
+    }
+
+    /**
      * @param $name
      */
     public function setName($name)
