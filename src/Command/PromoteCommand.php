@@ -39,7 +39,6 @@ class PromoteCommand extends BaseCommand
          * Services from Container
          */
         $haProxyHelper = $this->get('haproxy.helper');
-        $controlPanelHelper = $this->get('control_panel.helper');
         $em = $this->get('entity_manager');
 
 
@@ -85,6 +84,8 @@ class PromoteCommand extends BaseCommand
         }
 
         $haProxyHelper->updateConfig();
+
+        $controlPanelHelper = $this->get('control_panel.helper');
         $controlPanelHelper->update();
     }
 }

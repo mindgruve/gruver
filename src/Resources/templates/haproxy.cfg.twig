@@ -11,13 +11,16 @@ frontend http
     bind       *:80
     mode       http
 
-{% for service in staging_services %}
-    acl service_{{ service.release_id }} hdr_sub(cookie) -i gruver={{ service.release_id }}
-{% endfor %}
+    acl cp_service url_beg -i /gruver-control-panel
+    use_backend backend_{{ control_panel_service.id}} if cp_service
 
-{% for service in staging_services %}
-    use_backend backend_{{ service.release_id}} if service_{{ service.release_id }}
-{% endfor %}
+{#{% for service in staging_services %}#}
+    {#acl service_{{ service.release_id }} hdr_sub(cookie) -i gruver={{ service.release_uuid }}#}
+{#{% endfor %}#}
+
+{#{% for service in staging_services %}#}
+    {#use_backend backend_{{ service.release_id}} if service_{{ service.release_id }}#}
+{#{% endfor %}#}
 
 {% for service in live_services %}{% for host in service.hosts %}
     acl service_{{ service.release_id }} hdr(host) -i {{ host }}

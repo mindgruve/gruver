@@ -80,5 +80,8 @@ class RollbackCommand extends BaseCommand
 
         $haProxyHelper = $this->get('haproxy.helper');
         $haProxyHelper->updateConfig();
+
+        $controlPanelHelper = $this->get('control_panel.helper');
+        $controlPanelHelper->update();
     }
 }

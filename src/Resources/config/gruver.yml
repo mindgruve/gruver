@@ -31,21 +31,15 @@ config:
     remove_orphan_images: true
     email_notifications: [ 'ksimpson@mindgruve.com' ]
 events:
-    pre_build:
-      - echo 'processing pre_build'
-    post_build:
-      - echo 'processing post_build'
-    pre_run:
-      - echo 'processing pre_run'
-    post_run:
-      - echo 'processing post_run'
+    pre_build: ~
+    post_build: ~
+    pre_run: ~
+    post_run: ~
     pre_promote: ~
     post_promote: ~
     pre_rollback: ~
     post_rollback: ~
-    pre_cleanup:
-      - echo 'processing pre_cleanup'
-    post_cleanup:
-      - echo 'processing post_cleanup'
+    pre_cleanup: ~
+    post_cleanup: ~
     pre_status: ~
     post_status: ~

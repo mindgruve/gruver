@@ -1,0 +1,85 @@
+<?php
+
+Header('Cache-Control: no-cache, no-store, must-revalidate');
+Header('Pragma: no-cache');
+Header('Expires: 0');
+if (isset($_GET['gruver_id'])) {
+    echo 'woot';exit;
+    setcookie('gruver', $_GET['gruver_id'],0,'/');
+}
+
+?>
+
+
+<html>
+
+<head>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+
+</head>
+
+<body role="document">
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Gruver Control Panel</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container theme-showcase" role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <h1>Gruver Control Panel</h1>
+
+        <p>Click on any link below to view a specific version of the project.</p>
+        <hr/>
+
+        {% for project_name,project in projects %}
+            <h3>Project: {{ project_name }}</h3>
+            {% for service_name,service in project %}
+                <h5>{{ service_name }}</h5>
+                {% for release in service %}
+                    <p>Version: {{ release.tag }}
+                        <a href="<?php $_SERVER['HTTP_HOST'] . rtrim($_SERVER['REQUEST_URI'],'/'); ?>?gruver_id={{ release.uuid }}"
+                                class="btn btn-default">View</a>
+                    </p>
+
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</body>
+
+</html>

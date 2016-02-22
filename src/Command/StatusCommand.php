@@ -106,13 +106,18 @@ class StatusCommand extends BaseCommand
                 $date,
                 $release->getContainerID(),
                 $release->getContainerIp(),
-                $release->getContainerPort()
+                $release->getContainerPort(),
+                $release->getId(),
+                $release->getUuid(),
             );
         }
 
         $table = new Table($output);
-        $table->setHeaders(array('Tag', 'Run Date', 'Container', 'IP', 'Port', 'Heath Check'));
+        $table->setHeaders(array('Tag', 'Run Date', 'Container', 'IP', 'Port','ID', 'UUID'));
         $table->addRows($rows);
         $table->render();
+
+        $controlPanelHelper = $this->get('control_panel.helper');
+        $controlPanelHelper->update();
     }
 }

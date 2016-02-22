@@ -34,17 +34,35 @@ class ControlPanelHelper
         $serviceRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Service');
         $releaseRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Release');
 
+        // grab control panel
+        $gruverCP = $projectRepository->findOneBy(array('name' => 'control-panel'));
+
+        $data = array();
+
         $projects = $projectRepository->findAll();
         foreach ($projects as $project) {
-            echo PHP_EOL . $project->getName() . PHP_EOL;
+            if ($project == $gruverCP) {
+                continue;
+            }
+
             $services = $serviceRepository->findAll($project);
             foreach ($services as $service) {
-                echo $service->getName() . PHP_EOL;
                 $releases = $releaseRepository->findAll($project, $service);
                 foreach ($releases as $release) {
-                    echo $release->getUuid() . PHP_EOL;
+                    $data[$project->getName()][$service->getName()][] = array(
+                        'tag' => $release->getTag(),
+                        'uuid' => $release->getUuid(),
+                    );
                 }
             }
         }
+
+        $output = $this->twig->render(
+            'control-panel-index.php.twig',
+            array('projects' => $data)
+        );
+
+        $fp = fopen('/vagrant/source-code/control-panel/application/web/index.php', 'w');
+        fwrite($fp, $output);
     }
 }
