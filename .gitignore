@@ -2,6 +2,7 @@
 vendor/*
 documentation/.vagrant/*
 bin/*
+!bin/gruver.phar
 src/Tests/Temp/*
 source-code/*
 src/Cache/*
