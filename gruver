@@ -25,14 +25,15 @@ $application->add(new \Mindgruve\Gruver\Command\LoadConfigCommand());
 /**
  * Doctrine Commands
  **/
-$application->add(new \Mindgruve\Gruver\Command\Doctrine\CreateSchemaCommand());
-$application->add(new \Mindgruve\Gruver\Command\Doctrine\UpdateSchemaCommand());
-$application->add(new \Mindgruve\Gruver\Command\Doctrine\GenerateProxiesCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\OrmCreateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\OrmUpdateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\OrmGenerateProxiesCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationDiffCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationExecuteCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationGenerateCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationMigrateCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationStatusCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationVersionCommand());
 
 $input = new ArgvInput();
 $application->run($input);
