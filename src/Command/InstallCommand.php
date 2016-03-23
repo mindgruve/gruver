@@ -134,7 +134,7 @@ class InstallCommand extends BaseCommand
             if($returnCode === 0){
                 $output->writeln('<info>(✓) Able to generate doctrine proxies to /etc/gruver/cache</info>');
             } else {
-                $output->writeln('<error>(✓) Error generated when generatign doctrine proxies.</error>');
+                $output->writeln('<error>(✓) Error generated when generating doctrine proxies.</error>');
             }
         }
 
