@@ -36,11 +36,7 @@ class GruverConfig
     public function __construct()
     {
         $this->pwd = $_SERVER['PWD'];
-        $gruverYaml = $this->pwd.'/gruver.yml';
-
-        if (!file_exists($gruverYaml)) {
-            throw new \Exception('Gruver file not found');
-        }
+        $gruverYaml = $this->pwd . '/gruver.yml';
 
         /*
          * Load these configs, each one can potentially overwrite the configs before.
@@ -49,7 +45,7 @@ class GruverConfig
          *      (3) The local config ${PWD}/gruver.yml
          */
         $gruverConfigs = array();
-        $gruverConfigs[] = Yaml::parse(__DIR__.'/../Resources/config/gruver.yml');
+        $gruverConfigs[] = Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml');
         if (file_exists('/etc/gruver/gruver.yml')) {
             $gruverConfigs[] = Yaml::parse('/etc/gruver/config.yml');
         }
