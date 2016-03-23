@@ -22,7 +22,7 @@ class EntityManagerFactory
     {
         $paths = array(__DIR__.'/../Entity');
         $isDevMode = false;
-        $proxyDir = __DIR__.'/../Cache/';
+        $proxyDir = __DIR__.'/../Proxies/';
 
         // the connection configuration
         $dbParams = array(
