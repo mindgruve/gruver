@@ -31,6 +31,8 @@ $application->add(new \Mindgruve\Gruver\Command\Doctrine\GenerateProxiesCommand(
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationDiffCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationExecuteCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationGenerateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationMigrateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationStatusCommand());
 
 $input = new ArgvInput();
 $application->run($input);
