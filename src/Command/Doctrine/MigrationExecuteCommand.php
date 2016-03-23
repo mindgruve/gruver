@@ -84,7 +84,7 @@ EOT
         if ($input->getOption('query-time')) {
             $arguments['--query-time'] = $input->getOption('query-time');
         };
-        $arguments['--configuration'] = __DIR__ . '/../../migrations.yml';
+        $arguments['--configuration'] = __DIR__ . '/../../../migrations.yml';
 
         $command = new ExecuteCommand();
         $command->setHelperSet($helperSet);

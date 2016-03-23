@@ -30,6 +30,7 @@ $application->add(new \Mindgruve\Gruver\Command\Doctrine\UpdateSchemaCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\GenerateProxiesCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationDiffCommand());
 $application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationExecuteCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationGenerateCommand());
 
 $input = new ArgvInput();
 $application->run($input);
