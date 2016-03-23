@@ -18,7 +18,8 @@
     "doctrine/orm": "^2.5",
     "fabpot/php-cs-fixer": "^1.11",
     "twig/twig": "^1.24",
-    "webpatser/laravel-uuid": "2.*"
+    "webpatser/laravel-uuid": "2.*",
+    "doctrine/migrations": "^1.4"
   },
   "require-dev": {
     "mockery/mockery": "~0.9",

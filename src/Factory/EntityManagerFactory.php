@@ -22,7 +22,7 @@ class EntityManagerFactory
     {
         $paths = array(__DIR__.'/../Entity');
         $isDevMode = false;
-        $proxyDir = '/etc/gruver/cache';
+        $proxyDir = '/var/lib/gruver/cache';
 
         // the connection configuration
         $dbParams = array(
