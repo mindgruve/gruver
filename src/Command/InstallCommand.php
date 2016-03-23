@@ -3,7 +3,9 @@
 namespace Mindgruve\Gruver\Command;
 
 use Mindgruve\Gruver\BaseCommand;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
@@ -108,6 +110,33 @@ class InstallCommand extends BaseCommand
             $output->writeln('<error>(x) Unable to write to /etc/gruver/templates</error>');
         }
 
+        /**
+         * Cache Dir Directory
+         */
+        $process = new Process('mkdir -p /etc/gruver/cache');
+        $process->run();
+        touch('/etc/gruver/cache/temp.txt');
+        if(file_exists('/etc/gruver/cache/temp.txt')){
+            $output->writeln('<info>(✓) Able to write to /etc/gruver/cache</info>');
+        } else {
+            $output->writeln('<error>(x) Unable to write to /etc/gruver/templates</error>');
+        }
+
+        if(file_exists('/etc/gruver/cache/temp.txt')){
+            $process = new Process('rm -Rf /etc/gruver/cache/*');
+            $process->run();
+
+            $command = $this->getApplication()->find('doctrine:generate-proxies');
+            $arguments = array();
+            $greetInput = new ArrayInput($arguments);
+            $returnCode = $command->run($greetInput, new NullOutput());
+
+            if($returnCode === 0){
+                $output->writeln('<info>(✓) Able to generate doctrine proxies to /etc/gruver/cache</info>');
+            } else {
+                $output->writeln('<error>(✓) Error generated when generating doctrine proxies.</error>');
+            }
+        }
 
         /*
          * SQLite Database
