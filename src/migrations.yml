@@ -1,4 +1,4 @@
 name: Gruver Database Migration
 migrations_namespace: Mindgruve\Gruver\Migration
 table_name: doctrine_migration_versions
-migrations_directory: src/Migration
+migrations_directory: Migration
