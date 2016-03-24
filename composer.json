@@ -19,7 +19,8 @@
     "fabpot/php-cs-fixer": "^1.11",
     "twig/twig": "^1.24",
     "webpatser/laravel-uuid": "2.*",
-    "doctrine/migrations": "^1.4"
+    "doctrine/migrations": "^1.4",
+    "symfony/filesystem": "^3.0"
   },
   "require-dev": {
     "mockery/mockery": "~0.9",

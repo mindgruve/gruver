@@ -77,10 +77,7 @@ class GruverConfig
         switch ($key) {
             case '[application][directory]':
                 return $this->pwd;
-            case '[binaries][docker_compose]':
-                return isset($this->gruverConfig['binaries']['docker_compose']) ? $this->gruverConfig['binaries']['docker_compose'] : 'docker-compose';
-            case '[binaries][docker]':
-                return isset($this->gruverConfig['binaries']['docker']) ? $this->gruverConfig['binaries']['docker'] : 'docker';
+
             default:
                 return $accessor->getValue($this->gruverConfig, $key);
         }

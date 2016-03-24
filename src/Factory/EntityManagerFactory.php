@@ -20,21 +20,22 @@ class EntityManagerFactory
 
     public function getEntityManager()
     {
-        $paths = array(__DIR__.'/../Entity');
-        $isDevMode = false;
-        $proxyDir = '/var/lib/gruver/cache';
-
-        // the connection configuration
-        $dbParams = array(
-            'driver' => $this->config->get('[database][driver]'),
-            'user' => $this->config->get('[database][user]'),
-            'password' => $this->config->get('[database][password]'),
-            'path' => $this->config->get('[database][path]'),
+        $config = Setup::createAnnotationMetadataConfiguration(
+            array(__DIR__ . '/../Entity'),
+            $this->config->get('[config][dev_mode]'),
+            $this->config->get('[directories][cache_dir]')
         );
 
-        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, $proxyDir);
-        $entityManager = EntityManager::create($dbParams, $config);
+        return EntityManager::create($this->getDatabaseParams(), $config);
+    }
 
-        return $entityManager;
+    public function getDatabaseParams()
+    {
+        $dbParams = $this->config->get('[database]');
+        if ($dbParams['driver'] == 'pdo_sqlite' && !isset($dbParams['path'])) {
+            $dbParams['path'] = $this->config->get('[directories][data_dir]') . '/data.db';
+        }
+
+        return $dbParams;
     }
 }

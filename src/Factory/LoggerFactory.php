@@ -28,14 +28,19 @@ class LoggerFactory
 
     public function __construct(GruverConfig $config, OutputInterface $output)
     {
-        $this->defaultLogDirectory = $config->get('[logging][default_log_directory]');
+        $this->defaultLogDirectory = $config->get('[directories][logging_dir]');
         $this->output = $output;
 
         $adapterConfigs = $config->get('[logging][adapters]');
-        $logger = new Logger('default');
+        foreach ($adapterConfigs as $key => $loggingConfig) {
+            if (isset($loggingConfig['type']) && $loggingConfig['type'] == 'stream' && !isset($loggingConfig['path'])) {
+                $adapterConfigs[$key]['path'] = $config->get('[directories][logging_dir]') . '/' . $key . '.log';
+            }
+        }
 
+        $logger = new Logger('default');
         foreach ($adapterConfigs as $adapterConfig) {
-            $this->addAdapter($logger, $adapterConfig, $this->defaultLogDirectory.'/default.log');
+            $this->addAdapter($logger, $adapterConfig, $this->defaultLogDirectory . '/default.log');
         }
         $logger->pushHandler(new ConsoleOutputHandler($this->output));
 
@@ -55,7 +60,7 @@ class LoggerFactory
         } elseif ($type == 'syslog') {
             $logger->pushHandler(new SyslogHandler('gruver', 'gruver', $level));
         } else {
-            throw new \Exception('Unknown log handler type - '.$type);
+            throw new \Exception('Unknown log handler type - ' . $type);
         }
 
         return $logger;

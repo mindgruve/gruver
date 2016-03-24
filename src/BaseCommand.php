@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 class BaseCommand extends Command
@@ -153,10 +154,17 @@ class BaseCommand extends Command
         $container['control_panel.helper'] = function ($c) {
             return new ControlPanelHelper($c['twig'], $c['entity_manager']);
         };
+        $container['entity_manger.factory'] = function ($c) {
+            return new EntityManagerFactory($c['config']);
+        };
         $container['entity_manager'] = function ($c) {
-            $factory = new EntityManagerFactory($c['config']);
-
-            return $factory->getEntityManager();
+            return $c['entity_manger.factory']->getEntityManager();
+        };
+        $container['db_params'] = function ($c) {
+            return $c['entity_manger.factory']->getDatabaseParams();
+        };
+        $container['file_system'] = function ($c) {
+            return new Filesystem();
         };
 
         $this->container = $container;
