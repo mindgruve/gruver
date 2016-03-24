@@ -21,9 +21,19 @@ $application->add(new \Mindgruve\Gruver\Command\CheckCommand());
 $application->add(new \Mindgruve\Gruver\Command\StatusCommand());
 $application->add(new \Mindgruve\Gruver\Command\CleanupCommand());
 $application->add(new \Mindgruve\Gruver\Command\LoadConfigCommand());
-$application->add(new \Mindgruve\Gruver\Command\DoctrineCreateSchemaCommand());
-$application->add(new \Mindgruve\Gruver\Command\DoctrineUpdateSchemaCommand());
-$application->add(new \Mindgruve\Gruver\Command\DoctrineGenerateProxiesCommand());
+
+/**
+ * Doctrine Commands
+ **/
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\OrmCreateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\OrmUpdateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\OrmGenerateProxiesCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationDiffCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationExecuteCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationGenerateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationMigrateCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationStatusCommand());
+$application->add(new \Mindgruve\Gruver\Command\Doctrine\MigrationVersionCommand());
 
 $input = new ArgvInput();
 $application->run($input);

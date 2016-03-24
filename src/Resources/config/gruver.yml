@@ -2,6 +2,13 @@ project:
     name: ~
     email_notifications: []
     public_services: ~
+directories:
+    config_dir:     '/etc/gruver'
+    cache_dir:      '/var/cache/gruver'
+    data_dir:       '/var/lib/gruver'
+    templates_dir:  '/var/lib/gruver/templates'
+    releases_dir:   '/var/lib/gruver/releases'
+    logging_dir:    '/var/log/gruver'
 binaries:
     docker_binary: 'docker'
     docker_compose_binary: 'docker-compose'
@@ -10,26 +17,25 @@ database:
     driver: 'pdo_sqlite'
     user: ~
     password: ~
-    path: '/var/lib/gruver/data.db'
 logging:
-  default_directory: '/var/log/gruver'
-  adapters:
-    deployment:
-        type: 'stream'
-        path: '/var/log/gruver/deployment.log'
-        level: 'info'
-    error:
-        type: 'stream'
-        path: '/var/log/gruver/error.log'
-        level: 'error'
+    adapters:
+      deployment:
+          type: 'stream'
+          #path: '/var/log/gruver/deployment.log'
+          level: 'info'
+      error:
+          type: 'stream'
+          #path: '/var/log/gruver/error.log'
+          level: 'error'
 config:
-    automatic_deployment: false
-    docker_compose_files: []
-    date_format: 'Ymd'
-    health_checks: []
+    dev_mode:                 false
+    automatic_deployment:     false
+    docker_compose_files:     []
+    date_format:              'Ymd'
+    health_checks:            []
     remove_exited_containers: true
-    remove_orphan_images: true
-    email_notifications: [ 'ksimpson@mindgruve.com' ]
+    remove_orphan_images:     true
+    email_notifications:      [ 'ksimpson@mindgruve.com' ]
 events:
     pre_build: ~
     post_build: ~

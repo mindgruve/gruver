@@ -1,9 +1,8 @@
 <?php
 
-namespace Mindgruve\Gruver\Command;
+namespace Mindgruve\Gruver\Command\Doctrine;
 
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -12,15 +11,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand;
 
-class DoctrineGenerateProxiesCommand extends BaseCommand
+class OrmGenerateProxiesCommand extends BaseCommand
 {
     protected function configure()
     {
         parent::configure();
 
         $this
-            ->setName('doctrine:generate-proxies')
+            ->setName('doctrine:orm:generate-proxies')
             ->setDescription('Generates proxy classes for entity classes.')
             ->addOption(
                 'filter',

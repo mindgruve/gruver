@@ -2,17 +2,22 @@
 
 namespace Mindgruve\Gruver\Command;
 
+use Doctrine\DBAL\DriverManager;
 use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class InstallCommand extends BaseCommand
 {
     const COMMAND = 'install';
     const DESCRIPTION = 'Install gruver.';
+
+    const COMMAND_FAIL = 1;
+    const COMMAND_SUCCESS = 0;
 
     public function configure()
     {
@@ -23,131 +28,273 @@ class InstallCommand extends BaseCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($this->checkDependencies() == self::COMMAND_FAIL) {
+            return self::COMMAND_FAIL;
+        }
+
+        if ($this->createDirectories() == self::COMMAND_FAIL) {
+            return self::COMMAND_FAIL;
+        }
+        if ($this->generateProxies() == self::COMMAND_FAIL) {
+            return self::COMMAND_FAIL;
+        }
+
+        if ($this->createDatabase() == self::COMMAND_FAIL) {
+            return self::COMMAND_FAIL;
+        }
+
+        if ($this->runMigrations($input, $output) == self::COMMAND_FAIL) {
+            return self::COMMAND_FAIL;
+        }
+
+        $this->get('logger')->addDebug(PHP_EOL . PHP_EOL . 'Installation Complete!' . PHP_EOL);
+    }
+
+    public function checkDependencies()
+    {
         $docker = $this->get('docker');
         $dockerCompose = $this->get('docker_compose');
         $sqlite3 = $this->get('sqlite3');
+        $logger = $this->get('logger');
 
-        $output->writeln('Checking gruver dependencies... ');
+        $logger->addDebug(PHP_EOL . 'Checking gruver dependencies... ');
 
-        /*
+        /**
          * SQLite3
-         * @todo confirm minium version of SQLite
          */
         if ($sqlite3->binaryExists()) {
-            $output->writeln('<info>(✓) SQLite3 installed on server</info>');
+            $logger->addInfo('(✓) SQLite3 installed on server');
         } else {
-            $output->writeln('<error>(x) SQLite3 not installed on server</error>');
+            $logger->addError('(x) SQLite3 not installed on server');
+
+            return self::COMMAND_FAIL;
         }
 
         if (extension_loaded('sqlite3')) {
-            $output->writeln('<info>(✓) SQLite extension for PHP loaded</info>');
+            $logger->addInfo('(✓) SQLite extension for PHP loaded');
         } else {
-            $output->writeln('<error>(x) SQLite extension for PHP not loaded</error>');
+            $logger->addError('(x) SQLite extension for PHP not loaded');
+
+            return self::COMMAND_FAIL;
         }
         $version = $sqlite3->getVersion();
         if ($version->compareVersion(3.0)) {
-            $output->writeln('<error>(x) SQLite version < 3.0</error>');
+            $logger->addError('(x) SQLite version < 3.0');
+
+            return self::COMMAND_FAIL;
         } else {
-            $output->writeln('<info>(✓) SQLite version >= 3.0</info>');
+            $logger->addInfo('(✓) SQLite version >= 3.0');
         }
 
-        /*
+        /**
          * Docker
          */
         if ($docker->binaryExists()) {
-            $output->writeln('<info>(✓) Docker installed</info>');
+            $logger->addInfo('(✓) Docker installed');
         } else {
-            $output->writeln('<error>(x) Docker needs to be installed</error>');
+            $logger->addError('(x) Docker needs to be installed');
+
+            return self::COMMAND_FAIL;
         }
         $version = $docker->getVersion();
         if ($version->compareVersion(1, 10)) {
-            $output->writeln('<error>(x) Docker version < 1.10</error>');
+            $logger->addError('(x) Docker version < 1.10');
+
+            return self::COMMAND_FAIL;
         } else {
-            $output->writeln('<info>(✓) Docker version >= 1.10</info>');
+            $logger->addInfo('(✓) Docker version >= 1.10');
         }
 
-        /*
+        /**
          * Docker Compose
          */
         if ($dockerCompose->binaryExists()) {
-            $output->writeln('<info>(✓) Docker-Compose installed</info>');
+            $logger->addInfo('(✓) Docker-Compose installed');
         } else {
-            $output->writeln('<error>(x) Docker-Compose needs to be installed</error>');
+            $logger->addError('(x) Docker-Compose needs to be installed');
+
+            return self::COMMAND_FAIL;
         }
 
         $version = $dockerCompose->getVersion();
         if ($version->compareVersion(1, 6)) {
-            $output->writeln('<error>(x) Docker-Compose version < 1.6</error>');
+            $logger->addError('(x) Docker-Compose version < 1.6');
+
+            return self::COMMAND_FAIL;
         } else {
-            $output->writeln('<info>(✓) Docker-Compose version >= 1.6</info>');
+            $logger->addInfo('(✓) Docker-Compose version >= 1.6');
         }
 
-        /*
+        return self::COMMAND_SUCCESS;
+    }
+
+    public function createDirectories()
+    {
+        $fs = $this->get('file_system');
+        $logger = $this->get('logger');
+
+        $logger->addDebug(PHP_EOL . 'Creating Gruver Directories ... ');
+
+        /**
+         * Get Configuration for Directories
+         */
+        $config = $this->get('config');
+
+        $configDir = $config->get('[directories][config_dir]');
+        if (!$configDir) {
+            $logger->addError('Configuration value directories.config_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
+        $cacheDir = $config->get('[directories][cache_dir]');
+        if (!$cacheDir) {
+            $logger->addError('Configuration value directories.cache_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
+        $dataDir = $config->get('[directories][data_dir]');
+        if (!$dataDir) {
+            $logger->addError('Configuration value directories.data_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
+        $releasesDir = $config->get('[directories][releases_dir]');
+        if (!$releasesDir) {
+            $logger->addError('Configuration value directories.releases_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
+        $templatesDir = $config->get('[directories][templates_dir]');
+        if (!$templatesDir) {
+            $logger->addError('Configuration value directories.templates_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
+        $loggingDir = $config->get('[directories][logging_dir]');
+        if (!$loggingDir) {
+            $logger->addError('Configuration value directories.logging_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
+        /**
+         * Create Directories
+         */
+        $fs->mkdir($configDir);
+        $fs->mkdir($templatesDir);
+        $fs->mkdir($dataDir);
+        $fs->mkdir($releasesDir);
+        $fs->mkdir($cacheDir);
+        $fs->mkdir($loggingDir);
+
+        /**
          * Config Directory /etc/gruver
          */
-        $process = new Process('mkdir -p /etc/gruver');
-        $process->run();
-        if (!file_exists('/etc/gruver/config.yml')) {
-            copy(__DIR__ . '/../Resources/config/gruver.yml', '/etc/gruver/config.yml');
-        }
-        if (file_exists('/etc/gruver/config.yml')) {
-            $output->writeln('<info>(✓) Able to write to /etc/gruver</info>');
-        } else {
-            $output->writeln('<error>(x) Unable to write to /etc/gruver</error>');
+        if (!$fs->exists($configDir . '/config.yml')) {
+            $fs->copy(__DIR__ . '/../Resources/config/gruver.yml', $configDir . '/config.yml');
+            $logger->addInfo('(✓) Gruver configuration copied to ' . $configDir);
         }
 
         /**
          * Template Directory
          */
-        $process = new Process('mkdir -p /etc/gruver/templates');
-        $process->run();
-        if (!file_exists('/etc/gruver/templates/haproxy.cfg.twig')) {
-            copy(__DIR__ . '/../Resources/templates/haproxy.cfg.twig', '/etc/gruver/templates/haproxy.cfg.twig');
-        }
-        if (file_exists('/etc/gruver/templates/haproxy.cfg.twig')) {
-            $output->writeln('<info>(✓) Able to write to /etc/gruver/templates</info>');
-        } else {
-            $output->writeln('<error>(x) Unable to write to /etc/gruver/templates</error>');
+        if ($fs->exists($templatesDir . '/haproxy.cfg.twig')) {
+            $fs->copy(__DIR__ . '/../Resources/templates/haproxy.cfg.twig', $templatesDir . '/haproxy.cfg.twig');
+            $logger->addInfo('(✓) HAProxy Template copied to ' . $templatesDir);
         }
 
         /**
-         * Cache Dir Directory
+         * Clearing Cache Directory
          */
-        $process = new Process('mkdir -p /etc/gruver/cache');
-        $process->run();
-        touch('/etc/gruver/cache/temp.txt');
-        if(file_exists('/etc/gruver/cache/temp.txt')){
-            $output->writeln('<info>(✓) Able to write to /etc/gruver/cache</info>');
+        $fs->remove($cacheDir . '/*');
+        $logger->addInfo('(✓) Complete');
+
+        return self::COMMAND_SUCCESS;
+    }
+
+    public function generateProxies()
+    {
+        $logger = $this->get('logger');
+        $logger->addDebug(PHP_EOL . 'Generating Doctrine Proxies ... ');
+        $command = $this->getApplication()->find('doctrine:orm:generate-proxies');
+        $arguments = array();
+        $greetInput = new ArrayInput($arguments);
+        $returnCode = $command->run($greetInput, new NullOutput());
+
+        if ($returnCode === 0) {
+            $logger->addInfo('(✓) Able to generate doctrine proxies.');
         } else {
-            $output->writeln('<error>(x) Unable to write to /etc/gruver/templates</error>');
+            $logger->addError('(x) Error generated when generating doctrine proxies.');
+
+            return self::COMMAND_FAIL;
         }
 
-        if(file_exists('/etc/gruver/cache/temp.txt')){
-            $process = new Process('rm -Rf /etc/gruver/cache/*');
-            $process->run();
+        return self::COMMAND_SUCCESS;
+    }
 
-            $command = $this->getApplication()->find('doctrine:generate-proxies');
-            $arguments = array();
-            $greetInput = new ArrayInput($arguments);
-            $returnCode = $command->run($greetInput, new NullOutput());
+    public function createDatabase()
+    {
+        $params = $this->get('db_params');
+        $logger = $this->get('logger');
 
-            if($returnCode === 0){
-                $output->writeln('<info>(✓) Able to generate doctrine proxies to /etc/gruver/cache</info>');
-            } else {
-                $output->writeln('<error>(✓) Error generated when generating doctrine proxies.</error>');
+        $error = false;
+        $logger->addDebug(PHP_EOL . 'Generating Database ... ');
+        $name = isset($params['path']) ? $params['path'] : (isset($params['dbname']) ? $params['dbname'] : false);
+
+        if (!$name) {
+            throw new \InvalidArgumentException(
+                "Connection does not contain a 'path' or 'dbname' parameter and cannot be dropped."
+            );
+        }
+        unset($params['dbname']);
+
+        $tmpConnection = DriverManager::getConnection($params);
+
+        if (!isset($params['path'])) {
+            $name = $tmpConnection->getDatabasePlatform()->quoteSingleIdentifier($name);
+        }
+
+        try {
+            $tmpConnection->getSchemaManager()->createDatabase($name);
+            $logger->addInfo('(✓) Database created or already exists');
+        } catch (\Exception $e) {
+            $logger->addError(
+                sprintf(
+                    '(x) Could not create database for connection named <comment>%s</comment>',
+                    $name
+                )
+            );
+            $logger->addError(sprintf('%s', $e->getMessage()));
+            $error = true;
+        }
+
+        $tmpConnection->close();
+
+        return $error ? self::COMMAND_FAIL : self::COMMAND_SUCCESS;
+    }
+
+    public function runMigrations(InputInterface $input, OutputInterface $output)
+    {
+        $cmd = $this->getApplication()->find('doctrine:migrations:status');
+        $bufferedOutput = new BufferedOutput();
+        $cmd->run(new ArrayInput(array()), $bufferedOutput);
+
+        if (preg_match('/New Migrations:\s*(\d*)/', $bufferedOutput->fetch(), $matches)) {
+
+            if ($matches[1] == 0) {
+                return self::COMMAND_SUCCESS;
             }
+
+            $cmd = $this->getApplication()->find('doctrine:migrations:migrate');
+
+            return $cmd->run(new ArrayInput(array('-–no–interaction')), $output);
         }
 
-        /*
-         * SQLite Database
-         */
-        $process = new Process('mkdir -p /var/lib/gruver');
-        $process->run();
-
-        /*
-         * Releases Directory
-         */
-        $process = new Process('mkdir -p /var/lib/gruver/releases');
-        $process->run();
+        return self::COMMAND_SUCCESS;
     }
 }
