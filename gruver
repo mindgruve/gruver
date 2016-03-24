@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\ArgvInput;
  * Replace with Symfony Finder Component
  */
 
-$application = new Application('gruver','0.7.0');
+$application = new Application('gruver','0.7.1');
 $application->add(new \Mindgruve\Gruver\Command\InstallCommand());
 $application->add(new \Mindgruve\Gruver\Command\BuildCommand());
 $application->add(new \Mindgruve\Gruver\Command\RunCommand());
