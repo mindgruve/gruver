@@ -6,8 +6,10 @@ use Doctrine\DBAL\DriverManager;
 use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class InstallCommand extends BaseCommand
 {
@@ -41,7 +43,11 @@ class InstallCommand extends BaseCommand
             return self::COMMAND_FAIL;
         }
 
-        $this->get('logger')->addDebug(PHP_EOL . 'Installation Complete!');
+        if ($this->runMigrations($input, $output) == self::COMMAND_FAIL) {
+            return self::COMMAND_FAIL;
+        }
+
+        $this->get('logger')->addDebug(PHP_EOL . PHP_EOL . 'Installation Complete!' . PHP_EOL);
     }
 
     public function checkDependencies()
@@ -270,5 +276,25 @@ class InstallCommand extends BaseCommand
         $tmpConnection->close();
 
         return $error ? self::COMMAND_FAIL : self::COMMAND_SUCCESS;
+    }
+
+    public function runMigrations(InputInterface $input, OutputInterface $output)
+    {
+        $cmd = $this->getApplication()->find('doctrine:migrations:status');
+        $bufferedOutput = new BufferedOutput();
+        $cmd->run(new ArrayInput(array()), $bufferedOutput);
+
+        if (preg_match('/New Migrations:\s*(\d*)/', $bufferedOutput->fetch(), $matches)) {
+
+            if ($matches[1] == 0) {
+                return self::COMMAND_SUCCESS;
+            }
+
+            $cmd = $this->getApplication()->find('doctrine:migrations:migrate');
+
+            return $cmd->run(new ArrayInput(array('-–no–interaction')), $output);
+        }
+
+        return self::COMMAND_SUCCESS;
     }
 }
