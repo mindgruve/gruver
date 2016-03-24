@@ -49,7 +49,7 @@ EOT
         if ($input->getOption('editor-cmd')) {
             $arguments['--editor-cmd'] = $input->getOption('editor-cmd');
         };
-        $arguments['--configuration'] = __DIR__ . '/../../../migrations.yml';
+        $arguments['--configuration'] = __DIR__ . '/../../migrations.yml';
 
         $command = new GenerateCommand();
         $command->setHelperSet($helperSet);

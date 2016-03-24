@@ -54,7 +54,7 @@ EOT
         if ($input->getOption('show-versions')) {
             $arguments['--show-versions'] = $input->getArgument('show-versions');
         };
-        $arguments['--configuration'] = __DIR__ . '/../../../migrations.yml';
+        $arguments['--configuration'] = __DIR__ . '/../../migrations.yml';
 
         $command = new StatusCommand();
         $command->setHelperSet($helperSet);
