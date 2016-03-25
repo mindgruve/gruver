@@ -7,7 +7,6 @@ use Mindgruve\Gruver\Config\GruverConfig;
 use Mindgruve\Gruver\Factory\EntityManagerFactory;
 use Mindgruve\Gruver\Factory\LoggerFactory;
 use Mindgruve\Gruver\Factory\UrlFactory;
-use Mindgruve\Gruver\Helper\ControlPanelHelper;
 use Mindgruve\Gruver\Helper\HAProxyHelper;
 use Mindgruve\Gruver\Process\DockerComposeProcess;
 use Mindgruve\Gruver\Process\DockerProcess;
@@ -150,9 +149,6 @@ class BaseCommand extends Command
         };
         $container['haproxy.helper'] = function ($c) {
             return new HAProxyHelper($c['twig'], $c['entity_manager']);
-        };
-        $container['control_panel.helper'] = function ($c) {
-            return new ControlPanelHelper($c['twig'], $c['entity_manager']);
         };
         $container['entity_manger.factory'] = function ($c) {
             return new EntityManagerFactory($c['config']);

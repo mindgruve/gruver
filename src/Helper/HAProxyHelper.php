@@ -29,12 +29,6 @@ class HAProxyHelper
         $projectRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Project');
         $serviceRepository = $this->em->getRepository('Mindgruve\Gruver\Entity\Service');
 
-        // grab control panel
-        $gruverCP = $projectRepository->findOneBy(array('name'=> 'control-panel'));
-        $gruverCPService = $serviceRepository->findOneBy(array('project' => $gruverCP, 'name'=> 'web'));
-        $gruverCPRelease = $gruverCPService->getCurrentRelease();
-
-
         $services = array();
 
         $projects = $projectRepository->findAll();
@@ -79,7 +73,6 @@ class HAProxyHelper
         $cfg = $this->twig->render(
             'haproxy.cfg.twig',
             array(
-                'control_panel_service' => $gruverCPRelease,
                 'all_services' => $allServices,
                 'live_services' => $liveServices,
                 'staging_services' => $stagingServices
