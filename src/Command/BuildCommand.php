@@ -48,8 +48,5 @@ class BuildCommand extends BaseCommand
             $logger->addError('Error encountered running docker-compose');
             $logger->addError($e->getMessage());
         }
-
-        $controlPanelHelper = $this->get('control_panel.helper');
-        $controlPanelHelper->update();
     }
 }

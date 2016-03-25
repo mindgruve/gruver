@@ -84,8 +84,5 @@ class PromoteCommand extends BaseCommand
         }
 
         $haProxyHelper->updateConfig();
-
-        $controlPanelHelper = $this->get('control_panel.helper');
-        $controlPanelHelper->update();
     }
 }

@@ -116,8 +116,5 @@ class StatusCommand extends BaseCommand
         $table->setHeaders(array('Tag', 'Run Date', 'Container', 'IP', 'Port','ID', 'UUID'));
         $table->addRows($rows);
         $table->render();
-
-        $controlPanelHelper = $this->get('control_panel.helper');
-        $controlPanelHelper->update();
     }
 }
