@@ -8,6 +8,7 @@ directories:
     data_dir:       '/var/lib/gruver'
     templates_dir:  '/var/lib/gruver/templates'
     releases_dir:   '/var/lib/gruver/releases'
+    migrations_dir: '/var/lib/gruver/migrations'
     logging_dir:    '/var/log/gruver'
 binaries:
     docker_binary: 'docker'
@@ -21,11 +22,9 @@ logging:
     adapters:
       deployment:
           type: 'stream'
-          #path: '/var/log/gruver/deployment.log'
           level: 'info'
       error:
           type: 'stream'
-          #path: '/var/log/gruver/error.log'
           level: 'error'
 config:
     dev_mode:                 false

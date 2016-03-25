@@ -62,7 +62,9 @@ EOT
         if ($input->getOption('line-length')) {
             $arguments['--line-length'] = $input->getOption('line-length');
         };
-        $arguments['--configuration'] = __DIR__ . '/../../migrations.yml';
+
+        $configDir = $this->get('config')->get('[directories][config_dir]');
+        $arguments['--configuration'] = $configDir . '/migrations.yml';
 
         $command = new DiffCommand();
         $command->setHelperSet($helperSet);

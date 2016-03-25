@@ -86,7 +86,8 @@ EOT
         if ($input->getOption('allow-no-migration')) {
             $arguments['--allow-no-migration'] = $input->getOption('allow-no-migration');
         };
-        $arguments['--configuration'] = __DIR__ . '/../../migrations.yml';
+        $configDir = $this->get('config')->get('[directories][config_dir]');
+        $arguments['--configuration'] = $configDir . '/migrations.yml';
 
         $command = new MigrateCommand();
         $command->setHelperSet($helperSet);

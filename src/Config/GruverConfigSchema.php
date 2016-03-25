@@ -52,6 +52,7 @@ class GruverConfigSchema implements ConfigurationInterface
                         ->scalarNode('cache_dir')->end()
                         ->scalarNode('data_dir')->end()
                         ->scalarNode('templates_dir')->end()
+                        ->scalarNode('migrations_dir')->end()
                         ->scalarNode('releases_dir')->end()
                         ->scalarNode('logging_dir')->end()
                     ->end()
