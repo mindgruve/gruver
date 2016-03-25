@@ -84,7 +84,8 @@ EOT
         if ($input->getOption('range-to')) {
             $arguments['--range-to'] = $input->getOption('range-to');
         };
-        $arguments['--configuration'] = __DIR__ . '/../../migrations.yml';
+        $configDir = $this->get('config')->get('[directories][config_dir]');
+        $arguments['--configuration'] = $configDir . '/migrations.yml';
 
         $command = new VersionCommand();
         $command->setHelperSet($helperSet);

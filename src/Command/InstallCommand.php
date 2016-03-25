@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class InstallCommand extends BaseCommand
 {
@@ -35,6 +34,11 @@ class InstallCommand extends BaseCommand
         if ($this->createDirectories() == self::COMMAND_FAIL) {
             return self::COMMAND_FAIL;
         }
+
+        if ($this->copyConfigs() == self::COMMAND_FAIL) {
+            return self::COMMAND_FAIL;
+        }
+
         if ($this->generateProxies() == self::COMMAND_FAIL) {
             return self::COMMAND_FAIL;
         }
@@ -133,7 +137,7 @@ class InstallCommand extends BaseCommand
         $fs = $this->get('file_system');
         $logger = $this->get('logger');
 
-        $logger->addDebug(PHP_EOL . 'Creating Gruver Directories ... ');
+        $logger->addDebug(PHP_EOL . 'Gruver Directories ... ');
 
         /**
          * Get Configuration for Directories
@@ -175,6 +179,13 @@ class InstallCommand extends BaseCommand
             return self::COMMAND_FAIL;
         }
 
+        $migrationsDir = $config->get('[directories][migrations_dir]');
+        if (!$migrationsDir) {
+            $logger->addError('Configuration value directories.migrations_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
         $loggingDir = $config->get('[directories][logging_dir]');
         if (!$loggingDir) {
             $logger->addError('Configuration value directories.logging_dir does not exist');
@@ -189,24 +200,9 @@ class InstallCommand extends BaseCommand
         $fs->mkdir($templatesDir);
         $fs->mkdir($dataDir);
         $fs->mkdir($releasesDir);
+        $fs->mkdir($migrationsDir);
         $fs->mkdir($cacheDir);
         $fs->mkdir($loggingDir);
-
-        /**
-         * Config Directory /etc/gruver
-         */
-        if (!$fs->exists($configDir . '/config.yml')) {
-            $fs->copy(__DIR__ . '/../Resources/config/gruver.yml', $configDir . '/config.yml');
-            $logger->addInfo('(✓) Gruver configuration copied to ' . $configDir);
-        }
-
-        /**
-         * Template Directory
-         */
-        if ($fs->exists($templatesDir . '/haproxy.cfg.twig')) {
-            $fs->copy(__DIR__ . '/../Resources/templates/haproxy.cfg.twig', $templatesDir . '/haproxy.cfg.twig');
-            $logger->addInfo('(✓) HAProxy Template copied to ' . $templatesDir);
-        }
 
         /**
          * Clearing Cache Directory
@@ -217,17 +213,75 @@ class InstallCommand extends BaseCommand
         return self::COMMAND_SUCCESS;
     }
 
+    public function copyConfigs()
+    {
+
+        $fs = $this->get('file_system');
+        $logger = $this->get('logger');
+        $config = $this->get('config');
+
+        $logger->addDebug(PHP_EOL . 'Copying Gruver Configs ... ');
+        $configDir = $config->get('[directories][config_dir]');
+        $migrationsDir = $config->get('[directories][migrations_dir]');
+        $templatesDir = $config->get('[directories][templates_dir]');
+
+        /**
+         * Copy Gruver Config
+         */
+        if (!$fs->exists($configDir . '/config.yml')) {
+            $fs->copy(__DIR__ . '/../Resources/config/gruver.yml', $configDir . '/config.yml');
+            $logger->addInfo('(✓) Gruver configuration copied to ' . $configDir);
+        }
+
+        /**
+         * Copy Migrations Config
+         */
+
+        $twig = $this->get('twig');
+        if (!$fs->exists($configDir . '/migrations.yml')) {
+            $fs->dumpfile(
+                $configDir . '/migrations.yml',
+                $twig->render('migrations.yml.twig', array('migration_directory' => $migrationsDir))
+            );
+            $logger->addInfo('(✓) Doctrine Migration Config copied to ' . $configDir);
+        }
+
+        /**
+         * Copy Migrations
+         */
+        if (!$fs->exists($migrationsDir . '/Version20160324002221.php')) {
+            $fs->copy(
+                __DIR__ . '/../Migration/Version20160324002221.php',
+                $migrationsDir . '/Version20160324002221.php'
+            );
+            $logger->addInfo('(✓) Migration 20160324002221 copied to ' . $configDir);
+        }
+
+        /**
+         * Copy HAProxy Config
+         */
+        if ($fs->exists($templatesDir . '/haproxy.cfg.twig')) {
+            $fs->copy(__DIR__ . '/../Resources/templates/haproxy.cfg.twig', $templatesDir . '/haproxy.cfg.twig');
+            $logger->addInfo('(✓) HAProxy Template copied to ' . $templatesDir);
+        }
+
+        $logger->addInfo('(✓) Complete.');
+
+        return self::COMMAND_SUCCESS;
+    }
+
+
     public function generateProxies()
     {
         $logger = $this->get('logger');
-        $logger->addDebug(PHP_EOL . 'Generating Doctrine Proxies ... ');
+        $logger->addDebug(PHP_EOL . 'Doctrine Proxies ... ');
         $command = $this->getApplication()->find('doctrine:orm:generate-proxies');
         $arguments = array();
         $greetInput = new ArrayInput($arguments);
         $returnCode = $command->run($greetInput, new NullOutput());
 
         if ($returnCode === 0) {
-            $logger->addInfo('(✓) Able to generate doctrine proxies.');
+            $logger->addInfo('(✓) Complete.');
         } else {
             $logger->addError('(x) Error generated when generating doctrine proxies.');
 
@@ -280,6 +334,10 @@ class InstallCommand extends BaseCommand
 
     public function runMigrations(InputInterface $input, OutputInterface $output)
     {
+        $logger = $this->get('logger');
+
+        $logger->addDebug(PHP_EOL . 'Database Migrations ... ');
+
         $cmd = $this->getApplication()->find('doctrine:migrations:status');
         $bufferedOutput = new BufferedOutput();
         $cmd->run(new ArrayInput(array()), $bufferedOutput);
@@ -287,6 +345,8 @@ class InstallCommand extends BaseCommand
         if (preg_match('/New Migrations:\s*(\d*)/', $bufferedOutput->fetch(), $matches)) {
 
             if ($matches[1] == 0) {
+                $logger->addInfo('(✓) No migrations.');
+
                 return self::COMMAND_SUCCESS;
             }
 
@@ -294,6 +354,8 @@ class InstallCommand extends BaseCommand
 
             return $cmd->run(new ArrayInput(array('-–no–interaction')), $output);
         }
+
+        $logger->addInfo('(✓) No migrations.');
 
         return self::COMMAND_SUCCESS;
     }
