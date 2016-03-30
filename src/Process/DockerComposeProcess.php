@@ -118,7 +118,8 @@ class DockerComposeProcess implements ProcessInterface
      */
     public function getRunCommand($serviceName, $uuid, $detached = true, $servicePorts = true)
     {
-        $releaseFile = '/var/lib/gruver/releases/' . $uuid . '.yml';
+        $releaseDir = $this->config->get('[directories][releases_dir]');
+        $releaseFile = $releaseDir . $uuid . '.yml';
         if (!file_exists($releaseFile)) {
             $contents = $this->twig->render(
                 'docker-compose.yml.twig',

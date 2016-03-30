@@ -7,7 +7,6 @@ use Mindgruve\Gruver\BaseCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallCommand extends BaseCommand
@@ -193,6 +192,13 @@ class InstallCommand extends BaseCommand
             return self::COMMAND_FAIL;
         }
 
+        $proxyDir = $config->get('[directories][proxy_dir]');
+        if (!$proxyDir) {
+            $logger->addError('Configuration value directories.proxy_dir does not exist');
+
+            return self::COMMAND_FAIL;
+        }
+
         /**
          * Create Directories
          */
@@ -203,6 +209,7 @@ class InstallCommand extends BaseCommand
         $fs->mkdir($migrationsDir);
         $fs->mkdir($cacheDir);
         $fs->mkdir($loggingDir);
+        $fs->mkdir($proxyDir);
 
         /**
          * Clearing Cache Directory
@@ -275,20 +282,30 @@ class InstallCommand extends BaseCommand
     {
         $logger = $this->get('logger');
         $logger->addDebug(PHP_EOL . 'Doctrine Proxies ... ');
-        $command = $this->getApplication()->find('doctrine:orm:generate-proxies');
-        $arguments = array();
-        $greetInput = new ArrayInput($arguments);
-        $returnCode = $command->run($greetInput, new NullOutput());
+        $fs = $this->get('file_system');
+        $config = $this->get('config');
+        $proxyDir = $config->get('[directories][proxy_dir]');
 
-        if ($returnCode === 0) {
-            $logger->addInfo('(✓) Complete.');
-        } else {
-            $logger->addError('(x) Error generated when generating doctrine proxies.');
-
+        try {
+            $fs->copy(
+                __DIR__ . '/../Proxies/__CG__MindgruveGruverEntityProject.php',
+                $proxyDir . '/__CG__MindgruveGruverEntityProject.php'
+            );
+            $fs->copy(
+                __DIR__ . '/../Proxies/__CG__MindgruveGruverEntityRelease.php',
+                $proxyDir . '/__CG__MindgruveGruverEntityRelease.php'
+            );
+            $fs->copy(
+                __DIR__ . '/../Proxies/__CG__MindgruveGruverEntityService.php',
+                $proxyDir . '/__CG__MindgruveGruverEntityService.php'
+            );
+        } catch (\Exception $e) {
             return self::COMMAND_FAIL;
         }
 
+        $logger->addInfo('(✓) Complete.');
         return self::COMMAND_SUCCESS;
+
     }
 
     public function createDatabase()

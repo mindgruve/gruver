@@ -4,11 +4,12 @@ project:
     public_services: ~
 directories:
     config_dir:     '/etc/gruver'
-    cache_dir:      '/var/cache/gruver'
     data_dir:       '/var/lib/gruver'
     templates_dir:  '/var/lib/gruver/templates'
     releases_dir:   '/var/lib/gruver/releases'
     migrations_dir: '/var/lib/gruver/migrations'
+    cache_dir:      '/var/lib/gruver/cache'
+    proxy_dir:      '/var/lib/gruver/proxy'
     logging_dir:    '/var/log/gruver'
 binaries:
     docker_binary: 'docker'
