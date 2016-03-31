@@ -3,6 +3,7 @@
 namespace Mindgruve\Gruver\Helper;
 
 use Doctrine\ORM\EntityManager;
+use Mindgruve\Gruver\Config\GruverConfig;
 use Twig_Environment;
 
 class HAProxyHelper
@@ -17,10 +18,16 @@ class HAProxyHelper
      */
     protected $em;
 
-    public function __construct(Twig_Environment $twig, EntityManager $em)
+    /**
+     * @var GruverConfig
+     */
+    protected $config;
+
+    public function __construct(Twig_Environment $twig, EntityManager $em, GruverConfig $config)
     {
         $this->twig = $twig;
         $this->em = $em;
+        $this->config = $config;
     }
 
     public function updateConfig()
@@ -52,13 +59,13 @@ class HAProxyHelper
                  * @var \Mindgruve\Gruver\Entity\Release $release
                  */
                 $item = array(
-                    'service_id' => $service->getId(),
-                    'release_id' => $release->getId(),
+                    'service_id'   => $service->getId(),
+                    'release_id'   => $release->getId(),
                     'release_uuid' => $release->getUuid(),
-                    'hosts' => $service->getPublicHosts(),
-                    'ip' => $release->getContainerIp(),
-                    'port' => $release->getContainerPort(),
-                    'status' => 'staging',
+                    'hosts'        => $service->getPublicHosts(),
+                    'ip'           => $release->getContainerIp(),
+                    'port'         => $release->getContainerPort(),
+                    'status'       => 'staging',
                 );
 
                 if ($release == $currentRelease) {
@@ -73,13 +80,19 @@ class HAProxyHelper
         $cfg = $this->twig->render(
             'haproxy.cfg.twig',
             array(
-                'all_services' => $allServices,
-                'live_services' => $liveServices,
+                'all_services'     => $allServices,
+                'live_services'    => $liveServices,
                 'staging_services' => $stagingServices
             )
         );
 
-        $fp = fopen('/etc/haproxy/haproxy.cfg', 'w');
+        $haproxyConfigFile = $this->config->get('[config][haproxy_cfg]');
+
+        if (!$haproxyConfigFile || !file_exists($haproxyConfigFile)) {
+            throw new \Exception('HAProxy Config File Missing');
+        }
+
+        $fp = fopen($haproxyConfigFile, 'w');
         fwrite($fp, $cfg);
 
         /**
@@ -88,6 +101,11 @@ class HAProxyHelper
          * @todo test before switching config
          * @doto backup config before switching
          */
-        exec('/etc/init.d/haproxy restart');
+        $haproxyReloadCmd = $this->config->get('[config][haproxy_reload]');
+        if (!$haproxyReloadCmd) {
+            throw new \Exception('Reload Command Missing.');
+        }
+
+        exec($haproxyReloadCmd);
     }
 }
