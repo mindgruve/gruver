@@ -96,6 +96,8 @@ class GruverConfigSchema implements ConfigurationInterface
                         ->end()
                         ->booleanNode('remove_exited_containers')->end()
                         ->booleanNode('remove_orphan_images')->end()
+                        ->scalarNode('haproxy_cfg')->end()
+                        ->scalarNode('haproxy_reload')->end()
                     ->end()
                 ->end()
                 ->arrayNode('events')

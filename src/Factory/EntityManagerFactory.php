@@ -23,7 +23,7 @@ class EntityManagerFactory
         $config = Setup::createAnnotationMetadataConfiguration(
             array(__DIR__ . '/../Entity'),
             $this->config->get('[config][dev_mode]'),
-            $this->config->get('[directories][cache_dir]')
+            $this->config->get('[directories][proxy_dir]')
         );
 
         return EntityManager::create($this->getDatabaseParams(), $config);
