@@ -36,7 +36,7 @@ config:
     remove_exited_containers: true
     remove_orphan_images:     true
     haproxy_cfg:              '/etc/haproxy/haproxy.cfg'
-    haproxy_reload:           '/etc/init.d/haproxy restart'
+    haproxy_reload:           'service haproxy restart'
     email_notifications:      [ 'ksimpson@mindgruve.com' ]
 events:
     pre_build: ~
