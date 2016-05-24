@@ -33,6 +33,12 @@ class Project implements StatusInterface
      */
     protected $releases;
 
+    /** @Column(length=140, nullable=true) */
+    protected $configHash;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -42,7 +48,8 @@ class Project implements StatusInterface
     /**
      * @return mixed
      */
-    public function getId(){
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -65,7 +72,8 @@ class Project implements StatusInterface
     /**
      * @return string
      */
-    public function getSafeName(){
+    public function getSafeName()
+    {
         return preg_replace('/[^\da-z]/i', '_', $this->name);
     }
 
@@ -130,5 +138,15 @@ class Project implements StatusInterface
     public function getServices()
     {
         return $this->services;
+    }
+
+    public function getConfigHash()
+    {
+        return $this->configHash;
+    }
+
+    public function setConfigHash($hash)
+    {
+        $this->configHash = $hash;
     }
 }

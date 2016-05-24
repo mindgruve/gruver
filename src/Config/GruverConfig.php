@@ -29,6 +29,11 @@ class GruverConfig
     protected $envVar;
 
     /**
+     * @var string
+     */
+    protected $configHash = null;
+
+    /**
      * @throws \Exception
      *
      * @internal param null|string $gruverYaml
@@ -36,7 +41,7 @@ class GruverConfig
     public function __construct()
     {
         $this->pwd = $_SERVER['PWD'];
-        $gruverYaml = $this->pwd . '/gruver.yml';
+        $gruverYaml = $this->pwd.'/gruver.yml';
 
         /*
          * Load these configs, each one can potentially overwrite the configs before.
@@ -45,11 +50,12 @@ class GruverConfig
          *      (3) The local config ${PWD}/gruver.yml
          */
         $gruverConfigs = array();
-        $gruverConfigs[] = Yaml::parse(__DIR__ . '/../Resources/config/gruver.yml');
+        $gruverConfigs[] = Yaml::parse(__DIR__.'/../Resources/config/gruver.yml');
         if (file_exists('/etc/gruver/gruver.yml')) {
             $gruverConfigs[] = Yaml::parse('/etc/gruver/config.yml');
         }
         if (file_exists($gruverYaml)) {
+            $this->configHash = sha1_file($gruverYaml);
             $gruverConfigs[] = Yaml::parse($gruverYaml);
         }
 
@@ -62,6 +68,15 @@ class GruverConfig
             $gruverConfigs
         );
     }
+
+    /**
+     * @return string
+     */
+    public function getConfigHash()
+    {
+        return $this->configHash;
+    }
+
 
     /**
      * @param $key

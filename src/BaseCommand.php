@@ -4,6 +4,7 @@ namespace Mindgruve\Gruver;
 
 use Mindgruve\Gruver\Config\EnvironmentalVariables;
 use Mindgruve\Gruver\Config\GruverConfig;
+use Mindgruve\Gruver\Entity\Project;
 use Mindgruve\Gruver\Factory\EntityManagerFactory;
 use Mindgruve\Gruver\Factory\LoggerFactory;
 use Mindgruve\Gruver\Factory\UrlFactory;
@@ -13,9 +14,11 @@ use Mindgruve\Gruver\Process\DockerProcess;
 use Mindgruve\Gruver\Process\Sqlite3Process;
 use Pimple\Container;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
@@ -119,8 +122,8 @@ class BaseCommand extends Command
             $twigPaths[] = '/etc/gruver/templates';
         }
 
-        if (file_exists(__DIR__ . '/Resources/templates')) {
-            $twigPaths[] = __DIR__ . '/Resources/templates';
+        if (file_exists(__DIR__.'/Resources/templates')) {
+            $twigPaths[] = __DIR__.'/Resources/templates';
         }
         $container['twig_paths'] = $twigPaths;
 
@@ -226,5 +229,27 @@ class BaseCommand extends Command
         );
 
         return $process;
+    }
+
+    protected function checkConfigHash(Project $project, InputInterface $input, OutputInterface $output)
+    {
+        $config = $this->get('config');
+        $helper = $this->getHelper('question');
+
+        if ($project->getConfigHash() != $config->getConfigHash()) {
+            $question = new ConfirmationQuestion(
+                'Load new gruver config? <info>(y/n)</info>  ',
+                false
+            );
+            $loadConfig = $helper->ask($input, $output, $question);
+
+            if ($loadConfig) {
+                $command = $this->getApplication()->find('load-config');
+                $code = $command->run(new ArrayInput(array()), $output);
+                if(!$code){
+                    exit;
+                }
+            }
+        }
     }
 }

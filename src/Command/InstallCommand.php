@@ -50,7 +50,7 @@ class InstallCommand extends BaseCommand
             return self::COMMAND_FAIL;
         }
 
-        $this->get('logger')->addDebug(PHP_EOL . PHP_EOL . 'Installation Complete!' . PHP_EOL);
+        $this->get('logger')->addDebug(PHP_EOL.PHP_EOL.'Installation Complete!'.PHP_EOL);
     }
 
     public function checkDependencies()
@@ -60,7 +60,7 @@ class InstallCommand extends BaseCommand
         $sqlite3 = $this->get('sqlite3');
         $logger = $this->get('logger');
 
-        $logger->addDebug(PHP_EOL . 'Checking gruver dependencies... ');
+        $logger->addDebug(PHP_EOL.'Checking gruver dependencies... ');
 
         /**
          * SQLite3
@@ -136,7 +136,7 @@ class InstallCommand extends BaseCommand
         $fs = $this->get('file_system');
         $logger = $this->get('logger');
 
-        $logger->addDebug(PHP_EOL . 'Gruver Directories ... ');
+        $logger->addDebug(PHP_EOL.'Gruver Directories ... ');
 
         /**
          * Get Configuration for Directories
@@ -214,7 +214,7 @@ class InstallCommand extends BaseCommand
         /**
          * Clearing Cache Directory
          */
-        $fs->remove($cacheDir . '/*');
+        $fs->remove($cacheDir.'/*');
         $logger->addInfo('(✓) Complete');
 
         return self::COMMAND_SUCCESS;
@@ -227,7 +227,7 @@ class InstallCommand extends BaseCommand
         $logger = $this->get('logger');
         $config = $this->get('config');
 
-        $logger->addDebug(PHP_EOL . 'Copying Gruver Configs ... ');
+        $logger->addDebug(PHP_EOL.'Copying Gruver Configs ... ');
         $configDir = $config->get('[directories][config_dir]');
         $migrationsDir = $config->get('[directories][migrations_dir]');
         $templatesDir = $config->get('[directories][templates_dir]');
@@ -235,9 +235,9 @@ class InstallCommand extends BaseCommand
         /**
          * Copy Gruver Config
          */
-        if (!$fs->exists($configDir . '/config.yml')) {
-            $fs->copy(__DIR__ . '/../Resources/config/gruver.yml', $configDir . '/config.yml');
-            $logger->addInfo('(✓) Gruver configuration copied to ' . $configDir);
+        if (!$fs->exists($configDir.'/config.yml')) {
+            $fs->copy(__DIR__.'/../Resources/config/gruver.yml', $configDir.'/config.yml');
+            $logger->addInfo('(✓) Gruver configuration copied to '.$configDir);
         }
 
         /**
@@ -245,31 +245,38 @@ class InstallCommand extends BaseCommand
          */
 
         $twig = $this->get('twig');
-        if (!$fs->exists($configDir . '/migrations.yml')) {
+        if (!$fs->exists($configDir.'/migrations.yml')) {
             $fs->dumpfile(
-                $configDir . '/migrations.yml',
+                $configDir.'/migrations.yml',
                 $twig->render('migrations.yml.twig', array('migration_directory' => $migrationsDir))
             );
-            $logger->addInfo('(✓) Doctrine Migration Config copied to ' . $configDir);
+            $logger->addInfo('(✓) Doctrine Migration Config copied to '.$configDir);
         }
 
         /**
          * Copy Migrations
          */
-        if (!$fs->exists($migrationsDir . '/Version20160324002221.php')) {
-            $fs->copy(
-                __DIR__ . '/../Migration/Version20160324002221.php',
-                $migrationsDir . '/Version20160324002221.php'
-            );
-            $logger->addInfo('(✓) Migration 20160324002221 copied to ' . $configDir);
+        $migrations = array(
+            'Version20160324002221.php',
+            'Version20160524222904.php',
+        );
+
+        foreach($migrations as $migration){
+            if (!$fs->exists($migrationsDir.'/'.$migration)) {
+                $fs->copy(
+                    __DIR__.'/../Migration/'.$migration,
+                    $migrationsDir.'/'.$migration
+                );
+                $logger->addInfo('(✓) Migration '.preg_replace('/(Version|\.php)/',$migration,'').' copied to '.$configDir);
+            }
         }
 
         /**
          * Copy HAProxy Config
          */
-        if ($fs->exists($templatesDir . '/haproxy.cfg.twig')) {
-            $fs->copy(__DIR__ . '/../Resources/templates/haproxy.cfg.twig', $templatesDir . '/haproxy.cfg.twig');
-            $logger->addInfo('(✓) HAProxy Template copied to ' . $templatesDir);
+        if ($fs->exists($templatesDir.'/haproxy.cfg.twig')) {
+            $fs->copy(__DIR__.'/../Resources/templates/haproxy.cfg.twig', $templatesDir.'/haproxy.cfg.twig');
+            $logger->addInfo('(✓) HAProxy Template copied to '.$templatesDir);
         }
 
         $logger->addInfo('(✓) Complete.');
@@ -281,29 +288,30 @@ class InstallCommand extends BaseCommand
     public function generateProxies()
     {
         $logger = $this->get('logger');
-        $logger->addDebug(PHP_EOL . 'Doctrine Proxies ... ');
+        $logger->addDebug(PHP_EOL.'Doctrine Proxies ... ');
         $fs = $this->get('file_system');
         $config = $this->get('config');
         $proxyDir = $config->get('[directories][proxy_dir]');
 
         try {
             $fs->copy(
-                __DIR__ . '/../Proxies/__CG__MindgruveGruverEntityProject.php',
-                $proxyDir . '/__CG__MindgruveGruverEntityProject.php'
+                __DIR__.'/../Proxies/__CG__MindgruveGruverEntityProject.php',
+                $proxyDir.'/__CG__MindgruveGruverEntityProject.php'
             );
             $fs->copy(
-                __DIR__ . '/../Proxies/__CG__MindgruveGruverEntityRelease.php',
-                $proxyDir . '/__CG__MindgruveGruverEntityRelease.php'
+                __DIR__.'/../Proxies/__CG__MindgruveGruverEntityRelease.php',
+                $proxyDir.'/__CG__MindgruveGruverEntityRelease.php'
             );
             $fs->copy(
-                __DIR__ . '/../Proxies/__CG__MindgruveGruverEntityService.php',
-                $proxyDir . '/__CG__MindgruveGruverEntityService.php'
+                __DIR__.'/../Proxies/__CG__MindgruveGruverEntityService.php',
+                $proxyDir.'/__CG__MindgruveGruverEntityService.php'
             );
         } catch (\Exception $e) {
             return self::COMMAND_FAIL;
         }
 
         $logger->addInfo('(✓) Complete.');
+
         return self::COMMAND_SUCCESS;
 
     }
@@ -314,7 +322,7 @@ class InstallCommand extends BaseCommand
         $logger = $this->get('logger');
 
         $error = false;
-        $logger->addDebug(PHP_EOL . 'Generating Database ... ');
+        $logger->addDebug(PHP_EOL.'Generating Database ... ');
         $name = isset($params['path']) ? $params['path'] : (isset($params['dbname']) ? $params['dbname'] : false);
 
         if (!$name) {
@@ -353,7 +361,7 @@ class InstallCommand extends BaseCommand
     {
         $logger = $this->get('logger');
 
-        $logger->addDebug(PHP_EOL . 'Database Migrations ... ');
+        $logger->addDebug(PHP_EOL.'Database Migrations ... ');
 
         $cmd = $this->getApplication()->find('doctrine:migrations:status');
         $bufferedOutput = new BufferedOutput();

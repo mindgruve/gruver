@@ -43,4 +43,4 @@ apt-get install -y sqlite3
 apt-get install php5-sqlite
 
 # Symlink gruver
-ln -s /bin/gruver /vagrant/gruver
+ln -s /vagrant/gruver /bin/gruver

@@ -70,6 +70,8 @@ class DeployCommand extends BaseCommand
             return;
         }
 
+        $this->checkConfigHash($project, $input, $output);
+
         $service = $serviceRepository->loadServiceByName($project, $serviceName);
 
         /*

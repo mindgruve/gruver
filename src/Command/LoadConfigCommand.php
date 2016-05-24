@@ -34,7 +34,7 @@ class LoadConfigCommand extends BaseCommand
 
         $project = $projectRepository->loadProjectByName($projectName);
         if (!$project) {
-            $output->writeln('<info>Adding PROJECT: ' . $projectName);
+            $output->writeln('<info>Adding PROJECT: '.$projectName);
             $project = new Project();
             $project->setName($projectName);
             $project->setStatus(StatusInterface::STATUS_ENABLED);
@@ -51,18 +51,18 @@ class LoadConfigCommand extends BaseCommand
              * @todo open up so more flexible
              */
 
-            if($hosts == array()){
+            if ($hosts == array()) {
                 throw new \Exception('Each service must have a host right now');
             }
 
-            if($ports != array(80)){
+            if ($ports != array(80)) {
                 throw new \Exception('Only port 80 is supported right now');
             }
 
             $service = $serviceRepository->findOneBy(array('name' => $serviceName, 'project' => $project));
             if (!$service) {
 
-                $output->writeln('<info>Adding SERVICE: ' . $serviceName);
+                $output->writeln('<info>Adding SERVICE: '.$serviceName);
                 $service = new Service();
                 $service->setStatus(StatusInterface::STATUS_ENABLED);
 
@@ -75,16 +75,17 @@ class LoadConfigCommand extends BaseCommand
                 $em->persist($service);
             }
 
-            if($service->getPublicHosts() != $hosts){
+            if ($service->getPublicHosts() != $hosts) {
                 $service->setPublicHosts($hosts);
-                $output->writeln('<info>Modifying hosts for SERVICE: ' . $serviceName);
+                $output->writeln('<info>Modifying hosts for SERVICE: '.$serviceName);
             }
 
-            if($service->getPublicPorts() != $ports){
+            if ($service->getPublicPorts() != $ports) {
                 $service->setPublicPorts($ports);
-                $output->writeln('<info>Modifying ports for SERVICE: ' . $serviceName);
+                $output->writeln('<info>Modifying ports for SERVICE: '.$serviceName);
             }
 
+            $project->setConfigHash($config->getConfigHash());
             $em->flush();
         }
     }

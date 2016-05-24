@@ -5,9 +5,13 @@ namespace Mindgruve\Gruver\Command;
 use Mindgruve\Gruver\BaseCommand;
 use Mindgruve\Gruver\Helper\DateTimeHelper;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 class StatusCommand extends BaseCommand
 {
@@ -48,14 +52,18 @@ class StatusCommand extends BaseCommand
         $serviceRepository = $em->getRepository('Mindgruve\Gruver\Entity\Service');
         $releaseRepository = $em->getRepository('Mindgruve\Gruver\Entity\Release');
 
-
         $project = $projectRepository->loadProjectByName($projectName);
 
         if (!$project) {
-            $output->writeln('<error>Project ' . $projectName . ' does not exist </error>');
+            $output->writeln('<error>Project '.$projectName.' does not exist </error>');
 
             return;
         }
+
+        /**
+         * Check if Configuration needs to be reloaded
+         */
+        $this->checkConfigHash($project, $input, $output);
 
         $service = $serviceRepository->loadServiceByName($project, $serviceName);
 
@@ -64,7 +72,7 @@ class StatusCommand extends BaseCommand
          * Check if Service Exists
          */
         if (!$service) {
-            $output->writeln('<error>Service ' . $serviceName . ' does not exist </error>');
+            $output->writeln('<error>Service '.$serviceName.' does not exist </error>');
 
             return;
         }
@@ -102,7 +110,7 @@ class StatusCommand extends BaseCommand
             }
 
             $rows[] = array(
-                $tag . ' ' . $status,
+                $tag.' '.$status,
                 $date,
                 $release->getContainerID(),
                 $release->getContainerIp(),
@@ -113,7 +121,7 @@ class StatusCommand extends BaseCommand
         }
 
         $table = new Table($output);
-        $table->setHeaders(array('Tag', 'Run Date', 'Container', 'IP', 'Port','ID', 'UUID'));
+        $table->setHeaders(array('Tag', 'Run Date', 'Container', 'IP', 'Port', 'ID', 'UUID'));
         $table->addRows($rows);
         $table->render();
     }
