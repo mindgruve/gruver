@@ -46,6 +46,7 @@ class LoadConfigCommand extends BaseCommand
             $serviceName = $item['name'];
             $hosts = $item['hosts'];
             $ports = $item['ports'];
+            $haproxyBackend = isset($item['haproxy_append']['backend']) ? implode("\n    ",$item['haproxy_append']['backend']) : '';
 
             /**
              * @todo open up so more flexible
@@ -77,12 +78,17 @@ class LoadConfigCommand extends BaseCommand
 
             if ($service->getPublicHosts() != $hosts) {
                 $service->setPublicHosts($hosts);
-                $output->writeln('<info>Modifying hosts for SERVICE: '.$serviceName);
+                $output->writeln('<info>Modifying hosts for SERVICE: '.$serviceName.'</info>');
             }
 
             if ($service->getPublicPorts() != $ports) {
                 $service->setPublicPorts($ports);
-                $output->writeln('<info>Modifying ports for SERVICE: '.$serviceName);
+                $output->writeln('<info>Modifying ports for SERVICE: '.$serviceName.'</info>');
+            }
+
+            if($service->getHAProxyBackend() != $haproxyBackend){
+                $service->setHAProxyBackend($haproxyBackend);
+                $output->writeln('<info>Modifying haproxy_backend for SERVICE: '.$serviceName.'</info>');
             }
 
             $project->setConfigHash($config->getConfigHash());

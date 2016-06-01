@@ -24,4 +24,5 @@ backend backend_{{ service.release_id }}
     mode http
     balance roundrobin
     server web_{{ service.release_id}} {{ service.ip }}:{{ service.port }} check
+    {{ service.haproxy_backend }}
 {% endfor %}

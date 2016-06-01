@@ -29,6 +29,9 @@ class Service implements StatusInterface
     /** @Column(type="array") */
     protected $publicPorts;
 
+    /** @Column(length=1024, nullable=true) */
+    protected $haproxyBackend;
+
     /**
      * @ManyToOne(targetEntity="Project", inversedBy="services")
      * @JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
@@ -217,5 +220,15 @@ class Service implements StatusInterface
     public function getPublicPorts()
     {
         return $this->publicPorts;
+    }
+
+    public function getHAProxyBackend()
+    {
+        return $this->haproxyBackend;
+    }
+
+    public function setHAProxyBackend($append)
+    {
+        $this->haproxyBackend = $append;
     }
 }

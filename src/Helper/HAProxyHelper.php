@@ -63,6 +63,7 @@ class HAProxyHelper
                     'release_id'   => $release->getId(),
                     'release_uuid' => $release->getUuid(),
                     'hosts'        => $service->getPublicHosts(),
+                    'haproxy_backend' => $service->getHAProxyBackend(),
                     'ip'           => $release->getContainerIp(),
                     'port'         => $release->getContainerPort(),
                     'status'       => 'staging',

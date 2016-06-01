@@ -259,6 +259,7 @@ class InstallCommand extends BaseCommand
         $migrations = array(
             'Version20160324002221.php',
             'Version20160524222904.php',
+            'Version20160601201439.php',
         );
 
         foreach($migrations as $migration){
